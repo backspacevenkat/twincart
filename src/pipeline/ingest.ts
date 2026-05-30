@@ -18,7 +18,7 @@ const RETAILERS = Object.keys(RETAILER_ACTORS) as Retailer[];
 // Budget caps: Amazon is cheapest ($0.004), Temu dearest ($0.01) → weight accordingly.
 // Budget-weighted caps to reach ~10k+ efficiently: lean on cheap retailers (Amazon $0.004),
 // keep Temu ($0.01, riskiest) modest. Real yield runs ~60-80% of cap.
-const CAPS: Record<Retailer, number> = { amazon: 250, temu: 60, shein: 110, walmart: 120, target: 110 };
+const CAPS: Record<Retailer, number> = { amazon: 90, temu: 30, shein: 55, walmart: 50, target: 45 };
 
 async function upsertProduct(p: IngestedProduct): Promise<number> {
   const rows = await query<{ id: number }>(
