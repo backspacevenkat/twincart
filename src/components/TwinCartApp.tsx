@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { RETAILERS, CLUSTERS, GALLERY, IMG, CHIPS, QUERIES } from '@/lib/twincart-data';
+import { RETAILERS, CLUSTERS, GALLERY, IMG, CHIPS, QUERIES, DEMO_BASKET } from '@/lib/twincart-data';
+import CartScreen from '@/components/CartScreen';
 
 /* TwinCart — shared UI primitives */
 
@@ -1732,7 +1733,7 @@ function App() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <TopNav onHome={goHome} screen={screen} cartCount={cart.length} wishCount={wishlist.size}
-        onCart={() => cart.length && flash(`${cart.length} item${cart.length>1?"s":""} in cart · use Prepare checkout to pay safely`)} />
+        onCart={() => { setScreen("cart"); window.scrollTo({ top: 0 }); }} />
 
       <main style={{ flex: 1 }}>
         {screen === "home" && <HomeScreen onSearch={search} onOpenCluster={openCluster}
@@ -1745,6 +1746,7 @@ function App() {
           onAdd={addToCart} onWish={toggleWish} wishlist={wishlist} />}
         {screen === "report" && cluster && <ReportScreen cluster={cluster}
           onBack={() => openCluster(cluster)} onHome={() => goHome()} />}
+        {screen === "cart" && <CartScreen onBack={() => goHome()} onCheckout={() => openCheckout(CLUSTERS[0])} />}
       </main>
 
       <footer style={{ borderTop: "1px solid var(--hairline)", background: "var(--surface-2)",
