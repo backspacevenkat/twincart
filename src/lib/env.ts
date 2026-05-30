@@ -10,7 +10,7 @@ function req(name: string): string {
 /** Read an optional env var by name. */
 const opt = (name: string, fallback = ''): string => process.env[name] ?? fallback;
 
-// All access goes through name-based helpers — no literal credential values anywhere.
+// All access is name-based via helpers — no literal credential values in source.
 export const env = {
   databaseUrl: () => req('DATABASE_URL'),
   apifyToken: () => req('APIFY_TOKEN'),
