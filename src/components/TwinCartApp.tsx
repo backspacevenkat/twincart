@@ -1881,7 +1881,10 @@ function App() {
     window.scrollTo({ top: 0 });
   };
   const search = (q: any) => {
-    const match = QUERIES.find((x) => x.toLowerCase() === (q || "").toLowerCase()) || "thermo flask";
+    const ql = (q || "").toLowerCase().trim();
+    const match = QUERIES.find((x) => x.toLowerCase() === ql)
+      || QUERIES.find((x) => x.toLowerCase().includes(ql) || ql.includes(x.toLowerCase()))
+      || "thermo flask";
     setQuery(match); setScreen("results"); window.scrollTo({ top: 0 });
   };
   const openCluster = (c: any) => { setCluster(c); setScreen("compare"); window.scrollTo({ top: 0 }); };
