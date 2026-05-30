@@ -226,7 +226,7 @@ function Btn({ children, variant = "ghost", size = "md", icon, iconRight, onClic
 /* TwinCart — ImageCarousel + TwinSpectrum (cluster identity visuals) */
 
 /* ───────────────── Image carousel ───────────────── */
-function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounded = true }: any) {
+function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounded = true, images: imagesProp }: any) {
   const imgs = (GALLERY && GALLERY[icon]) || [IMG[icon]];
   const [i, setI] = useState(0);
   const [drag, setDrag] = useState<any>(null);
@@ -469,7 +469,7 @@ function OfferCard({ offer, icon, onAdd, onWish, wished, idx }: any) {
         outline: featured ? "2px solid var(--accent-soft)" : "none" }}>
 
       {/* image */}
-      <ProductImage icon={icon} tint={offer.tint} height={150} radius={0}>
+      <ProductImage icon={icon} img={offer.image} tint={offer.tint} height={150} radius={0}>
         {meta && (
           <span style={{ position: "absolute", top: 9, left: 9, fontSize: 10, fontWeight: 700,
             letterSpacing: "0.04em", textTransform: "uppercase", color: "#fff", background: meta.color,
@@ -949,7 +949,7 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
         className="cluster-identity">
         {/* carousel */}
         <div style={{ position: "relative" }}>
-          <ImageCarousel icon={cluster.icon} height={300}>
+          <ImageCarousel icon={cluster.icon} images={cluster.heroImages} height={300}>
             {cluster.trending && (
               <span style={{ position: "absolute", top: 12, left: 12, zIndex: 5, display: "inline-flex",
                 alignItems: "center", gap: 5, fontSize: 11, fontWeight: 700, color: "#fff",
@@ -1251,7 +1251,7 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
       {/* cluster identity band — carousel + spectrum */}
       <div style={{ display: "grid", gridTemplateColumns: "360px minmax(0,1fr)", gap: 24,
         marginBottom: 28, alignItems: "stretch" }} className="cluster-identity">
-        <ImageCarousel icon={cluster.icon} height={262} />
+        <ImageCarousel icon={cluster.icon} images={cluster.heroImages} height={262} />
         <TwinSpectrum cluster={cluster} onPick={() => {}} onAdd={onAdd} />
       </div>
 

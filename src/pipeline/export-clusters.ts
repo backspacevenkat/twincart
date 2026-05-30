@@ -62,8 +62,12 @@ async function main() {
     const twins = members.filter((m) => m.match_type !== 'EXACT_MATCH' && m.match_type !== 'NOT_COMPARABLE');
     if (!twins.length) continue;
     const value = members.find((m) => m.product_id === c.best_value_id) ?? twins[0];
-    const budget = members.find((m) => m.product_id === c.best_budget_id)
-      ?? twins.slice().sort((a, b) => b.price_savings_pct - a.price_savings_pct)[0];
+    // Budget = biggest-savings twin that is DISTINCT from value (avoid showing the same product twice).
+    const budgetSorted = twins.slice().sort((a, b) => b.price_savings_pct - a.price_savings_pct);
+    let budget = members.find((m) => m.product_id === c.best_budget_id) ?? budgetSorted[0];
+    if (budget.product_id === value.product_id) {
+      budget = budgetSorted.find((m) => m.product_id !== value.product_id) ?? budget;
+    }
 
     // savings amount vs anchor
     const withAmt = (p: any, m: M) => ({ ...p, savingsAmt: Math.max(0, Math.round(anchor.price - m.price)) });
