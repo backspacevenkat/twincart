@@ -301,12 +301,13 @@ function spectrumColor(o: any) {
   return "var(--accent)";
 }
 
-function TwinSpectrum({ cluster, onPick }: any) {
+function TwinSpectrum({ cluster, onPick, onAdd }: any) {
   const offers = cluster.offers;
   const prices = offers.map((o: any) => o.price);
   const lo = Math.min(...prices), hi = Math.max(...prices);
   const span = Math.max(1, hi - lo);
   const [hover, setHover] = useState<any>(null);
+  const [sel, setSel] = useState<any>(null);
   const pos = (p: any) => 6 + ((p - lo) / span) * 88; // 6%..94%
 
   // de-overlap: sort by price, nudge equal-ish nodes
@@ -348,7 +349,7 @@ function TwinSpectrum({ cluster, onPick }: any) {
           return (
             <div key={o.retailer + o.name}
               onMouseEnter={() => setHover(idx)} onMouseLeave={() => setHover(null)}
-              onClick={() => onPick && onPick(cluster)}
+              onClick={(e: any) => { e.stopPropagation(); setSel(o); }}
               style={{ position: "absolute", top: 32, left: `${x}%`, transform: "translate(-50%,-50%)",
                 zIndex: active ? 20 : isVal ? 10 : 5, cursor: "pointer" }}>
               {/* node dot */}
@@ -398,6 +399,23 @@ function TwinSpectrum({ cluster, onPick }: any) {
         </span>
       </div>
 
+      {(() => { const chosen = sel || cluster.offers.find((o: any) => o.tag === "value") || cluster.offers[0]; const stop = /NOT COMPARABLE/.test(chosen.matchType); return (
+        <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 14, background: "var(--surface-2)", border: "1px solid var(--hairline)", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+          <Thumb icon={cluster.icon} retailer={chosen.retailer} size={48} tint={chosen.tint} />
+          <div style={{ flex: 1, minWidth: 170 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>{chosen.name}</span>
+              <RetailerBadge id={chosen.retailer} size="sm" />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
+              <span className="tnum" style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, color: "var(--ink)" }}>${chosen.price}</span>
+              <span className="mono" style={{ fontSize: 10.5, fontWeight: 700, color: stop ? "var(--risk)" : "var(--accent)", background: stop ? "var(--risk-soft)" : "var(--accent-soft)", padding: "2px 7px", borderRadius: 6 }}>{chosen.parity}% {stop ? "· not a twin" : "twin"}</span>
+              {chosen.savingsAmt != null && <SavingsPill amt={chosen.savingsAmt} pct={chosen.savingsPct} size="sm" muted={stop} />}
+            </div>
+          </div>
+          <Btn variant="primary" size="sm" icon="cart" onClick={() => onAdd && onAdd(chosen)}>Add to cart</Btn>
+        </div>
+      ); })()}
       {/* savings callout */}
       <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--hairline)",
         display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
@@ -975,7 +993,7 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
           </div>
 
           {/* the twin spectrum — the cluster aha */}
-          <TwinSpectrum cluster={cluster} onPick={onOpenCluster} />
+          <TwinSpectrum cluster={cluster} onPick={onOpenCluster} onAdd={onAdd} />
         </div>
       </div>
 
@@ -1234,7 +1252,7 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
       <div style={{ display: "grid", gridTemplateColumns: "360px minmax(0,1fr)", gap: 24,
         marginBottom: 28, alignItems: "stretch" }} className="cluster-identity">
         <ImageCarousel icon={cluster.icon} height={262} />
-        <TwinSpectrum cluster={cluster} onPick={() => {}} />
+        <TwinSpectrum cluster={cluster} onPick={() => {}} onAdd={onAdd} />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 320px", gap: 28,
