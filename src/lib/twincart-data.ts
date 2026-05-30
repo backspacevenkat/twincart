@@ -1,6 +1,7 @@
 // TwinCart product data — aggregated clusters across 5 retailers (ported from the design prototype).
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import LIVE_CLUSTERS from './live-clusters.json';
+import CURATED_BOX_REPORTS from './curated-box-reports.json';
 
 export const RETAILERS: Record<string, { name: string; color: string; logo: string }> = {
   amazon:  { name: 'Amazon',  color: 'var(--retailer-amazon)',  logo: 'https://www.google.com/s2/favicons?domain=amazon.com&sz=64' },
@@ -136,6 +137,8 @@ const CURATED_CLUSTERS = CLUSTERS;
 const liveQueries: string[] = [...new Set((LIVE_CLUSTERS as any[]).map((c) => c.query))];
 // Merge: curated clusters first, then live clusters whose query isn't already curated.
 const curatedQueries = new Set(CURATED_CLUSTERS.map((c: any) => c.query));
+// Attach real Box shared links to curated clusters (live clusters already carry boxReport).
+CURATED_CLUSTERS.forEach((c: any) => { const u = (CURATED_BOX_REPORTS as any)[c.id]; if (u) c.boxReport = u; });
 (LIVE_CLUSTERS as any[]).forEach((c) => CLUSTERS.push(c));
 
 // curated demo queries lead; live (real-data) queries follow
