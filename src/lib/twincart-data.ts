@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import LIVE_CLUSTERS from './live-clusters.json';
 
-export const RETAILERS: Record<string, { name: string; color: string }> = {
-  amazon:  { name: 'Amazon',  color: 'var(--retailer-amazon)' },
-  temu:    { name: 'Temu',    color: 'var(--retailer-temu)' },
-  shein:   { name: 'SHEIN',   color: 'var(--retailer-shein)' },
-  walmart: { name: 'Walmart', color: 'var(--retailer-walmart)' },
-  target:  { name: 'Target',  color: 'var(--retailer-target)' },
+export const RETAILERS: Record<string, { name: string; color: string; logo: string }> = {
+  amazon:  { name: 'Amazon',  color: 'var(--retailer-amazon)',  logo: 'https://logo.clearbit.com/amazon.com' },
+  temu:    { name: 'Temu',    color: 'var(--retailer-temu)',    logo: 'https://logo.clearbit.com/temu.com' },
+  shein:   { name: 'SHEIN',   color: 'var(--retailer-shein)',   logo: 'https://logo.clearbit.com/shein.com' },
+  walmart: { name: 'Walmart', color: 'var(--retailer-walmart)', logo: 'https://logo.clearbit.com/walmart.com' },
+  target:  { name: 'Target',  color: 'var(--retailer-target)',  logo: 'https://logo.clearbit.com/target.com' },
 };
 
 export const GALLERY: Record<string, string[]> = {

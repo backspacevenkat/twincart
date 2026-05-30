@@ -699,7 +699,7 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
       )}
 
       {/* product image with overlays */}
-      <ProductImage icon={icon} img={p.image} tint={p.tint} height={elevated ? 178 : 168}>
+      <ProductImage icon={icon} img={p.image} tint={p.tint} height={172}>
         <div style={{ position: "absolute", top: 10, left: 10, right: 10, display: "flex",
           alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
           <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase",
