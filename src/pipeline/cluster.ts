@@ -98,7 +98,9 @@ async function buildCluster(q: string, rows: Row[]): Promise<string | null> {
   if (valid.length < 3) return null;
 
   // Reject outlier/bundle prices above 3× median when choosing the anchor.
-  const priceCap = median(valid.map((r) => r.price as number)) * 3;
+  // 1.8× median rejects set/bundle outliers (e.g. a $5,700 dumbbell SET vs single dumbbells) so the
+  // anchor lands on a mid-range single item and savings stay believable across wide-price categories.
+  const priceCap = median(valid.map((r) => r.price as number)) * 1.8;
   const anchor = valid.reduce((a, b) => (anchorScore(b, priceCap) > anchorScore(a, priceCap) ? b : a));
   const cands = pickCandidates(valid, anchor);
   if (!cands.length) return null;
