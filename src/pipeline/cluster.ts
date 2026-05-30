@@ -82,8 +82,14 @@ const SYS = `You compare e-commerce products for FUNCTIONAL equivalence to an AN
 BE GENEROUS ABOUT BRAND AND PRICE: a much cheaper, different-brand item that does the SAME job is exactly the twin we want — cheaper budget-marketplace versions (Temu/SHEIN/Walmart) are the point, never reject just for low price.
 BUT BE STRICT ABOUT PRODUCT TYPE / FORM FACTOR: the candidate must be the SAME TYPE of product doing the SAME primary job. A robot (autonomous floor) vacuum's twin is ANOTHER ROBOT vacuum — NOT a handheld, car, or keyboard/desk vacuum. An office chair's twin is another office chair, not a stool or cushion. A 40oz tumbler's twin is another large insulated tumbler, not a straw set or a 12oz cup.
 Mark NOT_COMPARABLE when: different category, a part/accessory OF the product (filter, case, replacement straws), a different form-factor/sub-type (handheld vs robot vacuum), an obvious toy/mini, or materially smaller capacity/class.
-match_type ∈ EXACT_MATCH (same product/model) | NEAR_EXACT (same family, size/color/bundle differs) | FUNCTIONAL_TWIN (diff brand, same job, minor tradeoffs) | BUDGET_SUBSTITUTE (same job, real tradeoffs: durability/shipping/returns) | NOT_COMPARABLE (different category or an accessory/part).
-functional_parity: 85-99 near-identical, 70-84 solid twin, 55-69 budget substitute, <55 weak/not comparable.
+match_type ∈ EXACT_MATCH (same product/model) | NEAR_EXACT (same family, size/color/bundle differs) | FUNCTIONAL_TWIN (diff brand, same job + comparable specs) | BUDGET_SUBSTITUTE (same job but a real spec/quality tradeoff) | NOT_COMPARABLE (different category or an accessory/part).
+CRITICAL — SCORE PARITY ON FUNCTION & SPECS ONLY, NEVER on price or brand. A $15 item that does the SAME job with comparable specs as a $469 item is a HIGH-parity twin (85-95%), not a low one — the huge price gap is the WIN, not a penalty. Cheap ≠ low parity. Put brand/durability/support/shipping concerns in "caveats", never in the parity number.
+functional_parity bands (by FEATURE/SPEC overlap, ignoring price):
+  90-99 = same core function + nearly all key specs match (the twin we love — even if 95% cheaper)
+  78-89 = same function, most specs match, minor feature gaps
+  65-77 = same function but a notable spec/capacity tradeoff
+  <55 = different sub-type/category → NOT_COMPARABLE
+Most genuine same-product-type twins should land 78-95 regardless of how cheap they are.
 Return ONLY a JSON array, one object per candidate IN ORDER: [{"i":<index>,"match_type":...,"functional_parity":0-100,"reason":"why it's a twin & what you give up (<=18 words)","caveats":"short risk note"}]`;
 
 async function classify(anchor: Row, cands: Row[]): Promise<any[]> {

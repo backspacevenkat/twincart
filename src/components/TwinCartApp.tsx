@@ -49,8 +49,10 @@ const CAT_ICON: any = { flask: "flask", buds: "buds", dress: "dress" };
 /* ───────────────── Retailer badge ───────────────── */
 function RetailerBadge({ id, size = "md" }: any) {
   const r = RETAILERS[id];
+  const [logoOk, setLogoOk] = useState(true);
   if (!r) return null;
   const sm = size === "sm";
+  const dim = sm ? 14 : 16;
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 6,
@@ -58,7 +60,10 @@ function RetailerBadge({ id, size = "md" }: any) {
       background: "var(--surface-3)", border: "1px solid var(--hairline)",
       fontSize: sm ? 11 : 12, fontWeight: 600, color: "var(--ink-soft)", whiteSpace: "nowrap",
     }}>
-      <span style={{ width: 7, height: 7, borderRadius: 999, background: r.color }} />
+      {logoOk && r.logo
+        ? <img src={r.logo} alt="" width={dim} height={dim} loading="lazy" onError={() => setLogoOk(false)}
+            style={{ width: dim, height: dim, borderRadius: 4, objectFit: "contain", display: "block" }} />
+        : <span style={{ width: 7, height: 7, borderRadius: 999, background: r.color }} />}
       {r.name}
     </span>
   );
@@ -242,13 +247,20 @@ function RetailerLink({ url, retailer, compact, full }: any) {
 /* TwinCart — ImageCarousel + TwinSpectrum (cluster identity visuals) */
 
 /* ───────────────── Image carousel ───────────────── */
-function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounded = true, images: imagesProp }: any) {
+function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounded = true, images: imagesProp, captions, index, setIndex }: any) {
   const imgs = ((imagesProp && imagesProp.length ? imagesProp : (GALLERY && GALLERY[icon]) || [IMG[icon]]) as any[]).filter(Boolean);
-  const [i, setI] = useState(0);
+  const [iLocal, setILocal] = useState(0);
+  // Controlled mode: parent owns the index (so clicking a price elsewhere syncs the image).
+  const i = typeof index === "number" ? Math.min(index, Math.max(0, imgs.length - 1)) : iLocal;
+  const setI = (fnOrVal: any) => {
+    const next = typeof fnOrVal === "function" ? fnOrVal(i) : fnOrVal;
+    if (setIndex) setIndex(next); else setILocal(next);
+  };
   const [drag, setDrag] = useState<any>(null);
   const n = imgs.length;
-  const go = (d: any) => setI((p) => (p + d + n) % n);
+  const go = (d: any) => setI((p: any) => (p + d + n) % n);
   const at = (k: any) => setI(k);
+  const caption = captions && captions[i];
 
   const onDown = (e: any) => { const x = (e.touches ? e.touches[0].clientX : e.clientX); setDrag({ x, dx: 0 }); };
   const onMove = (e: any) => { if (!drag) return; const x = (e.touches ? e.touches[0].clientX : e.clientX); setDrag((d: any) => ({ ...d, dx: x - d.x })); };
@@ -284,6 +296,15 @@ function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounde
       </div>
 
       {children}
+
+      {/* caption — name of the product whose image is showing (syncs with clicked price) */}
+      {caption && (
+        <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "26px 12px 10px",
+          background: "linear-gradient(transparent, rgba(14,15,19,0.78))", color: "#fff",
+          fontSize: 12, fontWeight: 600, lineHeight: 1.3, pointerEvents: "none" }}>
+          <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{caption}</span>
+        </div>
+      )}
 
       {/* arrows */}
       {n > 1 && ["back", "chevron"].map((ic, k) => (
@@ -375,7 +396,7 @@ function TwinSpectrum({ cluster, onPick, onAdd }: any) {
           return (
             <div key={o.retailer + o.name}
               onMouseEnter={() => setHover(idx)} onMouseLeave={() => setHover(null)}
-              onClick={(e: any) => { e.stopPropagation(); setSel(o); }}
+              onClick={(e: any) => { e.stopPropagation(); setSel(o); onSelectImage && onSelectImage(idx); }}
               style={{ position: "absolute", top: 32, left: `${x}%`, transform: "translate(-50%,-50%)",
                 zIndex: active ? 20 : isVal ? 10 : 5, cursor: "pointer" }}>
               {/* node dot */}
@@ -968,6 +989,8 @@ function FilterBar({ filters, setFilters }: any) {
 /* ───────────────── Results cluster card ───────────────── */
 function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWish, wishlist, lead }: any) {
   const [showAll, setShowAll] = useState(!!lead);
+  const [activeImg, setActiveImg] = useState(0);
+  const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
   const prices = cluster.offers.map((o: any) => o.price);
   const lo = Math.min(...prices), hi = Math.max(...prices);
   const retailers = new Set(cluster.offers.map((o: any) => o.retailer)).size;
@@ -982,7 +1005,8 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
         className="cluster-identity">
         {/* carousel */}
         <div style={{ position: "relative" }}>
-          <ImageCarousel icon={cluster.icon} images={cluster.heroImages} height={300}>
+          <ImageCarousel icon={cluster.icon} images={cluster.heroImages} captions={captions}
+            index={activeImg} setIndex={setActiveImg} height={300}>
             {cluster.trending && (
               <span style={{ position: "absolute", top: 12, left: 12, zIndex: 5, display: "inline-flex",
                 alignItems: "center", gap: 5, fontSize: 11, fontWeight: 700, color: "#fff",
@@ -1026,7 +1050,7 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
           </div>
 
           {/* the twin spectrum — the cluster aha */}
-          <TwinSpectrum cluster={cluster} onPick={onOpenCluster} onAdd={onAdd} />
+          <TwinSpectrum cluster={cluster} onPick={onOpenCluster} onAdd={onAdd} onSelectImage={setActiveImg} />
         </div>
       </div>
 
@@ -1358,6 +1382,8 @@ function Sparkline({ seed = 1 }: any) {
 /* Screen 3 */
 function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, wishlist }: any) {
   const [watch, setWatch] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
+  const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
   const { exact, value, budget } = cluster.products;
   const rows = cluster.compareRows || [];
 
@@ -1391,8 +1417,9 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
       {/* cluster identity band — carousel + spectrum */}
       <div style={{ display: "grid", gridTemplateColumns: "360px minmax(0,1fr)", gap: 24,
         marginBottom: 28, alignItems: "stretch" }} className="cluster-identity">
-        <ImageCarousel icon={cluster.icon} images={cluster.heroImages} height={262} />
-        <TwinSpectrum cluster={cluster} onPick={() => {}} onAdd={onAdd} />
+        <ImageCarousel icon={cluster.icon} images={cluster.heroImages} captions={captions}
+          index={activeImg} setIndex={setActiveImg} height={262} />
+        <TwinSpectrum cluster={cluster} onPick={() => {}} onAdd={onAdd} onSelectImage={setActiveImg} />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 320px", gap: 28,
