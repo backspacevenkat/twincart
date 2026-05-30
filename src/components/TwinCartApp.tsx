@@ -69,7 +69,7 @@ function RetailerBadge({ id, size = "md" }: any) {
       fontSize: sm ? 11 : 12, fontWeight: 600, color: "var(--ink-soft)", whiteSpace: "nowrap",
     }}>
       {logoOk && r.logo
-        ? <img src={px(r.logo)} alt="" width={dim} height={dim} loading="lazy" onError={() => setLogoOk(false)}
+        ? <img src={r.logo} alt="" width={dim} height={dim} loading="lazy" onError={() => setLogoOk(false)}
             style={{ width: dim, height: dim, borderRadius: 4, objectFit: "contain", display: "block" }} />
         : <span style={{ width: 7, height: 7, borderRadius: 999, background: r.color }} />}
       {r.name}

@@ -3,11 +3,11 @@
 import LIVE_CLUSTERS from './live-clusters.json';
 
 export const RETAILERS: Record<string, { name: string; color: string; logo: string }> = {
-  amazon:  { name: 'Amazon',  color: 'var(--retailer-amazon)',  logo: 'https://logo.clearbit.com/amazon.com' },
-  temu:    { name: 'Temu',    color: 'var(--retailer-temu)',    logo: 'https://logo.clearbit.com/temu.com' },
-  shein:   { name: 'SHEIN',   color: 'var(--retailer-shein)',   logo: 'https://logo.clearbit.com/shein.com' },
-  walmart: { name: 'Walmart', color: 'var(--retailer-walmart)', logo: 'https://logo.clearbit.com/walmart.com' },
-  target:  { name: 'Target',  color: 'var(--retailer-target)',  logo: 'https://logo.clearbit.com/target.com' },
+  amazon:  { name: 'Amazon',  color: 'var(--retailer-amazon)',  logo: 'https://www.google.com/s2/favicons?domain=amazon.com&sz=64' },
+  temu:    { name: 'Temu',    color: 'var(--retailer-temu)',    logo: 'https://www.google.com/s2/favicons?domain=temu.com&sz=64' },
+  shein:   { name: 'SHEIN',   color: 'var(--retailer-shein)',   logo: 'https://www.google.com/s2/favicons?domain=shein.com&sz=64' },
+  walmart: { name: 'Walmart', color: 'var(--retailer-walmart)', logo: 'https://www.google.com/s2/favicons?domain=walmart.com&sz=64' },
+  target:  { name: 'Target',  color: 'var(--retailer-target)',  logo: 'https://www.google.com/s2/favicons?domain=target.com&sz=64' },
 };
 
 export const GALLERY: Record<string, string[]> = {
