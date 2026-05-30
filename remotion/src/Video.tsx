@@ -1,21 +1,29 @@
-import { AbsoluteFill, Sequence } from "remotion";
+import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { MANIFEST, sceneFrames } from "./lib/manifest";
+import { Caption } from "./components/Caption";
+import { S1_Hook } from "./scenes/S1_Hook";
+import { S2_TwinIdea } from "./scenes/S2_TwinIdea";
+import { S3_HowTwinsFound } from "./scenes/S3_HowTwinsFound";
+import { S4_TwinPayoff } from "./scenes/S4_TwinPayoff";
+import { S5_AgentCheckout } from "./scenes/S5_AgentCheckout";
+import { S6_Close } from "./scenes/S6_Close";
 
-const COLORS: Record<string, string> = {
-  s1: "#0b1020", s2: "#10213a", s3: "#0f2e2a", s4: "#13351c", s5: "#2a1530", s6: "#0b1020",
+const BODY: Record<string, React.FC<{ dur: number }>> = {
+  s1: S1_Hook, s2: S2_TwinIdea, s3: S3_HowTwinsFound, s4: S4_TwinPayoff, s5: S5_AgentCheckout, s6: S6_Close,
 };
 
 export const TwinCartVideo: React.FC = () => {
   let from = 0;
   return (
-    <AbsoluteFill style={{ backgroundColor: "#000" }}>
+    <AbsoluteFill style={{ backgroundColor: "#06120f" }}>
       {MANIFEST.map((s) => {
         const dur = sceneFrames(s);
+        const Body = BODY[s.scene] ?? (() => null);
         const seq = (
           <Sequence key={s.scene} from={from} durationInFrames={dur} name={s.scene}>
-            <AbsoluteFill style={{ backgroundColor: COLORS[s.scene], alignItems: "center", justifyContent: "center" }}>
-              <div style={{ color: "#fff", fontSize: 64, fontFamily: "sans-serif" }}>{s.scene.toUpperCase()}</div>
-            </AbsoluteFill>
+            <Body dur={s.durationSeconds} />
+            {s.audioFile ? <Audio src={staticFile(s.audioFile)} /> : null}
+            <Caption words={s.words} />
           </Sequence>
         );
         from += dur;
