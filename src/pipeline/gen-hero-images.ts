@@ -57,11 +57,11 @@ function slug(q: string) { return q.replace(/[^a-z0-9]+/gi, '-').toLowerCase(); 
 
 async function gen(prompt: string, outPath: string): Promise<boolean> {
   if (existsSync(outPath) && !FORCE) { console.log(`  · skip ${outPath} (exists)`); return true; }
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const r = await fetch(url, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': KEY as string },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
       });
       const j: any = await r.json();

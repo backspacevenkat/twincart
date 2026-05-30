@@ -16,7 +16,7 @@ if (!KEY) {
 }
 
 const ENDPOINT =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + KEY;
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 const DATA_PATH = resolve(import.meta.dir, "../lib/live-clusters.json");
 const force = process.argv.includes("--force");
@@ -57,7 +57,7 @@ Rules:
 async function callGemini(prompt: string): Promise<any | null> {
   const res = await fetch(ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-goog-api-key": KEY as string },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: { responseMimeType: "application/json", temperature: 0.4 },
