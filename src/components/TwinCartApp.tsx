@@ -368,6 +368,7 @@ function TwinSpectrum({ cluster, onPick, onAdd, onSelectImage, onPickOffer }: an
   // de-overlap: sort by price, nudge equal-ish nodes
   const nodes = offers.map((o: any, idx: any) => ({ o, idx, x: pos(o.price) }))
     .sort((a: any, b: any) => a.x - b.x);
+  // de-overlap: push each node right so its price label can't collide with the previous one
   const MIN_GAP = 9;
   for (let k = 1; k < nodes.length; k++) {
     if (nodes[k].x < nodes[k - 1].x + MIN_GAP) nodes[k].x = Math.min(96, nodes[k - 1].x + MIN_GAP);
@@ -1009,6 +1010,7 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
   const [activeImg, setActiveImg] = useState(0);
   const [picked, setPicked] = useState<any>(null);
   const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
+  // one image per offer, aligned 1:1 with captions & spectrum nodes so clicking a price swaps the image
   const offerImgs = cluster.offers.map((o: any) => o.image || cluster.heroImages?.[0]).filter(Boolean);
   const carouselImgs = offerImgs.length === cluster.offers.length ? offerImgs : cluster.heroImages;
   const prices = cluster.offers.map((o: any) => o.price);
@@ -1130,6 +1132,37 @@ function ResultsScreen({ query, onSearch, onOpenCluster, onCheckout, onReport, o
   const clusters = CLUSTERS.filter((c) => c.query === query);
   const totalListings = clusters.reduce((n, c) => n + c.offers.length, 0);
 
+  // No matches — show a friendly empty state with suggested searches (don't silently fake a result)
+  if (clusters.length === 0) {
+    return (
+      <div className="anim-fadein" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "28px 28px 80px" }}>
+        <div style={{ maxWidth: 680, marginBottom: 28 }}>
+          <SearchBar value={q} onChange={setQ} onSubmit={(v: any) => onSearch(v || query)} size="md" />
+        </div>
+        <div style={{ textAlign: "center", padding: "70px 20px" }}>
+          <div style={{ display: "inline-grid", placeItems: "center", width: 64, height: 64, borderRadius: 18,
+            background: "var(--surface-3)", color: "var(--muted-2)", marginBottom: 18 }}>
+            <Icon name="search" size={30} stroke={1.6} />
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: "var(--ink)", marginBottom: 10 }}>
+            No twins found for "<span style={{ color: "var(--accent)" }}>{query}</span>"
+          </h1>
+          <p style={{ fontSize: 15, color: "var(--muted)", marginBottom: 26 }}>
+            We aggregate {QUERIES.length}+ live product categories. Try one of these:
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", maxWidth: 620, margin: "0 auto" }}>
+            {CHIPS.slice(0, 10).map((c: any) => (
+              <button key={c} onClick={() => onSearch(c)} style={{
+                padding: "9px 16px", borderRadius: 999, border: "1px solid var(--hairline-2)",
+                background: "var(--surface)", fontSize: 13.5, fontWeight: 600, color: "var(--ink)",
+                cursor: "pointer", textTransform: "capitalize" }}>{c}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="anim-fadein" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "28px 28px 80px" }}>
       <div style={{ maxWidth: 680, marginBottom: 22 }}>
@@ -1145,23 +1178,6 @@ function ResultsScreen({ query, onSearch, onOpenCluster, onCheckout, onReport, o
         </span>
       </div>
 
-      {clusters.length === 0 ? (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16,
-          textAlign: "center", padding: "60px 24px" }}>
-          <h3 style={{ fontSize: 22, fontWeight: 700, color: "var(--ink)" }}>
-            No twins found for <span style={{ color: "var(--accent)" }}>&quot;{query}&quot;</span>
-          </h3>
-          <p style={{ fontSize: 14, color: "var(--muted)" }}>Try one of these:</p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
-            {CHIPS.slice(0, 8).map((c) => (
-              <button key={c} onClick={() => onSearch(c)} style={{ padding: "9px 16px", borderRadius: 999,
-                border: "1px solid var(--hairline-2)", background: "var(--surface)", color: "var(--muted)",
-                fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>{c}</button>
-            ))}
-          </div>
-        </div>
-      ) : (
-      <>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
         marginBottom: 26, flexWrap: "wrap" }}>
         <FilterBar filters={filters} setFilters={setFilters} />
@@ -1422,6 +1438,7 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
   const [watch, setWatch] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
   const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
+  // one image per offer, aligned 1:1 with captions & spectrum nodes so clicking a price swaps the image
   const offerImgs = cluster.offers.map((o: any) => o.image || cluster.heroImages?.[0]).filter(Boolean);
   const carouselImgs = offerImgs.length === cluster.offers.length ? offerImgs : cluster.heroImages;
   const { exact, value, budget } = cluster.products;
@@ -1951,15 +1968,10 @@ function App() {
   };
   const search = (q: any) => {
     const ql = (q || "").toLowerCase().trim();
-    const exact = QUERIES.find((x) => x.toLowerCase() === ql);
-    if (exact) { setQuery(exact); setScreen("results"); window.scrollTo({ top: 0 }); return; }
-    const partial = ql && QUERIES.find((x) => x.toLowerCase().includes(ql) || ql.includes(x.toLowerCase()));
-    if (partial) { setQuery(partial); setScreen("results"); window.scrollTo({ top: 0 }); return; }
-    const byContent = ql && CLUSTERS.find((c: any) =>
-      (c.title || "").toLowerCase().includes(ql) ||
-      (c.offers || []).some((o: any) => (o.name || "").toLowerCase().includes(ql)));
-    if (byContent) { setQuery(byContent.query); setScreen("results"); window.scrollTo({ top: 0 }); return; }
-    setQuery(q); setScreen("results"); window.scrollTo({ top: 0 });
+    const match = QUERIES.find((x) => x.toLowerCase() === ql)
+      || QUERIES.find((x) => x.toLowerCase().includes(ql) || ql.includes(x.toLowerCase()))
+      || "thermo flask";
+    setQuery(match); setScreen("results"); window.scrollTo({ top: 0 });
   };
   const openCluster = (c: any) => { setCluster(c); setScreen("compare"); window.scrollTo({ top: 0 }); };
   const openReport = (c: any) => { setCluster(c); setScreen("report"); window.scrollTo({ top: 0 }); };
