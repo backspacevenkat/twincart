@@ -1135,7 +1135,7 @@ function ColHead({ p, kind, icon }: any) {
         <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase",
           color: elevated ? "var(--accent-deep)" : isStop ? "var(--risk)" : "var(--ink)" }}>{p.slot}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-          <Thumb icon={icon} retailer={p.retailer} size={40} />
+          <Thumb icon={icon} img={p.image} retailer={p.retailer} size={40} />
           <div>
             <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", lineHeight: 1.25 }}>{p.name}</div>
             <div style={{ marginTop: 4 }}><RetailerBadge id={p.retailer} size="sm" /></div>
