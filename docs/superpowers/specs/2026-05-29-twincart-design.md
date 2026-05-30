@@ -157,7 +157,7 @@ Twin clusters + AI explanations are **pre-computed offline** and stored, so the 
 
 The matching layers two complementary engines:
 
-**Tier 1 — deterministic exact-match (the anchor, no ML).** Match on `upc` / `gtin` (Target+Walmart) or `asin` (Amazon). Shared identifier → `EXACT_MATCH` at confidence 1.0. This gives us the *true price of the genuine article* to measure savings against — it is the floor, not the point.
+**Tier 1 — deterministic exact-match (the anchor, no ML).** Normalize every barcode to **GTIN-14** (UPC-12 / EAN-13 left-padded with zeros) and match on that. **GTIN-14 is the only cross-retailer key, and it spans Amazon+Walmart+Target on *branded* goods only.** `ASIN` (Amazon), `TCIN` (Target), `goods_id` (Temu/SHEIN) are retailer-*local* (dedup/refetch only — never cross-retailer match keys). **Temu & SHEIN carry no barcodes → they never Tier-1 match; they route straight to Tier 2.** A shared GTIN-14 → `EXACT_MATCH` at confidence 1.0, giving the *true price of the genuine branded article* to measure savings against. This is the floor, not the point. (See `docs/apify-actors.md` for the per-retailer identifier matrix.)
 
 **Tier 2 — LLM functional-parity engine (the product, offline).** This is where the differentiation lives. It does NOT depend on shared identifiers — it reasons about *function*:
 - **Normalization:** messy title → `normalized_attrs = {category, core_function, key_specs{capacity,power,size,…}, material, features[], use_case[], pack_count, condition, shipping_days, return_risk}`.
