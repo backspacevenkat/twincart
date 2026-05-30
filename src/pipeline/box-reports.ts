@@ -132,12 +132,17 @@ async function main() {
   const token = await boxToken();
   console.log(`Uploading ${clusters.length} reports to Box folder ${FOLDER}...`);
   let ok = 0;
+  const force = process.argv.includes('--force');
   for (const c of clusters) {
+    // Resumable: skip clusters that already have a link unless --force. Persist after EACH upload
+    // so a timeout/kill never loses progress (Chrome PDF render is slow ~10s/report).
+    if (c.boxReport && !force) { ok++; continue; }
     try {
       const pdf = htmlToPdf(c.id, reportHTML(c));
       const url = await upload(token, `TwinCart_${c.id}_${c.query.replace(/\s+/g, '-')}.pdf`, pdf);
       c.boxReport = url;
       ok++;
+      writeFileSync(path, JSON.stringify(clusters, null, 0));
       console.log(`  ✓ ${c.query} → ${url}`);
     } catch (e) {
       console.warn(`  ✗ ${c.query}: ${String(e).slice(0, 80)}`);

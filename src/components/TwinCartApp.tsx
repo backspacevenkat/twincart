@@ -307,8 +307,8 @@ function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounde
 
       {/* caption — name of the product whose image is showing (syncs with clicked price) */}
       {caption && (
-        <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "26px 12px 10px",
-          background: "linear-gradient(transparent, rgba(14,15,19,0.78))", color: "#fff",
+        <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "30px 12px 28px",
+          background: "linear-gradient(transparent, rgba(14,15,19,0.82))", color: "#fff",
           fontSize: 12, fontWeight: 600, lineHeight: 1.3, pointerEvents: "none" }}>
           <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{caption}</span>
         </div>
@@ -916,7 +916,8 @@ function TrustStrap({ center }: any) {
 /* ───────────────── Screen 1 — Home ───────────────── */
 function HomeScreen({ onSearch, onOpenCluster, onCheckout, onReport, onAdd, onWish, wishlist }: any) {
   const [q, setQ] = useState("");
-  const tod = CLUSTERS.find((c) => c.id === "stanley-40oz");
+  const tod = CLUSTERS[0]; // first real scraped cluster (curated demo clusters removed)
+  if (!tod) return null;
   return (
     <div className="anim-fadein" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 28px" }}>
       {/* hero */}
@@ -937,7 +938,7 @@ function HomeScreen({ onSearch, onOpenCluster, onCheckout, onReport, onAdd, onWi
         </p>
 
         <div style={{ maxWidth: 680, marginTop: 32 }}>
-          <SearchBar value={q} onChange={setQ} onSubmit={(v: any) => onSearch(v || "thermo flask")} autoFocus />
+          <SearchBar value={q} onChange={setQ} onSubmit={(v: any) => onSearch(v || QUERIES[0])} autoFocus />
         </div>
 
         <div style={{ marginTop: 22, display: "flex", flexDirection: "column", gap: 18 }}>
@@ -961,7 +962,7 @@ function HomeScreen({ onSearch, onOpenCluster, onCheckout, onReport, onAdd, onWi
             </div>
             <h2 style={{ fontSize: 27, fontWeight: 700, marginTop: 10, color: "var(--ink)" }}>{tod.title}</h2>
           </div>
-          <Btn variant="soft" iconRight="arrow" onClick={() => onSearch("thermo flask")}>See all twins</Btn>
+          <Btn variant="soft" iconRight="arrow" onClick={() => onSearch(tod.query)}>See all twins</Btn>
         </div>
         <ClusterCard cluster={tod} lead onOpenCluster={onOpenCluster} onCheckout={onCheckout}
           onReport={onReport} onAdd={onAdd} onWish={onWish} wishlist={wishlist} />
@@ -1011,8 +1012,10 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
   const [picked, setPicked] = useState<any>(null);
   const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
   // one image per offer, aligned 1:1 with captions & spectrum nodes so clicking a price swaps the image
-  const offerImgs = cluster.offers.map((o: any) => o.image || cluster.heroImages?.[0]).filter(Boolean);
-  const carouselImgs = offerImgs.length === cluster.offers.length ? offerImgs : cluster.heroImages;
+  // One image per offer, 1:1 with captions & spectrum nodes so clicking a price swaps to THAT
+  // offer's image. Offers missing an image fall back to a hero, never collapsing the alignment.
+  const heroPool = (cluster.heroImages && cluster.heroImages.length ? cluster.heroImages : []);
+  const carouselImgs = cluster.offers.map((o: any, k: number) => o.image || heroPool[k % (heroPool.length || 1)] || heroPool[0]).filter(Boolean);
   const prices = cluster.offers.map((o: any) => o.price);
   const lo = Math.min(...prices), hi = Math.max(...prices);
   const retailers = new Set(cluster.offers.map((o: any) => o.retailer)).size;
@@ -1439,8 +1442,10 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
   const [activeImg, setActiveImg] = useState(0);
   const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
   // one image per offer, aligned 1:1 with captions & spectrum nodes so clicking a price swaps the image
-  const offerImgs = cluster.offers.map((o: any) => o.image || cluster.heroImages?.[0]).filter(Boolean);
-  const carouselImgs = offerImgs.length === cluster.offers.length ? offerImgs : cluster.heroImages;
+  // One image per offer, 1:1 with captions & spectrum nodes so clicking a price swaps to THAT
+  // offer's image. Offers missing an image fall back to a hero, never collapsing the alignment.
+  const heroPool = (cluster.heroImages && cluster.heroImages.length ? cluster.heroImages : []);
+  const carouselImgs = cluster.offers.map((o: any, k: number) => o.image || heroPool[k % (heroPool.length || 1)] || heroPool[0]).filter(Boolean);
   const { exact, value, budget } = cluster.products;
   const rows = cluster.compareRows || [];
 
@@ -1986,7 +1991,7 @@ function TopNav({ onHome, screen, cartCount, wishCount, onCart }: any) {
         </button>
 
         <nav style={{ display: "flex", alignItems: "center", gap: 22 }} className="topnav-links">
-          {["thermo flask", "airpods", "summer dress"].map((q) => (
+          {QUERIES.slice(0, 3).map((q) => (
             <button key={q} onClick={() => onHome(q)} style={{ fontSize: 13.5, fontWeight: 600,
               color: "var(--muted)", textTransform: "capitalize" }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
@@ -2044,7 +2049,7 @@ function Toast({ msg }: any) {
 /* ───────────────── App ───────────────── */
 function App() {
   const [screen, setScreen] = useState("home");
-  const [query, setQuery] = useState("thermo flask");
+  const [query, setQuery] = useState(QUERIES[0]);
   const [cluster, setCluster] = useState<any>(null);
   const [checkout, setCheckout] = useState<any>(null);
   const [cart, setCart] = useState<any>([]);
@@ -2089,7 +2094,7 @@ function App() {
       if (hit) match = hit.query;
     }
     // genuinely no match -> pass the raw query so ResultsScreen shows its "No twins found" empty state
-    setQuery(match || q || "thermo flask"); setScreen("results"); window.scrollTo({ top: 0 });
+    setQuery(match || q || QUERIES[0]); setScreen("results"); window.scrollTo({ top: 0 });
   };
   const openCluster = (c: any) => { setCluster(c); setScreen("compare"); window.scrollTo({ top: 0 }); };
   const openReport = (c: any) => { setCluster(c); setScreen("report"); window.scrollTo({ top: 0 }); };
