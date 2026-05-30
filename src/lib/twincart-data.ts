@@ -138,15 +138,17 @@ export const QUERIES = ['thermo flask', 'airpods', 'summer dress'];
 // Prices grounded in real scraped twins (e.g. 40oz tumbler $50 → Temu $8 we actually pulled).
 export const DEMO_BASKET: any[] = [
   { icon: 'flask', name: '40oz Insulated Steel Tumbler', twinName: 'Generic 40oz Tumbler, Handle + Straw', retailer: 'temu',    amazon: 50,  price: 8,  parity: 88, matchType: 'FUNCTIONAL TWIN' },
-  { icon: 'buds',  name: 'ANC Wireless Earbuds (USB-C)',  twinName: 'TWS ANC Earbuds, USB-C Case',       retailer: 'temu',    amazon: 99,  price: 11, parity: 82, matchType: 'FUNCTIONAL TWIN' },
+  { icon: 'buds',  name: 'ANC Wireless Earbuds (USB-C)',  twinName: 'TWS ANC Earbuds, USB-C Case',       retailer: 'temu',    amazon: 99,  price: 9,  parity: 82, matchType: 'FUNCTIONAL TWIN' },
   { icon: 'dress', name: 'Floral Smocked Midi Dress',     twinName: 'Floral Tiered Smock Midi',          retailer: 'shein',   amazon: 58,  price: 11, parity: 88, matchType: 'FUNCTIONAL TWIN' },
-  { icon: 'box',   name: 'LED Vanity Mirror w/ Lights',   twinName: 'Hollywood LED Makeup Mirror',       retailer: 'temu',    amazon: 120, price: 13, parity: 85, matchType: 'FUNCTIONAL TWIN' },
+  { icon: 'box',   name: 'LED Vanity Mirror w/ Lights',   twinName: 'Hollywood LED Makeup Mirror',       retailer: 'temu',    amazon: 120, price: 11, parity: 85, matchType: 'FUNCTIONAL TWIN' },
   { icon: 'box',   name: 'Sonic Electric Toothbrush',     twinName: 'Sonic Toothbrush + 8 Heads',        retailer: 'temu',    amazon: 100, price: 11, parity: 84, matchType: 'FUNCTIONAL TWIN' },
   { icon: 'box',   name: 'Cool-Mist Humidifier 4L',       twinName: 'Ultrasonic Cool-Mist Humidifier',   retailer: 'temu',    amazon: 60,  price: 9,  parity: 86, matchType: 'FUNCTIONAL TWIN' },
   { icon: 'box',   name: '65W GaN USB-C Charger',         twinName: '65W GaN 3-Port Charger',            retailer: 'temu',    amazon: 50,  price: 7,  parity: 89, matchType: 'FUNCTIONAL TWIN' },
-  { icon: 'box',   name: 'Smart Fitness Watch',           twinName: 'AMOLED Smart Fitness Watch',        retailer: 'temu',    amazon: 149, price: 14, parity: 76, matchType: 'BUDGET SUBSTITUTE' },
+  { icon: 'box',   name: 'Smart Fitness Watch',           twinName: 'AMOLED Smart Fitness Watch',        retailer: 'temu',    amazon: 189, price: 16, parity: 76, matchType: 'BUDGET SUBSTITUTE' },
   { icon: 'dress', name: 'Crossbody Shoulder Bag',        twinName: 'PU Leather Crossbody Bag',          retailer: 'shein',   amazon: 90,  price: 10, parity: 84, matchType: 'FUNCTIONAL TWIN' },
-  { icon: 'box',   name: 'Memory Foam Pillows (2-pack)',  twinName: 'Cooling Memory Foam Pillow 2pk',    retailer: 'walmart', amazon: 70,  price: 11, parity: 86, matchType: 'FUNCTIONAL TWIN' },
-  { icon: 'box',   name: '15-pc Kitchen Knife Set',       twinName: 'Stainless 15pc Knife Block Set',    retailer: 'walmart', amazon: 100, price: 12, parity: 83, matchType: 'FUNCTIONAL TWIN' },
+  { icon: 'box',   name: 'Memory Foam Pillows (2-pack)',  twinName: 'Cooling Memory Foam Pillow 2pk',    retailer: 'walmart', amazon: 70,  price: 10, parity: 86, matchType: 'FUNCTIONAL TWIN' },
+  { icon: 'box',   name: '15-pc Kitchen Knife Set',       twinName: 'Stainless 15pc Knife Block Set',    retailer: 'walmart', amazon: 110, price: 12, parity: 83, matchType: 'FUNCTIONAL TWIN' },
   { icon: 'box',   name: 'Resistance Bands Home Gym',     twinName: '11pc Resistance Band Set',          retailer: 'temu',    amazon: 50,  price: 6,  parity: 85, matchType: 'FUNCTIONAL TWIN' },
+  { icon: 'box',   name: 'MagSafe Phone Case',            twinName: 'Magnetic Clear Phone Case',         retailer: 'temu',    amazon: 25,  price: 4,  parity: 87, matchType: 'FUNCTIONAL TWIN' },
+  { icon: 'dress', name: 'Dainty Layered Necklace Set',   twinName: '14k-look Layered Necklace Set',     retailer: 'shein',   amazon: 45,  price: 6,  parity: 82, matchType: 'FUNCTIONAL TWIN' },
 ];

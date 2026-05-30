@@ -3,24 +3,12 @@ import { toGtin14 } from './gtin';
 
 // The curated search universe the demo runs on. Pre-scraped offline.
 export const CURATED_QUERIES = [
-  'thermo flask',
-  'stanley tumbler',
-  'airpods',
-  'wireless earbuds',
-  'robot vacuum',
-  'office chair',
-  'baby stroller',
-  'protein powder',
-  'luggage',
-  'led mirror',
-  'summer dress',
-  'kids shoes',
-  'iphone charger',
-  'humidifier',
-  'electric toothbrush',
-  'espresso machine',
-  'smartwatch',
-  'air fryer',
+  // Diverse across drinkware, audio, home, kitchen, beauty, fashion, electronics, fitness, accessories
+  'thermo flask', 'stanley tumbler', 'airpods', 'wireless earbuds', 'robot vacuum',
+  'office chair', 'led mirror', 'summer dress', 'kids shoes', 'iphone charger',
+  'humidifier', 'electric toothbrush', 'espresso machine', 'smartwatch', 'air fryer',
+  'crossbody bag', 'memory foam pillow', 'kitchen knife set', 'resistance bands', 'phone case',
+  'necklace', 'yoga mat', 'desk lamp', 'sunglasses', 'backpack', 'wireless charger',
 ];
 
 const num = (v: unknown): number | null => {
@@ -39,6 +27,11 @@ const GENERIC_TERM: Record<string, string> = {
   'airpods': 'wireless earbuds',
   'iphone charger': 'usb c charger',
   'led mirror': 'vanity mirror',
+  'smartwatch': 'smart watch',
+  'espresso machine': 'espresso maker',
+  'kids shoes': 'kids sneakers',
+  'kitchen knife set': 'knife set',
+  'wireless charger': 'wireless charger pad',
 };
 const genericTerm = (q: string): string => GENERIC_TERM[q] ?? q;
 

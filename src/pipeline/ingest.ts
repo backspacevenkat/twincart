@@ -1,18 +1,22 @@
 /**
- * Offline ingestion orchestrator.
+ * Offline ingestion — scrapes the 5 retailers across the curated query universe,
+ * upserts into RDS Postgres, AND indexes into the AWS-hosted Typesense.
  *
- * SAFETY GATE: actually calling Apify (which costs money) requires INGEST_CONFIRM=1.
- * Without it, this is a dry run that prints the plan and exits — so it can never spend
- * credit by accident. Run for real with:  INGEST_CONFIRM=1 pnpm ingest
+ * SAFETY GATE: real Apify calls (which cost credit) require INGEST_CONFIRM=1.
+ * Budget-aware per-retailer caps keep the aggregate run < ~$50.
+ *   Dry run:  pnpm ingest
+ *   Real run: INGEST_CONFIRM=1 bun src/pipeline/ingest.ts
  */
 import { pool, query } from '@/lib/db';
+import { ensureCollection, indexProducts } from '@/lib/search';
 import type { IngestedProduct, Retailer } from '@/lib/types';
 import { env } from '@/lib/env';
 import { CURATED_QUERIES, RETAILER_ACTORS } from './config';
 import { scrapeRetailer } from './apify';
 
 const RETAILERS = Object.keys(RETAILER_ACTORS) as Retailer[];
-const PER_RETAILER = 100;
+// Budget caps: Amazon is cheapest ($0.004), Temu dearest ($0.01) → weight accordingly.
+const CAPS: Record<Retailer, number> = { amazon: 120, temu: 45, shein: 50, walmart: 40, target: 50 };
 
 async function upsertProduct(p: IngestedProduct): Promise<number> {
   const rows = await query<{ id: number }>(
@@ -29,34 +33,48 @@ async function upsertProduct(p: IngestedProduct): Promise<number> {
   return rows[0].id;
 }
 
+// Typesense doc — value_score proxy = discount % until LLM twin-matching runs.
+function tsDoc(p: IngestedProduct, id: number): Record<string, unknown> {
+  const disc = p.original_price && p.price ? Math.max(0, Math.round((1 - p.price / p.original_price) * 100)) : 0;
+  const d: Record<string, unknown> = { id: String(id), title: p.title, retailer: p.retailer, price: p.price ?? 0, value_score: disc };
+  if (p.brand) d.brand = p.brand;
+  if (p.rating != null) d.rating = p.rating;
+  if (p.gtin14) d.gtin14 = p.gtin14;
+  if (p.image_url) d.image_url = p.image_url;
+  if (p.product_url) d.product_url = p.product_url;
+  return d;
+}
+
 async function main() {
   if (!env.ingestConfirmed()) {
-    console.log('DRY RUN (set INGEST_CONFIRM=1 to actually scrape — this costs Apify credit).\n');
-    console.log(`Would scrape ${RETAILERS.length} retailers × ${CURATED_QUERIES.length} queries × ${PER_RETAILER} items`);
-    console.log(`≈ ${RETAILERS.length * CURATED_QUERIES.length * PER_RETAILER} products. Retailers: ${RETAILERS.join(', ')}`);
-    console.log(`Queries: ${CURATED_QUERIES.join(', ')}`);
+    const est = CURATED_QUERIES.length * RETAILERS.reduce((s, r) => s + CAPS[r], 0);
+    console.log('DRY RUN (set INGEST_CONFIRM=1 to actually scrape — costs Apify credit).\n');
+    console.log(`Would scrape ${RETAILERS.length} retailers × ${CURATED_QUERIES.length} queries (caps ${JSON.stringify(CAPS)})`);
+    console.log(`≈ ${est} products max. Indexes into RDS + Typesense (${env.typesense().host}).`);
     await pool.end();
     return;
   }
 
+  await ensureCollection();
   let total = 0;
   for (const q of CURATED_QUERIES) {
-    const results = await Promise.allSettled(RETAILERS.map((r) => scrapeRetailer(r, q, PER_RETAILER)));
+    const results = await Promise.allSettled(RETAILERS.map((r) => scrapeRetailer(r, q, CAPS[r])));
+    const docs: Record<string, unknown>[] = [];
     for (const [idx, res] of results.entries()) {
-      if (res.status === 'rejected') {
-        console.warn(`  ✗ ${RETAILERS[idx]} "${q}": ${res.reason}`);
-        continue;
+      const r = RETAILERS[idx];
+      if (res.status === 'rejected') { console.warn(`  ✗ ${r} "${q}": ${String(res.reason).slice(0, 80)}`); continue; }
+      for (const p of res.value) {
+        const id = await upsertProduct(p);
+        docs.push(tsDoc(p, id));
       }
-      for (const p of res.value) await upsertProduct(p);
       total += res.value.length;
-      console.log(`  ✓ ${RETAILERS[idx]} "${q}": ${res.value.length} products`);
+      console.log(`  ✓ ${r} "${q}": ${res.value.length}`);
     }
+    if (docs.length) { try { await indexProducts(docs); } catch (e) { console.warn('  ⚠ typesense index:', String(e).slice(0, 80)); } }
+    console.log(`  → "${q}" done · running total ${total} products`);
   }
-  console.log(`\nIngested ${total} products. Next: build clusters (normalize + match). See src/pipeline/match.ts`);
+  console.log(`\n✓ Ingested ${total} products into RDS + Typesense. Next: LLM twin-matching → clusters.`);
   await pool.end();
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+main().catch((e) => { console.error(e); process.exit(1); });
