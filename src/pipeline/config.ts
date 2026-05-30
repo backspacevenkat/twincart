@@ -95,7 +95,8 @@ export const RETAILER_ACTORS: Record<Retailer, ActorConfig> = {
   temu: {
     // crw actor is reliable + cleanly structured. NOTE: prices come in CENTS.
     actorId: 'crw/temu-products-scraper',
-    buildInput: (q, maxItems) => ({ keyword: genericTerm(q), region: 'US', max_items: maxItems, sort: 'relevance' }),
+    // sort by top_sales → best-selling = best budget twins, so fewer items needed (cheaper).
+    buildInput: (q, maxItems) => ({ keyword: genericTerm(q), region: 'US', max_items: maxItems, sort: 'top_sales' }),
     map: (i, q) => ({
       retailer: 'temu', external_id: str(i.goods_id), asin: null, upc: null, gtin14: null,
       title: str(i.title) ?? '', brand: null,
