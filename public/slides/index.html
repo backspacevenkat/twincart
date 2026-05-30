@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TwinCart — Pitch Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  deck-stage:not(:defined) { visibility: hidden; }
+
+  :root {
+    --green: #16A34A;
+    --green-deep: color-mix(in srgb, var(--green) 78%, #04210f);
+    --green-bright: color-mix(in srgb, var(--green) 86%, #6ee7a8);
+    --green-tint: color-mix(in srgb, var(--green) 7%, white);
+    --green-100: color-mix(in srgb, var(--green) 16%, white);
+    --green-200: color-mix(in srgb, var(--green) 30%, white);
+
+    --ink: #0B1220;
+    --ink-2: #1E293B;
+    --slate: #475569;
+    --slate-2: #64748B;
+    --slate-3: #94A3B8;
+    --line: #E6EAF0;
+    --line-2: #EEF2F7;
+    --bg: #FFFFFF;
+    --bg-soft: #F6F8FB;
+    --bg-soft-2: #F0F4F8;
+
+    --display: 'Hanken Grotesk', system-ui, sans-serif;
+    --body: 'Hanken Grotesk', system-ui, sans-serif;
+
+    --type-hero: 108px;
+    --type-title: 70px;
+    --type-h2: 54px;
+    --type-subtitle: 38px;
+    --type-body: 30px;
+    --type-small: 25px;
+
+    --pad-x: 110px;
+    --pad-y: 88px;
+
+    --radius: 26px;
+    --radius-sm: 16px;
+    --shadow: 0 30px 70px -28px rgba(11,18,32,0.28), 0 4px 14px -6px rgba(11,18,32,0.10);
+    --shadow-sm: 0 16px 38px -22px rgba(11,18,32,0.30);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #04130a; }
+
+  section {
+    font-family: var(--body);
+    color: var(--ink);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: var(--pad-y) var(--pad-x);
+    display: flex;
+    flex-direction: column;
+  }
+  .slide.soft { background: var(--bg-soft); }
+
+  .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+  h1, h2, h3, p { margin: 0; text-wrap: pretty; }
+
+  /* ---- shared eyebrow / kicker ---- */
+  .kicker {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: var(--type-small); font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--green-deep);
+  }
+  .kicker::before {
+    content: ""; width: 30px; height: 3px; border-radius: 3px; background: var(--green);
+  }
+  .kno { color: var(--slate-3); }
+  .kno::before { background: var(--slate-3); }
+
+  .h-title { font-family: var(--display); font-weight: 800; font-size: var(--type-title); line-height: 1.02; letter-spacing: -0.025em; }
+  .lede { font-size: var(--type-subtitle); line-height: 1.32; color: var(--slate); font-weight: 400; }
+  .accent { color: var(--green-deep); }
+  .strike { color: var(--slate-3); }
+
+  /* ---- price device ---- */
+  .price-arrow { display: inline-flex; align-items: baseline; gap: 18px; font-weight: 800; }
+  .price-arrow .from { color: var(--slate-3); text-decoration: line-through; text-decoration-thickness: 3px; }
+  .price-arrow .to { color: var(--green-deep); }
+  .price-arrow .ar { color: var(--green); font-weight: 700; transform: translateY(-2px); }
+  .saved-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); color: white; font-weight: 800;
+    font-size: var(--type-small); padding: 8px 16px; border-radius: 999px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ---- built-on strip ---- */
+  .builton {
+    position: absolute; left: var(--pad-x); bottom: 46px;
+    display: flex; align-items: center; gap: 20px; z-index: 5;
+  }
+  .builton .lbl { font-size: var(--type-small); font-weight: 700; color: var(--slate-3); letter-spacing: 0.04em; }
+  .builton .logos { display: flex; align-items: center; gap: 26px; }
+  .builton img { height: 27px; width: auto; opacity: 0.62; }
+  .builton .sep { width: 1px; height: 26px; background: var(--line); }
+  .pageno { position: absolute; right: var(--pad-x); bottom: 48px; font-size: var(--type-small); font-weight: 700; color: var(--slate-3); }
+  .builton.dark .lbl { color: rgba(255,255,255,0.65); }
+  .builton.dark img { filter: brightness(0) invert(1); opacity: 0.85; }
+
+  /* ---- brand wordmark ---- */
+  .brand { display: inline-flex; align-items: center; gap: 18px; font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; }
+  .twinmark { position: relative; display: inline-block; }
+  .twinmark svg { display: block; }
+
+  /* ---- cards ---- */
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+  .chip { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; font-size: var(--type-small); font-weight: 600; border: 1px solid var(--line); background: var(--bg); color: var(--ink-2); }
+  .chip.g { background: var(--green-tint); border-color: var(--green-200); color: var(--green-deep); }
+  .rdot { width: 15px; height: 15px; border-radius: 50%; flex: none; }
+
+  .tick { color: var(--green); font-weight: 800; }
+  .cross { color: var(--slate-3); font-weight: 800; }
+
+  /* tweaks mount */
+  #tweaks-root { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+  #tweaks-root > * { pointer-events: auto; }
+</style>
+</head>
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- ============ 1 · TITLE ============ -->
+  <section data-label="Title">
+    <div class="slide" data-screen-label="01 Title" style="padding:0;">
+      <img src="assets/banners/banner-4.jpg" alt="Twin robot vacuums" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" />
+      <div style="position:absolute; inset:0; background:linear-gradient(100deg, rgba(4,16,9,0.93) 0%, rgba(4,16,9,0.78) 38%, rgba(4,16,9,0.18) 64%, rgba(4,16,9,0) 80%);"></div>
+      <div style="position:absolute; inset:0; padding:var(--pad-y) var(--pad-x); display:flex; flex-direction:column; justify-content:center; color:white;">
+        <div class="brand" style="font-size:42px; color:white; margin-bottom:60px;">
+          <span class="twinmark">
+            <svg width="58" height="40" viewBox="0 0 58 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 6 C5 6 5 34 14 34 C23 34 25 20 29 20 C33 20 35 34 44 34 C53 34 53 6 44 6 C35 6 33 20 29 20 C25 20 23 6 14 6 Z" stroke="#16A34A" stroke-width="5" fill="none"/>
+            </svg>
+          </span>
+          <span>TwinCart</span>
+        </div>
+        <div class="kicker" style="color:var(--green-bright); margin-bottom:26px;">The cross-marketplace twin-finder</div>
+        <h1 class="h-title" style="font-size:var(--type-hero); color:white; max-width:1180px;">Find the twin.<br/>Pay the smart price.</h1>
+        <p class="lede" style="color:rgba(255,255,255,0.82); margin-top:36px; max-width:780px;">Search any product. We surface the same item — or its cheaper functional twin — across five marketplaces, and prove it.</p>
+        <div style="display:flex; align-items:center; gap:18px; margin-top:52px;">
+          <a href="https://main.d2lad0772pqd8l.amplifyapp.com" style="text-decoration:none; display:inline-flex; align-items:center; gap:12px; background:var(--green); color:white; font-weight:700; font-size:var(--type-body); padding:16px 30px; border-radius:14px;">
+            <span style="width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,0.28);"></span>
+            Live · main.d2lad0772pqd8l.amplifyapp.com
+          </a>
+        </div>
+      </div>
+      <div class="builton dark">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep" style="background:rgba(255,255,255,0.25);"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep" style="background:rgba(255,255,255,0.25);"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 · PROBLEM ============ -->
+  <section data-label="Problem">
+    <div class="slide soft" data-screen-label="02 Problem">
+      <div class="kicker kno">The problem</div>
+      <h2 class="h-title" style="margin-top:24px; max-width:1500px;">Comparison sites match barcodes.<br/>We match the <span class="accent">job</span>.</h2>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:34px; margin-top:64px; flex:1; align-items:stretch;">
+
+        <div class="card" style="padding:46px 48px; display:flex; flex-direction:column; background:#fff;">
+          <div class="chip" style="align-self:flex-start; margin-bottom:30px;">What today's tools see</div>
+          <p style="font-size:var(--type-subtitle); font-weight:700; line-height:1.25; max-width:560px;">Only an <span class="strike">identical SKU</span> — same UPC, ASIN, barcode.</p>
+          <p style="font-size:var(--type-body); color:var(--slate); line-height:1.42; margin-top:22px; max-width:600px;">PriceGrabber, Google Shopping and Honey can only match the exact same product. The cheaper equivalent — a different brand, no shared barcode — is completely invisible to them.</p>
+          <div style="margin-top:auto; padding-top:34px; display:flex; align-items:center; gap:22px;">
+            <div style="width:96px; height:96px; border-radius:18px; background:var(--bg-soft-2); display:flex; align-items:center; justify-content:center; font-size:46px;">⌗</div>
+            <div>
+              <div style="font-size:var(--type-small); color:var(--slate-2); font-weight:700; letter-spacing:0.04em;">SKU MATCH ONLY</div>
+              <div class="num price-arrow" style="font-size:46px; margin-top:6px;"><span class="to" style="color:var(--ink);">$130</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:46px 48px; display:flex; flex-direction:column; border-color:var(--green-200); background:linear-gradient(180deg, var(--green-tint), #fff 60%);">
+          <div class="chip g" style="align-self:flex-start; margin-bottom:30px;">What you're missing</div>
+          <p style="font-size:var(--type-subtitle); font-weight:700; line-height:1.25; max-width:560px;">The <span class="accent">functional twin</span> — same job, a fraction of the price.</p>
+          <p style="font-size:var(--type-body); color:var(--slate); line-height:1.42; margin-top:22px; max-width:600px;">Shoppers know there's a cheaper version on Temu or SHEIN. But finding it — and trusting it in five seconds — is manual, slow, and uncertain.</p>
+          <div style="margin-top:auto; padding-top:34px; display:flex; align-items:center; gap:22px;">
+            <img src="assets/products/massage-gun.jpg" alt="Massage gun" style="width:96px; height:96px; border-radius:18px; object-fit:cover;" />
+            <div>
+              <div style="font-size:var(--type-small); color:var(--green-deep); font-weight:700; letter-spacing:0.04em;">FUNCTIONAL TWIN</div>
+              <div class="num price-arrow" style="font-size:46px; margin-top:6px;"><span class="from">$130</span><span class="ar">→</span><span class="to">$13</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="builton">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+      <div class="pageno num">02 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 3 · MEET TWINCART ============ -->
+  <section data-label="Meet TwinCart">
+    <div class="slide" data-screen-label="03 Meet TwinCart">
+      <div class="kicker">The solution</div>
+      <h2 class="h-title" style="margin-top:24px;">One search. The same job for a <span class="accent">fraction</span> of the price.</h2>
+
+      <div style="display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; margin-top:58px; flex:1; align-items:center;">
+        <div>
+          <!-- search → marketplaces → ranked answer -->
+          <div class="card" style="padding:18px 22px; display:flex; align-items:center; gap:16px; box-shadow:var(--shadow);">
+            <span style="font-size:30px;">🔍</span>
+            <span style="font-size:var(--type-body); color:var(--slate-2); font-weight:500;">robot vacuum</span>
+            <span style="margin-left:auto; background:var(--green); color:#fff; font-weight:700; font-size:var(--type-small); padding:11px 22px; border-radius:12px;">Find twins</span>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin:30px 0; color:var(--slate-3);">
+            <span style="height:1px; flex:1; background:var(--line);"></span>
+            <span style="font-size:var(--type-small); font-weight:700; letter-spacing:0.1em;">SCANS 5 MARKETPLACES</span>
+            <span style="height:1px; flex:1; background:var(--line);"></span>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center;">
+            <span class="chip"><span class="rdot" style="background:#FF9900;"></span>Amazon</span>
+            <span class="chip"><span class="rdot" style="background:#0071CE;"></span>Walmart</span>
+            <span class="chip"><span class="rdot" style="background:#CC0000;"></span>Target</span>
+            <span class="chip"><span class="rdot" style="background:#FB7701;"></span>Temu</span>
+            <span class="chip"><span class="rdot" style="background:#1A1A1A;"></span>SHEIN</span>
+          </div>
+
+          <div class="card" style="margin-top:30px; padding:26px 30px; display:flex; align-items:center; gap:24px; border-color:var(--green-200); background:var(--green-tint); box-shadow:var(--shadow);">
+            <img src="assets/products/robot-vacuum.jpg" alt="Robot vacuum" style="width:108px; height:108px; border-radius:16px; object-fit:cover; background:#fff;" />
+            <div style="flex:1;">
+              <div style="font-size:var(--type-small); font-weight:700; color:var(--green-deep); letter-spacing:0.04em;">BEST VALUE · 88% FUNCTIONAL PARITY</div>
+              <div class="num price-arrow" style="font-size:50px; margin-top:8px;"><span class="from">$469</span><span class="ar">→</span><span class="to">$69</span></div>
+            </div>
+            <span class="saved-badge num">85% off</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:30px;">
+          <div>
+            <div class="num" style="font-size:84px; font-weight:800; color:var(--green-deep); line-height:1;">5 → 1</div>
+            <p style="font-size:var(--type-body); color:var(--slate); line-height:1.4; margin-top:16px; max-width:480px;">Five marketplaces, one ranked answer — sorted by a <strong style="color:var(--ink);">Value Score</strong>, not by the lowest sticker.</p>
+          </div>
+          <div style="height:1px; background:var(--line);"></div>
+          <div class="card" style="padding:30px 32px; background:var(--bg-soft);">
+            <div class="chip g" style="margin-bottom:18px;">Complementary, not competitive</div>
+            <p style="font-size:var(--type-body); color:var(--slate); line-height:1.4;">Google's <strong style="color:var(--ink);">Universal Cart</strong> covers brand merchants. TwinCart reaches the value marketplaces it skips — <strong style="color:var(--ink);">Temu &amp; SHEIN</strong> — on the same open standards.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="builton">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+      <div class="pageno num">03 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 4 · PIPELINE ============ -->
+  <section data-label="How it works">
+    <div class="slide soft" data-screen-label="04 Pipeline">
+      <div class="kicker">How it works</div>
+      <h2 class="h-title" style="margin-top:24px;">Five marketplaces collapse into <span class="accent">one ranked answer</span>.</h2>
+
+      <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:0; margin-top:auto; margin-bottom:auto;">
+        <!-- each step -->
+        <div class="pstep">
+          <div class="pnum num">01</div>
+          <div class="pttl">Scrape</div>
+          <div class="pdesc">5 Apify actors pull real listings from Amazon, Walmart, Target, Temu, SHEIN.</div>
+        </div>
+        <div class="pstep">
+          <div class="pnum num">02</div>
+          <div class="pttl">Normalize</div>
+          <div class="pdesc">Land in AWS RDS Postgres with pgvector + pg_trgm; index to Typesense.</div>
+        </div>
+        <div class="pstep">
+          <div class="pnum num">03</div>
+          <div class="pttl">Cluster</div>
+          <div class="pdesc">One LLM call per group classifies each candidate into 5 match types.</div>
+        </div>
+        <div class="pstep">
+          <div class="pnum num">04</div>
+          <div class="pttl">Score</div>
+          <div class="pdesc">Value Score = Parity × Savings × Confidence picks the triptych.</div>
+        </div>
+        <div class="pstep">
+          <div class="pnum num">05</div>
+          <div class="pttl">Prove &amp; report</div>
+          <div class="pdesc">Attribute matrix + parity chips, exported to a real Box PDF.</div>
+        </div>
+        <div class="pstep last">
+          <div class="pnum num">06</div>
+          <div class="pttl">Checkout</div>
+          <div class="pdesc">Verified agent carts the item under UCP + an AP2-signed mandate.</div>
+        </div>
+      </div>
+
+      <div class="builton">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+      <div class="pageno num">04 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 5 · TWIN ENGINE ============ -->
+  <section data-label="Twin engine">
+    <div class="slide" data-screen-label="05 Twin engine">
+      <div class="kicker">The functional-twin engine</div>
+      <h2 class="h-title" style="margin-top:24px;">We rank by <span class="accent">value</span>, not by lowest sticker.</h2>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; margin-top:56px; flex:1; align-items:center;">
+        <!-- 5 match types -->
+        <div>
+          <div style="font-size:var(--type-small); font-weight:700; color:var(--slate-2); letter-spacing:0.08em; margin-bottom:24px;">FIVE MATCH TYPES — STRONGEST TO HONEST "NO"</div>
+          <div class="ladder">
+            <div class="lrow"><span class="ldot" style="background:var(--green-deep);"></span><span class="lname">Exact</span><span class="lbar"><i style="width:100%;background:var(--green-deep);"></i></span></div>
+            <div class="lrow"><span class="ldot" style="background:var(--green);"></span><span class="lname">Near-exact</span><span class="lbar"><i style="width:84%;background:var(--green);"></i></span></div>
+            <div class="lrow"><span class="ldot" style="background:var(--green-bright);"></span><span class="lname">Functional twin</span><span class="lbar"><i style="width:66%;background:var(--green-bright);"></i></span></div>
+            <div class="lrow"><span class="ldot" style="background:var(--green-200);"></span><span class="lname">Budget substitute</span><span class="lbar"><i style="width:46%;background:var(--green-200);"></i></span></div>
+            <div class="lrow"><span class="ldot" style="background:var(--slate-3);"></span><span class="lname strike">Not comparable</span><span class="lbar"><i style="width:20%;background:var(--slate-3);"></i></span></div>
+          </div>
+          <p style="font-size:var(--type-small); color:var(--slate); line-height:1.4; margin-top:30px;"><strong style="color:var(--ink);">219 honest rejections.</strong> The engine says "not a match" when it should — that's what makes the savings defensible.</p>
+        </div>
+
+        <!-- value score + triptych -->
+        <div>
+          <div class="card" style="padding:34px 38px; background:var(--ink); color:#fff; box-shadow:var(--shadow);">
+            <div style="font-size:var(--type-small); font-weight:700; color:var(--green-bright); letter-spacing:0.06em;">VALUE SCORE</div>
+            <div style="font-size:36px; font-weight:800; line-height:1.25; margin-top:16px; letter-spacing:-0.01em;">Functional Parity&nbsp;%<br/><span style="color:var(--green-bright);">×</span> Price Savings&nbsp;%<br/><span style="color:var(--green-bright);">×</span> Confidence</div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:24px;">
+            <div class="card trip"><div class="ttag">Best Exact</div><div class="tprice num">$469</div><div class="tnote">verified SKU</div></div>
+            <div class="card trip on"><div class="ttag" style="color:var(--green-deep);">Best Value</div><div class="tprice num">$69</div><div class="tnote">88% parity</div></div>
+            <div class="card trip"><div class="ttag">Best Budget</div><div class="tprice num">$15</div><div class="tnote">97% off</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="builton">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+      <div class="pageno num">05 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 6 · PROOF ============ -->
+  <section data-label="Proof">
+    <div class="slide soft" data-screen-label="06 Proof">
+      <div class="kicker">Proof, not guesswork</div>
+      <h2 class="h-title" style="margin-top:24px;">Every twin ships with its <span class="accent">proof</span>.</h2>
+
+      <div style="display:grid; grid-template-columns:1.55fr 1fr; gap:48px; margin-top:54px; flex:1; align-items:start;">
+        <!-- attribute matrix -->
+        <div class="card" style="padding:0; overflow:hidden; box-shadow:var(--shadow);">
+          <table style="width:100%; border-collapse:collapse; font-size:var(--type-small);">
+            <thead>
+              <tr style="background:var(--bg-soft);">
+                <th style="text-align:left; padding:22px 28px; font-weight:700; color:var(--slate-2);">Attribute</th>
+                <th style="padding:22px 18px; font-weight:800;">Shark<br/><span class="num" style="color:var(--slate-3); font-weight:700;">$469</span></th>
+                <th style="padding:22px 18px; font-weight:800; background:var(--green-tint);">Temu twin<br/><span class="num" style="color:var(--green-deep); font-weight:800;">$69</span></th>
+                <th style="padding:22px 18px; font-weight:800;">SHEIN<br/><span class="num" style="color:var(--slate-3); font-weight:700;">$15</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="mrow">LiDAR navigation</td><td class="mc"><span class="tick">✓</span></td><td class="mc g"><span class="tick">✓</span></td><td class="mc"><span class="cross">✕</span></td></tr>
+              <tr><td class="mrow">Self-empty base</td><td class="mc"><span class="tick">✓</span></td><td class="mc g"><span class="tick">✓</span></td><td class="mc"><span class="cross">✕</span></td></tr>
+              <tr><td class="mrow">Suction ≥ 4000Pa</td><td class="mc"><span class="tick">✓</span></td><td class="mc g"><span class="tick">✓</span></td><td class="mc"><span class="tick">✓</span></td></tr>
+              <tr><td class="mrow">App + mapping</td><td class="mc"><span class="tick">✓</span></td><td class="mc g"><span class="tick">✓</span></td><td class="mc"><span class="tick">✓</span></td></tr>
+              <tr><td class="mrow">Runtime ≥ 120 min</td><td class="mc"><span class="tick">✓</span></td><td class="mc g"><span class="tick">✓</span></td><td class="mc"><span class="cross">✕</span></td></tr>
+              <tr><td class="mrow" style="border:none;">Match type</td><td class="mc" style="border:none;"><span style="font-weight:700;">Anchor</span></td><td class="mc g" style="border:none;"><span style="font-weight:800; color:var(--green-deep);">Functional twin</span></td><td class="mc" style="border:none;"><span style="font-weight:700; color:var(--slate-2);">Budget</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- why it's a twin -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div class="card" style="padding:30px 32px;">
+            <div style="font-size:var(--type-small); font-weight:700; color:var(--slate-2); letter-spacing:0.06em; margin-bottom:18px;">WHY IT'S A TWIN</div>
+            <div style="display:flex; flex-wrap:wrap; gap:12px;">
+              <span class="chip g">Same navigation</span>
+              <span class="chip g">Equal suction</span>
+              <span class="chip g">Maps your home</span>
+            </div>
+          </div>
+          <div class="card" style="padding:30px 32px; background:var(--green-deep); color:#fff;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between;">
+              <span style="font-size:var(--type-small); font-weight:700; color:rgba(255,255,255,0.78); letter-spacing:0.05em;">CONFIDENCE</span>
+              <span class="num" style="font-size:64px; font-weight:800;">92%</span>
+            </div>
+            <p style="font-size:var(--type-small); color:rgba(255,255,255,0.82); line-height:1.4; margin-top:10px;">Defensible equivalence — backed by the matrix, not a guess.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="builton">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+      <div class="pageno num">06 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 7 · PRODUCT TOUR ============ -->
+  <section data-label="Product tour">
+    <div class="slide" data-screen-label="07 Product tour">
+      <div class="kicker">The product</div>
+      <h2 class="h-title" style="margin-top:24px;">From search to signed checkout, <span class="accent">end to end</span>.</h2>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:26px; margin-top:56px; flex:1; align-items:stretch;">
+        <!-- screen 1: search -->
+        <div class="screen">
+          <div class="sbar"><span></span><span></span><span></span></div>
+          <div class="sbody">
+            <div class="snum">01</div>
+            <div class="sttl">Search</div>
+            <div class="mockrow"><span style="font-size:26px;">🔍</span><span style="color:var(--slate-2);">find anything</span></div>
+            <div class="mockgrid"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="sdesc">Cinematic hero + a category grid of every twin.</div>
+          </div>
+        </div>
+        <!-- screen 2: results -->
+        <div class="screen">
+          <div class="sbar"><span></span><span></span><span></span></div>
+          <div class="sbody">
+            <div class="snum">02</div>
+            <div class="sttl">Twin Spectrum</div>
+            <div class="spectrum"><b></b><b></b><b class="hi"></b><b></b><b></b></div>
+            <div class="triptiny"><u></u><u class="on"></u><u></u></div>
+            <div class="sdesc">A price ladder premium → budget, plus the smart-picks triptych.</div>
+          </div>
+        </div>
+        <!-- screen 3: compare -->
+        <div class="screen">
+          <div class="sbar"><span></span><span></span><span></span></div>
+          <div class="sbody">
+            <div class="snum">03</div>
+            <div class="sttl">Compare</div>
+            <div class="cmprow"><span class="tick">✓</span><span class="tick">✓</span><span class="cross">✕</span></div>
+            <div class="cmprow"><span class="tick">✓</span><span class="tick">✓</span><span class="tick">✓</span></div>
+            <div class="cmprow"><span class="tick">✓</span><span class="cross">✕</span><span class="tick">✓</span></div>
+            <div class="sdesc">The attribute matrix and "why it's a twin" parity chips.</div>
+          </div>
+        </div>
+        <!-- screen 4: cart -->
+        <div class="screen on">
+          <div class="sbar"><span></span><span></span><span></span></div>
+          <div class="sbody">
+            <div class="snum">04</div>
+            <div class="sttl">Cart &amp; checkout</div>
+            <div class="line"><span></span><b class="num">88%</b></div>
+            <div class="line"><span></span><b class="num">81%</b></div>
+            <div class="bask"><span>Basket</span><b class="num">$996→$118</b></div>
+            <div class="sdesc">Re-price a whole basket — then an agent carts it for approval.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="builton">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+      <div class="pageno num">07 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 8 · AGENTIC CHECKOUT ============ -->
+  <section data-label="Agentic checkout">
+    <div class="slide soft" data-screen-label="08 Agentic checkout">
+      <div class="kicker">Standards-native agentic checkout</div>
+      <h2 class="h-title" style="margin-top:24px;">Your agent shops. You approve. <span class="accent">It never auto-pays.</span></h2>
+
+      <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; margin-top:56px; flex:1; align-items:center;">
+        <!-- stepper -->
+        <div class="card" style="padding:40px 44px; box-shadow:var(--shadow);">
+          <div style="font-size:var(--type-small); font-weight:700; color:var(--slate-2); letter-spacing:0.06em; margin-bottom:28px;">VERIFIED AGENT · BROWSERBASE + STAGEHAND</div>
+          <div class="step done"><span class="sdot">✓</span><span>Opening retailer page</span></div>
+          <div class="step done"><span class="sdot">✓</span><span>Locating product · UPC confirmed</span></div>
+          <div class="step done"><span class="sdot">✓</span><span>Adding to cart</span></div>
+          <div class="step now"><span class="sdot">●</span><span>Awaiting <strong>your</strong> approval</span></div>
+        </div>
+        <!-- trust panel -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <div class="trust"><div class="tk">UCP</div><div class="tv">Universal Commerce Protocol discovery — the same open rail as Google's Universal Cart.</div></div>
+          <div class="trust"><div class="tk">AP2</div><div class="tv">Payment mandate signed with <span class="num">ES256</span> — cryptographically authorized, auditable.</div></div>
+          <div class="trust hold"><div class="tk" style="color:#fff;">STOP</div><div class="tv" style="color:rgba(255,255,255,0.9);">Hard human-approval gate. The agent carts; you confirm the purchase.</div></div>
+        </div>
+      </div>
+
+      <div class="builton">
+        <span class="lbl">Built on</span>
+        <span class="logos">
+          <img src="assets/logos/aws.svg" alt="AWS" />
+          <span class="sep"></span>
+          <img src="assets/logos/box.svg" alt="Box" />
+          <span class="sep"></span>
+          <img src="assets/logos/apify.svg" alt="Apify" />
+        </span>
+      </div>
+      <div class="pageno num">08 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 9 · SPONSOR TECH ============ -->
+  <section data-label="Sponsor tech">
+    <div class="slide" data-screen-label="09 Sponsor tech">
+      <div class="kicker">The stack</div>
+      <h2 class="h-title" style="margin-top:24px;">The whole thing runs on <span class="accent">AWS, Box, and Apify</span>.</h2>
+
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin-top:58px; flex:1; align-items:stretch;">
+        <div class="card sponsor">
+          <img src="assets/logos/aws.svg" alt="Amazon Web Services" class="slogo" />
+          <div class="sponsor-role">The entire backbone</div>
+          <ul class="sponsor-list">
+            <li><strong>RDS Postgres</strong> — pgvector + pg_trgm, source of truth</li>
+            <li><strong>EC2 · Typesense</strong> — value-ranked search index</li>
+            <li><strong>S3</strong> — product &amp; asset storage</li>
+            <li><strong>Amplify</strong> — hosts the live app</li>
+          </ul>
+        </div>
+        <div class="card sponsor">
+          <img src="assets/logos/box.svg" alt="Box" class="slogo" />
+          <div class="sponsor-role">Trust &amp; audit layer</div>
+          <ul class="sponsor-list">
+            <li><strong>PDF savings reports</strong> with embedded product images</li>
+            <li><strong>CCG auth</strong> with auto-refresh — production-style</li>
+            <li><strong class="num">25</strong> live reports via real shared links</li>
+          </ul>
+        </div>
+        <div class="card sponsor">
+          <img src="assets/logos/apify.svg" alt="Apify" class="slogo" />
+          <div class="sponsor-role">Real cross-marketplace data</div>
+          <ul class="sponsor-list">
+            <li><strong class="num">5</strong> retailer scrapers, all verified live</li>
+            <li>Generic query mapping for Temu &amp; SHEIN</li>
+            <li><strong class="num">5,468</strong> products ingested across 5 markets</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pageno num">09 / 10</div>
+    </div>
+  </section>
+
+  <!-- ============ 10 · TRACTION + CTA ============ -->
+  <section data-label="Traction & close">
+    <div class="slide" data-screen-label="10 Traction" style="background:var(--ink); color:#fff; padding:0;">
+      <div style="position:absolute; inset:0; background:radial-gradient(1100px 600px at 78% -8%, color-mix(in srgb, var(--green) 30%, transparent), transparent 60%);"></div>
+      <div style="position:absolute; inset:0; padding:var(--pad-y) var(--pad-x); display:flex; flex-direction:column;">
+        <div class="kicker" style="color:var(--green-bright);">Traction &amp; scale — all real</div>
+        <h2 class="h-title" style="margin-top:24px; color:#fff;">5,468 real products. The twins are <span style="color:var(--green-bright);">already live.</span></h2>
+
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-top:54px;">
+          <div class="stat"><div class="snum2 num">5,468</div><div class="slab">products scraped &amp; indexed</div></div>
+          <div class="stat"><div class="snum2 num">5</div><div class="slab">marketplaces, one search</div></div>
+          <div class="stat"><div class="snum2 num">27</div><div class="slab">twin clusters · 412 members</div></div>
+          <div class="stat"><div class="snum2 num">97%</div><div class="slab">top saving — $469 → $15</div></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:auto;">
+          <div class="ex"><img src="assets/products/robot-vacuum.jpg" alt="Robot vacuum"/><div class="exb"><div class="exn">Robot vacuum</div><div class="num exp"><span class="exf">$469</span> → <span class="ext">$15</span></div></div></div>
+          <div class="ex"><img src="assets/products/sunscreen.jpg" alt="Sunscreen"/><div class="exb"><div class="exn">Sunscreen</div><div class="num exp"><span class="exf">$61</span> → <span class="ext">$5</span></div></div></div>
+          <div class="ex"><img src="assets/products/stanley-tumbler.jpg" alt="Tumbler"/><div class="exb"><div class="exn">Tumbler</div><div class="num exp"><span class="exf">$45</span> → <span class="ext">$17</span></div></div></div>
+          <div class="ex"><img src="assets/products/rain-jacket.jpg" alt="Rain jacket"/><div class="exb"><div class="exn">Rain jacket</div><div class="num exp"><span class="exf">$89</span> → <span class="ext">$17</span></div></div></div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:50px;">
+          <div style="display:flex; align-items:center; gap:18px;">
+            <span class="twinmark">
+              <svg width="46" height="32" viewBox="0 0 58 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 6 C5 6 5 34 14 34 C23 34 25 20 29 20 C33 20 35 34 44 34 C53 34 53 6 44 6 C35 6 33 20 29 20 C25 20 23 6 14 6 Z" stroke="#6ee7a8" stroke-width="5" fill="none"/></svg>
+            </span>
+            <span style="font-family:var(--display); font-weight:800; font-size:40px;">Find the twin. Pay the smart price.</span>
+          </div>
+          <a href="https://main.d2lad0772pqd8l.amplifyapp.com" style="text-decoration:none; display:inline-flex; align-items:center; gap:12px; background:var(--green); color:#fff; font-weight:700; font-size:var(--type-body); padding:16px 30px; border-radius:14px;">
+            <span style="width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,0.28);"></span>
+            Try it live
+          </a>
+        </div>
+
+        <div class="builton dark" style="bottom:42px;">
+          <span class="lbl">Built on</span>
+          <span class="logos">
+            <img src="assets/logos/aws.svg" alt="AWS" />
+            <span class="sep" style="background:rgba(255,255,255,0.25);"></span>
+            <img src="assets/logos/box.svg" alt="Box" />
+            <span class="sep" style="background:rgba(255,255,255,0.25);"></span>
+            <img src="assets/logos/apify.svg" alt="Apify" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<div id="tweaks-root"></div>
+
+<!-- per-slide component styles -->
+<style>
+  /* pipeline steps */
+  .pstep { padding:0 30px; border-right:1px solid var(--line); }
+  .pstep.last { border-right:none; }
+  .pstep:first-child { padding-left:0; }
+  .pnum { font-size:30px; font-weight:800; color:var(--green); }
+  .pttl { font-size:var(--type-subtitle); font-weight:800; margin-top:14px; letter-spacing:-0.01em; }
+  .pdesc { font-size:var(--type-small); color:var(--slate); line-height:1.4; margin-top:16px; }
+
+  /* ladder */
+  .ladder { display:flex; flex-direction:column; gap:18px; }
+  .lrow { display:flex; align-items:center; gap:18px; }
+  .ldot { width:18px; height:18px; border-radius:50%; flex:none; }
+  .lname { font-size:var(--type-body); font-weight:700; width:300px; flex:none; }
+  .lbar { flex:1; height:18px; background:var(--line-2); border-radius:999px; overflow:hidden; }
+  .lbar i { display:block; height:100%; border-radius:999px; }
+
+  /* triptych on slide 5 */
+  .trip { padding:22px 20px; text-align:center; }
+  .trip.on { border-color:var(--green-200); background:var(--green-tint); }
+  .ttag { font-size:var(--type-small); font-weight:700; color:var(--slate-2); }
+  .tprice { font-size:48px; font-weight:800; margin-top:8px; }
+  .tnote { font-size:var(--type-small); color:var(--slate-2); margin-top:4px; }
+
+  /* matrix */
+  .mrow { padding:18px 28px; font-weight:600; color:var(--ink-2); border-top:1px solid var(--line-2); font-size:var(--type-small); }
+  .mc { text-align:center; padding:18px 10px; border-top:1px solid var(--line-2); font-size:30px; }
+  .mc.g { background:var(--green-tint); }
+
+  /* product tour screens */
+  .screen { background:#fff; border:1px solid var(--line); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; }
+  .screen.on { border-color:var(--green-200); box-shadow:var(--shadow); }
+  .sbar { height:40px; background:var(--bg-soft); border-bottom:1px solid var(--line); display:flex; align-items:center; gap:8px; padding:0 16px; }
+  .sbar span { width:11px; height:11px; border-radius:50%; background:var(--line); }
+  .sbody { padding:26px 26px 28px; flex:1; display:flex; flex-direction:column; }
+  .snum { font-size:25px; font-weight:800; color:var(--green); }
+  .sttl { font-size:32px; font-weight:800; margin:6px 0 18px; letter-spacing:-0.01em; }
+  .sdesc { font-size:var(--type-small); color:var(--slate); line-height:1.36; margin-top:auto; padding-top:20px; }
+  .mockrow { display:flex; align-items:center; gap:10px; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:25px; }
+  .mockgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+  .mockgrid i { height:42px; border-radius:9px; background:var(--bg-soft-2); }
+  .spectrum { display:flex; align-items:center; gap:10px; padding:8px 0 4px; }
+  .spectrum b { flex:1; height:14px; border-radius:999px; background:var(--bg-soft-2); }
+  .spectrum b.hi { background:var(--green); }
+  .triptiny { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+  .triptiny u { height:54px; border-radius:10px; background:var(--bg-soft-2); }
+  .triptiny u.on { background:var(--green-tint); border:1.5px solid var(--green-200); }
+  .cmprow { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:8px; font-size:30px; text-align:center; }
+  .cmprow span { background:var(--bg-soft); border-radius:9px; padding:6px 0; }
+  .line { display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:8px; }
+  .line span { width:54%; height:14px; border-radius:999px; background:var(--bg-soft-2); }
+  .line b { color:var(--green-deep); font-weight:800; font-size:25px; }
+  .bask { display:flex; align-items:center; justify-content:space-between; background:var(--green-tint); border-radius:12px; padding:14px 14px; margin-top:4px; }
+  .bask span { font-weight:700; color:var(--slate-2); font-size:25px; }
+  .bask b { color:var(--green-deep); font-weight:800; font-size:26px; }
+
+  /* agentic stepper */
+  .step { display:flex; align-items:center; gap:18px; padding:16px 0; font-size:var(--type-body); border-bottom:1px solid var(--line-2); }
+  .step:last-child { border-bottom:none; }
+  .sdot { width:38px; height:38px; flex:none; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; }
+  .step.done { color:var(--slate-2); }
+  .step.done .sdot { background:var(--green); color:#fff; }
+  .step.now { color:var(--ink); font-weight:700; }
+  .step.now .sdot { background:var(--green-tint); color:var(--green-deep); border:2px solid var(--green); }
+  .trust { background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px 26px; display:flex; gap:20px; align-items:center; box-shadow:var(--shadow-sm); }
+  .trust .tk { font-weight:800; font-size:28px; color:var(--green-deep); width:84px; flex:none; }
+  .trust .tv { font-size:var(--type-small); color:var(--slate); line-height:1.38; }
+  .trust.hold { background:var(--ink); border-color:var(--ink); }
+
+  /* sponsor cards */
+  .sponsor { padding:42px 40px; display:flex; flex-direction:column; }
+  .slogo { height:52px; width:auto; align-self:flex-start; object-fit:contain; }
+  .sponsor-role { font-size:var(--type-subtitle); font-weight:800; margin:28px 0 22px; letter-spacing:-0.01em; }
+  .sponsor-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:16px; }
+  .sponsor-list li { font-size:var(--type-small); color:var(--slate); line-height:1.36; padding-left:30px; position:relative; }
+  .sponsor-list li::before { content:""; position:absolute; left:0; top:11px; width:13px; height:13px; border-radius:4px; background:var(--green); }
+  .sponsor-list strong { color:var(--ink); font-weight:700; }
+
+  /* traction stats + examples */
+  .stat { border-top:3px solid var(--green); padding-top:20px; }
+  .snum2 { font-size:74px; font-weight:800; line-height:1; letter-spacing:-0.02em; }
+  .slab { font-size:var(--type-small); color:rgba(255,255,255,0.66); margin-top:12px; line-height:1.3; }
+  .ex { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; }
+  .ex img { width:100%; height:150px; object-fit:cover; }
+  .exb { padding:18px 20px; }
+  .exn { font-size:var(--type-small); font-weight:700; color:rgba(255,255,255,0.86); }
+  .exp { font-size:30px; font-weight:800; margin-top:6px; }
+  .exf { color:rgba(255,255,255,0.5); text-decoration:line-through; }
+  .ext { color:var(--green-bright); }
+</style>
+
+<script src="deck-stage.js"></script>
+
+<!-- Tweaks -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel">
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accent": "#16A34A",
+    "font": "Hanken Grotesk"
+  }/*EDITMODE-END*/;
+
+  function TweaksApp() {
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+    React.useEffect(() => {
+      document.documentElement.style.setProperty('--green', t.accent);
+      document.documentElement.style.setProperty('--display', `'${t.font}', system-ui, sans-serif`);
+      document.documentElement.style.setProperty('--body', `'${t.font}', system-ui, sans-serif`);
+    }, [t.accent, t.font]);
+    return (
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Brand" />
+        <TweakColor label="Accent" value={t.accent}
+          options={['#16A34A', '#0E9F6E', '#0F766E', '#2563EB']}
+          onChange={(v) => setTweak('accent', v)} />
+        <TweakSection label="Type" />
+        <TweakRadio label="Typeface" value={t.font}
+          options={['Hanken Grotesk', 'Plus Jakarta Sans', 'Geist']}
+          onChange={(v) => setTweak('font', v)} />
+      </TweaksPanel>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweaksApp />);
+</script>
+
+</body>
+</html>
