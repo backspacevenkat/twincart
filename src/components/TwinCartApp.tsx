@@ -156,10 +156,10 @@ function Rating({ value, count }: any) {
 }
 
 /* ───────────────── Product thumbnail (real imagery) ───────────────── */
-function Thumb({ icon, retailer, size = 64, tone, tint, radius = 14 }: any) {
+function Thumb({ icon, retailer, size = 64, tone, tint, radius = 14, img }: any) {
   const r = RETAILERS[retailer];
   const accent = tone || (r ? r.color : "var(--accent)");
-  const src = IMG[icon];
+  const src = img || IMG[icon];
   return (
     <div style={{
       width: size, height: size, borderRadius: radius, flexShrink: 0,
@@ -178,8 +178,8 @@ function Thumb({ icon, retailer, size = 64, tone, tint, radius = 14 }: any) {
 }
 
 /* Larger product image for cards — fixed aspect, real photo */
-function ProductImage({ icon, tint, height = 200, radius = 14, children }: any) {
-  const src = IMG[icon];
+function ProductImage({ icon, tint, height = 200, radius = 14, children, img }: any) {
+  const src = img || IMG[icon];
   return (
     <div style={{ position: "relative", width: "100%", height, borderRadius: radius, overflow: "hidden",
       background: "var(--surface-3)", border: "1px solid var(--hairline)" }}>
@@ -401,7 +401,7 @@ function TwinSpectrum({ cluster, onPick, onAdd }: any) {
 
       {(() => { const chosen = sel || cluster.offers.find((o: any) => o.tag === "value") || cluster.offers[0]; const stop = /NOT COMPARABLE/.test(chosen.matchType); return (
         <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 14, background: "var(--surface-2)", border: "1px solid var(--hairline)", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-          <Thumb icon={cluster.icon} retailer={chosen.retailer} size={48} tint={chosen.tint} />
+          <Thumb icon={cluster.icon} img={chosen.image} retailer={chosen.retailer} size={48} tint={chosen.tint} />
           <div style={{ flex: 1, minWidth: 170 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>{chosen.name}</span>
@@ -669,7 +669,7 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
       )}
 
       {/* product image with overlays */}
-      <ProductImage icon={icon} tint={p.tint} height={elevated ? 178 : 168}>
+      <ProductImage icon={icon} img={p.image} tint={p.tint} height={elevated ? 178 : 168}>
         <div style={{ position: "absolute", top: 10, left: 10, right: 10, display: "flex",
           alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
           <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase",
@@ -1232,7 +1232,7 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         gap: 20, flexWrap: "wrap", marginBottom: 26 }}>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          <Thumb icon={cluster.icon} size={60} tone="var(--accent)" />
+          <Thumb icon={cluster.icon} img={cluster.heroImages?.[0]} size={60} tone="var(--accent)" />
           <div>
             <div style={{ fontSize: 12.5, fontWeight: 600, color: "var(--muted)", marginBottom: 5 }}>
               {cluster.category}

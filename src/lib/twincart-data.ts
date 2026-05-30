@@ -1,5 +1,6 @@
 // TwinCart product data — aggregated clusters across 5 retailers (ported from the design prototype).
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import LIVE_CLUSTERS from './live-clusters.json';
 
 export const RETAILERS: Record<string, { name: string; color: string }> = {
   amazon:  { name: 'Amazon',  color: 'var(--retailer-amazon)' },
@@ -130,8 +131,18 @@ export const CLUSTERS: any[] = [
   },
 ];
 
-export const CHIPS = ['thermo flask', 'airpods', 'summer dress', 'robot vacuum', 'office chair', 'electric toothbrush'];
-export const QUERIES = ['thermo flask', 'airpods', 'summer dress'];
+// Curated hero flows stay FIRST (bulletproof demo beats), then real scraped clusters add depth.
+const CURATED_CLUSTERS = CLUSTERS;
+const liveQueries: string[] = [...new Set((LIVE_CLUSTERS as any[]).map((c) => c.query))];
+// Merge: curated clusters first, then live clusters whose query isn't already curated.
+const curatedQueries = new Set(CURATED_CLUSTERS.map((c: any) => c.query));
+(LIVE_CLUSTERS as any[]).forEach((c) => CLUSTERS.push(c));
+
+// curated demo queries lead; live (real-data) queries follow
+export const QUERIES = ['thermo flask', 'airpods', 'summer dress', ...liveQueries.filter((q) => !curatedQueries.has(q))];
+// chips: a curated lead + a few high-impact live categories
+export const CHIPS = ['thermo flask', 'airpods', 'summer dress',
+  ...liveQueries.filter((q) => !curatedQueries.has(q)).slice(0, 9)];
 
 // ─── Smart Basket (the demo's money shot) ───
 // 12 functional twins TwinCart assembled. Amazon ≈ $996, TwinCart ≈ $120 (~88% off).
