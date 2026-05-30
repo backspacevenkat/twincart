@@ -1968,10 +1968,16 @@ function App() {
   };
   const search = (q: any) => {
     const ql = (q || "").toLowerCase().trim();
-    const match = QUERIES.find((x) => x.toLowerCase() === ql)
-      || QUERIES.find((x) => x.toLowerCase().includes(ql) || ql.includes(x.toLowerCase()))
-      || "thermo flask";
-    setQuery(match); setScreen("results"); window.scrollTo({ top: 0 });
+    let match = QUERIES.find((x) => x.toLowerCase() === ql)
+      || (ql && QUERIES.find((x) => x.toLowerCase().includes(ql) || ql.includes(x.toLowerCase())));
+    if (!match && ql) {
+      const hit = CLUSTERS.find((c: any) =>
+        (c.title && c.title.toLowerCase().includes(ql)) ||
+        (c.offers || []).some((o: any) => o.name && o.name.toLowerCase().includes(ql)));
+      if (hit) match = hit.query;
+    }
+    // genuinely no match -> pass the raw query so ResultsScreen shows its "No twins found" empty state
+    setQuery(match || q || "thermo flask"); setScreen("results"); window.scrollTo({ top: 0 });
   };
   const openCluster = (c: any) => { setCluster(c); setScreen("compare"); window.scrollTo({ top: 0 }); };
   const openReport = (c: any) => { setCluster(c); setScreen("report"); window.scrollTo({ top: 0 }); };
