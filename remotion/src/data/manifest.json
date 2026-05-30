@@ -1,8 +1,804 @@
 [
-  {"scene":"s1","audioFile":null,"durationSeconds":16,"words":[]},
-  {"scene":"s2","audioFile":null,"durationSeconds":14,"words":[]},
-  {"scene":"s3","audioFile":null,"durationSeconds":46,"words":[]},
-  {"scene":"s4","audioFile":null,"durationSeconds":52,"words":[]},
-  {"scene":"s5","audioFile":null,"durationSeconds":20,"words":[]},
-  {"scene":"s6","audioFile":null,"durationSeconds":22,"words":[]}
+  {
+    "scene": "s1",
+    "audioFile": "audio/s1.mp3",
+    "durationSeconds": 8.824,
+    "words": [
+      {
+        "word": "Two",
+        "start": 0,
+        "end": 0.221
+      },
+      {
+        "word": "weeks",
+        "start": 0.267,
+        "end": 0.476
+      },
+      {
+        "word": "ago",
+        "start": 0.511,
+        "end": 0.708
+      },
+      {
+        "word": "Google",
+        "start": 0.824,
+        "end": 1.138
+      },
+      {
+        "word": "announced",
+        "start": 1.161,
+        "end": 1.509
+      },
+      {
+        "word": "Universal",
+        "start": 1.753,
+        "end": 2.322
+      },
+      {
+        "word": "Cart.",
+        "start": 2.496,
+        "end": 3.042
+      },
+      {
+        "word": "It",
+        "start": 3.193,
+        "end": 3.332
+      },
+      {
+        "word": "checks",
+        "start": 3.379,
+        "end": 3.646
+      },
+      {
+        "word": "you",
+        "start": 3.68,
+        "end": 3.773
+      },
+      {
+        "word": "out",
+        "start": 3.843,
+        "end": 4.029
+      },
+      {
+        "word": "at",
+        "start": 4.122,
+        "end": 4.342
+      },
+      {
+        "word": "brand",
+        "start": 4.423,
+        "end": 4.714
+      },
+      {
+        "word": "stores.",
+        "start": 4.76,
+        "end": 5.166
+      },
+      {
+        "word": "But",
+        "start": 5.248,
+        "end": 5.399
+      },
+      {
+        "word": "it",
+        "start": 5.445,
+        "end": 5.503
+      },
+      {
+        "word": "can't",
+        "start": 5.561,
+        "end": 5.828
+      },
+      {
+        "word": "find",
+        "start": 5.886,
+        "end": 6.153
+      },
+      {
+        "word": "the",
+        "start": 6.211,
+        "end": 6.293
+      },
+      {
+        "word": "cheaper",
+        "start": 6.351,
+        "end": 6.711
+      },
+      {
+        "word": "twin",
+        "start": 6.792,
+        "end": 7.175
+      },
+      {
+        "word": "of",
+        "start": 7.384,
+        "end": 7.535
+      },
+      {
+        "word": "the",
+        "start": 7.605,
+        "end": 7.674
+      },
+      {
+        "word": "thing",
+        "start": 7.721,
+        "end": 7.895
+      },
+      {
+        "word": "you're",
+        "start": 7.941,
+        "end": 8.115
+      },
+      {
+        "word": "buying.",
+        "start": 8.139,
+        "end": 8.824
+      }
+    ]
+  },
+  {
+    "scene": "s2",
+    "audioFile": "audio/s2.mp3",
+    "durationSeconds": 7.477,
+    "words": [
+      {
+        "word": "Every",
+        "start": 0,
+        "end": 0.29
+      },
+      {
+        "word": "product",
+        "start": 0.348,
+        "end": 0.685
+      },
+      {
+        "word": "has",
+        "start": 0.72,
+        "end": 0.848
+      },
+      {
+        "word": "a",
+        "start": 0.894,
+        "end": 0.929
+      },
+      {
+        "word": "twin.",
+        "start": 0.987,
+        "end": 1.37
+      },
+      {
+        "word": "Same",
+        "start": 1.579,
+        "end": 1.881
+      },
+      {
+        "word": "job,",
+        "start": 1.927,
+        "end": 2.299
+      },
+      {
+        "word": "different",
+        "start": 2.345,
+        "end": 2.659
+      },
+      {
+        "word": "brand,",
+        "start": 2.682,
+        "end": 3.111
+      },
+      {
+        "word": "no",
+        "start": 3.262,
+        "end": 3.46
+      },
+      {
+        "word": "shared",
+        "start": 3.529,
+        "end": 3.808
+      },
+      {
+        "word": "barcode.",
+        "start": 3.843,
+        "end": 4.389
+      },
+      {
+        "word": "Invisible",
+        "start": 4.714,
+        "end": 5.341
+      },
+      {
+        "word": "to",
+        "start": 5.387,
+        "end": 5.48
+      },
+      {
+        "word": "every",
+        "start": 5.654,
+        "end": 6.014
+      },
+      {
+        "word": "cart",
+        "start": 6.095,
+        "end": 6.362
+      },
+      {
+        "word": "on",
+        "start": 6.432,
+        "end": 6.548
+      },
+      {
+        "word": "the",
+        "start": 6.583,
+        "end": 6.653
+      },
+      {
+        "word": "internet.",
+        "start": 6.699,
+        "end": 7.477
+      }
+    ]
+  },
+  {
+    "scene": "s3",
+    "audioFile": "audio/s3.mp3",
+    "durationSeconds": 14.629,
+    "words": [
+      {
+        "word": "TwinCart",
+        "start": 0,
+        "end": 0.453
+      },
+      {
+        "word": "finds",
+        "start": 0.488,
+        "end": 0.685
+      },
+      {
+        "word": "them",
+        "start": 0.72,
+        "end": 0.848
+      },
+      {
+        "word": "two",
+        "start": 0.906,
+        "end": 1.08
+      },
+      {
+        "word": "ways.",
+        "start": 1.138,
+        "end": 1.486
+      },
+      {
+        "word": "Shared",
+        "start": 1.602,
+        "end": 1.939
+      },
+      {
+        "word": "barcodes",
+        "start": 1.985,
+        "end": 2.508
+      },
+      {
+        "word": "lock",
+        "start": 2.624,
+        "end": 2.902
+      },
+      {
+        "word": "exact",
+        "start": 3.019,
+        "end": 3.483
+      },
+      {
+        "word": "matches",
+        "start": 3.553,
+        "end": 3.901
+      },
+      {
+        "word": "across",
+        "start": 3.959,
+        "end": 4.261
+      },
+      {
+        "word": "Amazon,",
+        "start": 4.342,
+        "end": 4.934
+      },
+      {
+        "word": "Walmart",
+        "start": 4.992,
+        "end": 5.503
+      },
+      {
+        "word": "and",
+        "start": 5.573,
+        "end": 5.7
+      },
+      {
+        "word": "Target.",
+        "start": 5.77,
+        "end": 6.293
+      },
+      {
+        "word": "Then",
+        "start": 6.734,
+        "end": 6.92
+      },
+      {
+        "word": "Claude",
+        "start": 6.989,
+        "end": 7.314
+      },
+      {
+        "word": "scores",
+        "start": 7.338,
+        "end": 7.674
+      },
+      {
+        "word": "functional",
+        "start": 7.755,
+        "end": 8.173
+      },
+      {
+        "word": "parity",
+        "start": 8.231,
+        "end": 8.591
+      },
+      {
+        "word": "across",
+        "start": 8.684,
+        "end": 9.3
+      },
+      {
+        "word": "brands,",
+        "start": 9.369,
+        "end": 10.043
+      },
+      {
+        "word": "and",
+        "start": 10.252,
+        "end": 10.379
+      },
+      {
+        "word": "a",
+        "start": 10.426,
+        "end": 10.449
+      },
+      {
+        "word": "Value",
+        "start": 10.53,
+        "end": 10.937
+      },
+      {
+        "word": "Score",
+        "start": 10.971,
+        "end": 11.355
+      },
+      {
+        "word": "ranks",
+        "start": 11.505,
+        "end": 11.831
+      },
+      {
+        "word": "parity",
+        "start": 11.912,
+        "end": 12.283
+      },
+      {
+        "word": "times",
+        "start": 12.341,
+        "end": 12.771
+      },
+      {
+        "word": "savings",
+        "start": 12.945,
+        "end": 13.386
+      },
+      {
+        "word": "times",
+        "start": 13.433,
+        "end": 13.735
+      },
+      {
+        "word": "confidence.",
+        "start": 13.793,
+        "end": 14.629
+      }
+    ]
+  },
+  {
+    "scene": "s4",
+    "audioFile": "audio/s4.mp3",
+    "durationSeconds": 10.96,
+    "words": [
+      {
+        "word": "So",
+        "start": 0,
+        "end": 0.197
+      },
+      {
+        "word": "a",
+        "start": 0.267,
+        "end": 0.325
+      },
+      {
+        "word": "ninety",
+        "start": 0.441,
+        "end": 0.813
+      },
+      {
+        "word": "dollar",
+        "start": 0.882,
+        "end": 1.173
+      },
+      {
+        "word": "robot",
+        "start": 1.242,
+        "end": 1.567
+      },
+      {
+        "word": "vacuum",
+        "start": 1.614,
+        "end": 1.997
+      },
+      {
+        "word": "has",
+        "start": 2.043,
+        "end": 2.171
+      },
+      {
+        "word": "a",
+        "start": 2.218,
+        "end": 2.252
+      },
+      {
+        "word": "twin",
+        "start": 2.31,
+        "end": 2.566
+      },
+      {
+        "word": "that",
+        "start": 2.612,
+        "end": 2.717
+      },
+      {
+        "word": "does",
+        "start": 2.763,
+        "end": 2.914
+      },
+      {
+        "word": "the",
+        "start": 2.961,
+        "end": 3.042
+      },
+      {
+        "word": "same",
+        "start": 3.123,
+        "end": 3.402
+      },
+      {
+        "word": "job",
+        "start": 3.46,
+        "end": 3.715
+      },
+      {
+        "word": "for",
+        "start": 3.785,
+        "end": 3.901
+      },
+      {
+        "word": "a",
+        "start": 3.936,
+        "end": 3.959
+      },
+      {
+        "word": "fraction",
+        "start": 4.04,
+        "end": 4.609
+      },
+      {
+        "word": "of",
+        "start": 4.783,
+        "end": 4.934
+      },
+      {
+        "word": "the",
+        "start": 5.004,
+        "end": 5.074
+      },
+      {
+        "word": "price.",
+        "start": 5.12,
+        "end": 5.608
+      },
+      {
+        "word": "Up",
+        "start": 6.304,
+        "end": 6.478
+      },
+      {
+        "word": "to",
+        "start": 6.536,
+        "end": 6.629
+      },
+      {
+        "word": "ninety",
+        "start": 6.78,
+        "end": 7.198
+      },
+      {
+        "word": "seven",
+        "start": 7.268,
+        "end": 7.523
+      },
+      {
+        "word": "percent",
+        "start": 7.57,
+        "end": 7.883
+      },
+      {
+        "word": "less,",
+        "start": 7.93,
+        "end": 8.185
+      },
+      {
+        "word": "proven,",
+        "start": 8.243,
+        "end": 8.707
+      },
+      {
+        "word": "with",
+        "start": 8.777,
+        "end": 8.963
+      },
+      {
+        "word": "a",
+        "start": 8.998,
+        "end": 9.033
+      },
+      {
+        "word": "savings",
+        "start": 9.125,
+        "end": 9.543
+      },
+      {
+        "word": "report",
+        "start": 9.59,
+        "end": 9.973
+      },
+      {
+        "word": "you",
+        "start": 10.054,
+        "end": 10.17
+      },
+      {
+        "word": "can",
+        "start": 10.217,
+        "end": 10.321
+      },
+      {
+        "word": "keep.",
+        "start": 10.379,
+        "end": 10.96
+      }
+    ]
+  },
+  {
+    "scene": "s5",
+    "audioFile": "audio/s5.mp3",
+    "durationSeconds": 7.384,
+    "words": [
+      {
+        "word": "Found",
+        "start": 0,
+        "end": 0.244
+      },
+      {
+        "word": "your",
+        "start": 0.267,
+        "end": 0.36
+      },
+      {
+        "word": "twin?",
+        "start": 0.383,
+        "end": 0.731
+      },
+      {
+        "word": "The",
+        "start": 0.801,
+        "end": 0.929
+      },
+      {
+        "word": "agent",
+        "start": 0.975,
+        "end": 1.231
+      },
+      {
+        "word": "adds",
+        "start": 1.277,
+        "end": 1.474
+      },
+      {
+        "word": "it",
+        "start": 1.498,
+        "end": 1.556
+      },
+      {
+        "word": "to",
+        "start": 1.579,
+        "end": 1.625
+      },
+      {
+        "word": "your",
+        "start": 1.672,
+        "end": 1.776
+      },
+      {
+        "word": "cart",
+        "start": 1.823,
+        "end": 2.055
+      },
+      {
+        "word": "and",
+        "start": 2.113,
+        "end": 2.241
+      },
+      {
+        "word": "stops",
+        "start": 2.357,
+        "end": 2.705
+      },
+      {
+        "word": "at",
+        "start": 2.74,
+        "end": 2.798
+      },
+      {
+        "word": "your",
+        "start": 2.833,
+        "end": 2.937
+      },
+      {
+        "word": "approval.",
+        "start": 2.961,
+        "end": 3.529
+      },
+      {
+        "word": "It",
+        "start": 3.855,
+        "end": 4.005
+      },
+      {
+        "word": "never",
+        "start": 4.122,
+        "end": 4.47
+      },
+      {
+        "word": "auto-pays.",
+        "start": 4.551,
+        "end": 5.213
+      },
+      {
+        "word": "That's",
+        "start": 5.259,
+        "end": 5.538
+      },
+      {
+        "word": "AP2-signed",
+        "start": 5.619,
+        "end": 6.513
+      },
+      {
+        "word": "checkout.",
+        "start": 6.583,
+        "end": 7.384
+      }
+    ]
+  },
+  {
+    "scene": "s6",
+    "audioFile": "audio/s6.mp3",
+    "durationSeconds": 9.242,
+    "words": [
+      {
+        "word": "Google",
+        "start": 0,
+        "end": 0.337
+      },
+      {
+        "word": "checks",
+        "start": 0.36,
+        "end": 0.557
+      },
+      {
+        "word": "you",
+        "start": 0.592,
+        "end": 0.685
+      },
+      {
+        "word": "out",
+        "start": 0.755,
+        "end": 0.987
+      },
+      {
+        "word": "at",
+        "start": 1.161,
+        "end": 1.335
+      },
+      {
+        "word": "the",
+        "start": 1.382,
+        "end": 1.451
+      },
+      {
+        "word": "brand.",
+        "start": 1.498,
+        "end": 1.904
+      },
+      {
+        "word": "TwinCart",
+        "start": 1.974,
+        "end": 2.473
+      },
+      {
+        "word": "finds",
+        "start": 2.519,
+        "end": 2.891
+      },
+      {
+        "word": "the",
+        "start": 2.961,
+        "end": 3.053
+      },
+      {
+        "word": "cross-marketplace",
+        "start": 3.1,
+        "end": 4.226
+      },
+      {
+        "word": "twin",
+        "start": 4.319,
+        "end": 4.702
+      },
+      {
+        "word": "Google",
+        "start": 4.853,
+        "end": 5.364
+      },
+      {
+        "word": "won't",
+        "start": 5.492,
+        "end": 5.863
+      },
+      {
+        "word": "index.",
+        "start": 5.979,
+        "end": 6.664
+      },
+      {
+        "word": "The",
+        "start": 6.943,
+        "end": 7.059
+      },
+      {
+        "word": "dupe",
+        "start": 7.105,
+        "end": 7.291
+      },
+      {
+        "word": "economy,",
+        "start": 7.314,
+        "end": 7.767
+      },
+      {
+        "word": "finally",
+        "start": 7.802,
+        "end": 8.266
+      },
+      {
+        "word": "searchable.",
+        "start": 8.417,
+        "end": 9.242
+      }
+    ]
+  }
 ]
