@@ -56,14 +56,27 @@ const main = async () => {
     await page.waitForTimeout(2400);
   });
 
-  // TAKE 2 — agent checkout (feeds scene 5)
+  // TAKE 2 — MULTI-ITEM basket + simulated agent checkout (feeds scene 5)
   await take("take2", async (page) => {
-    const search = page.getByPlaceholder(/Search a product/i).first();
-    await search.click(); await search.fill("robot vacuum"); await pause(300);
-    await clickIf(page, /Find twins/i);
-    await page.waitForTimeout(1400);
-    await clickIf(page, /Prepare (agent )?checkout/i);
-    await page.waitForTimeout(7000); // stepper runs its 4 client-side steps to "Awaiting your approval"
+    const doSearch = async (q: string) => {
+      const s = page.getByPlaceholder(/Search a product/i).first();
+      await s.click(); await s.fill(""); await s.pressSequentially(q, { delay: 55 }); await pause(300);
+      await clickIf(page, /Find twins/i); await page.waitForTimeout(1500);
+    };
+    const addOne = async () => {
+      if (!(await clickIf(page, /Add to cart/i))) await clickIf(page, /^\s*Add\s*$/i);
+      await pause(1000);
+    };
+    await doSearch("robot vacuum"); await addOne();
+    await doSearch("massage gun"); await addOne();
+    await doSearch("led strip lights"); await addOne();
+    // open the basket — shows N items + total savings %
+    await clickIf(page, /^\s*Cart\s*$/i); await page.waitForTimeout(2400);
+    await page.mouse.wheel(0, 420); await pause(1600);
+    await page.mouse.wheel(0, -220); await pause(600);
+    // check out the whole basket with the agent -> stepper -> awaiting approval
+    await clickIf(page, /Check out all|TwinCart Agent|Prepare (agent )?checkout|Checkout/i);
+    await page.waitForTimeout(7000);
   });
 
   const ok = existsSync(join(OUT, "take1.webm")) && existsSync(join(OUT, "take2.webm"));

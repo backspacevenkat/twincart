@@ -13,7 +13,7 @@ export const Caption: React.FC<{ words: Word[] }> = ({ words }) => {
         const spoken = t > w.end;
         return (
           <span key={i} style={{
-            color: active ? "#7CF6C8" : spoken ? "#ffffff" : "rgba(255,255,255,0.42)",
+            color: active ? "#16A34A" : spoken ? "#ffffff" : "rgba(255,255,255,0.42)",
             textShadow: "0 2px 22px rgba(0,0,0,0.9)", marginRight: 12 }}>
             {w.word}{" "}
           </span>

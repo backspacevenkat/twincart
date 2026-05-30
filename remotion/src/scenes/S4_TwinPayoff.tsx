@@ -16,7 +16,7 @@ const SavingsBadge: React.FC = () => (
   <div style={{ position: "absolute", right: 70, top: 60, textAlign: "right", fontFamily: "Inter, sans-serif",
     textShadow: "0 6px 30px rgba(0,0,0,0.85)" }}>
     <div style={{ color: "#fff", fontSize: 34, fontWeight: 700 }}>save up to</div>
-    <div style={{ color: "#7CF6C8", fontSize: 150, fontWeight: 900, lineHeight: 1 }}><SavingsCounter to={97} /></div>
+    <div style={{ color: "#16A34A", fontSize: 150, fontWeight: 900, lineHeight: 1 }}><SavingsCounter to={97} /></div>
     <div style={{ color: "#fff", fontSize: 30, opacity: 0.85 }}>Shark $469 → twin $15 · proven</div>
   </div>
 );
@@ -33,7 +33,7 @@ export const S4_TwinPayoff: React.FC<{ dur: number }> = ({ dur }) => {
         </>
       ) : (
         <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", fontFamily: "Inter, sans-serif" }}>
-          <div style={{ color: "#fff", fontSize: 40, fontWeight: 800, marginBottom: 30 }}>Shark AV2501S Robot Vacuum <span style={{ color: "#7CF6C8" }}>&amp; its twins</span></div>
+          <div style={{ color: "#fff", fontSize: 40, fontWeight: 800, marginBottom: 30 }}>Shark AV2501S Robot Vacuum <span style={{ color: "#16A34A" }}>&amp; its twins</span></div>
           <div style={{ display: "flex", gap: 40 }}>
             {PRODUCTS.map((p, i) => {
               const a = spring({ frame: f - 10 - i * 14, fps, config: { damping: 200 } });
@@ -43,7 +43,7 @@ export const S4_TwinPayoff: React.FC<{ dur: number }> = ({ dur }) => {
                   <Img src={p.img} style={{ width: 240, height: 240, objectFit: "contain", margin: "0 auto", borderRadius: 12, background: "#fff" }} />
                   <div style={{ marginTop: 16 }}><Logo name={p.retailer} size={34} /></div>
                   <div style={{ color: "#fff", fontSize: 56, fontWeight: 900 }}>{p.price}</div>
-                  <div style={{ color: "#7CF6C8", fontSize: 24, fontWeight: 700 }}>{p.tag}</div>
+                  <div style={{ color: "#16A34A", fontSize: 24, fontWeight: 700 }}>{p.tag}</div>
                 </div>
               );
             })}

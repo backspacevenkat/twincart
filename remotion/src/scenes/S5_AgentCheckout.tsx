@@ -1,48 +1,56 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring } from "remotion";
-import { CaptureClip } from "../components/CaptureClip";
-import { KenBurns } from "../components/KenBurns";
-import { HAS_FOOTAGE, SHOTS } from "../data/shots";
+import { Logo } from "../components/Logo";
+import { SavingsCounter } from "../components/SavingsCounter";
 
-const STEPS = ["Opening retailer", "Locating product", "Adding to cart", "Awaiting your approval"];
+const FONT = "'Hanken Grotesk','Plus Jakarta Sans',system-ui,sans-serif";
 
-const Badge: React.FC = () => (
-  <div style={{ position: "absolute", bottom: 150, width: "100%", textAlign: "center" }}>
-    <span style={{ background: "#7CF6C8", color: "#06231b", fontWeight: 900, fontSize: 32, padding: "12px 24px",
-      borderRadius: 12, fontFamily: "Inter, sans-serif", boxShadow: "0 8px 30px rgba(0,0,0,0.4)" }}>
-      Stops at your approval · never auto-pays · AP2-signed
-    </span>
-  </div>
-);
+// Real demo basket from the deck brief: $996 (Amazon) -> $118 (TwinCart) = 88% off.
+const ITEMS = [
+  { name: "Robot vacuum twin", retailer: "temu", ref: "$469", price: "$72" },
+  { name: "Massage gun twin", retailer: "temu", ref: "$399", price: "$30" },
+  { name: "LED strip lights twin", retailer: "shein", ref: "$128", price: "$16" },
+];
 
-export const S5_AgentCheckout: React.FC<{ dur: number }> = ({ dur }) => {
-  const t = SHOTS.take2;
+export const S5_AgentCheckout: React.FC<{ dur: number }> = () => {
   const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  // take2 capture failed (empty webm) -> always use the animated stepper recreation.
-  const useFootage = false && HAS_FOOTAGE;
+  const a = (d: number) => spring({ frame: f - d, fps, config: { damping: 200 } });
   return (
-    <AbsoluteFill style={{ backgroundColor: "#160a1a" }}>
-      {useFootage ? (
-        <><KenBurns from={1.04} to={1.14}><CaptureClip src={t.src} from={t.stepper[0]} to={t.stepper[1]} fill={dur} /></KenBurns><Badge /></>
-      ) : (
-        <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", fontFamily: "Inter, sans-serif" }}>
-          <div style={{ width: 760 }}>
-            {STEPS.map((s, i) => {
-              const a = spring({ frame: f - 10 - i * 30, fps, config: { damping: 200 } });
-              const last = i === STEPS.length - 1;
-              return (
-                <div key={s} style={{ display: "flex", alignItems: "center", gap: 22, padding: "18px 26px", marginBottom: 16,
-                  borderRadius: 16, background: last ? "rgba(124,246,200,0.16)" : "rgba(255,255,255,0.05)",
-                  border: `2px solid ${last ? "#7CF6C8" : "rgba(255,255,255,0.15)"}`, opacity: a, transform: `translateX(${(1 - a) * -30}px)` }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 20, background: last ? "#7CF6C8" : "#2e3b46", color: last ? "#06231b" : "#fff",
-                    display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 22 }}>{last ? "✋" : i + 1}</div>
-                  <div style={{ color: "#fff", fontSize: 34, fontWeight: last ? 800 : 600 }}>{s}</div>
-                </div>
-              );
-            })}
+    <AbsoluteFill style={{ background: "linear-gradient(160deg,#FFFFFF,#F6F8FB)", fontFamily: FONT, padding: "70px 120px" }}>
+      <div style={{ fontSize: 44, fontWeight: 900, color: "#0B1220", opacity: a(0) }}>
+        Your <span style={{ color: "#16A34A" }}>TwinCart</span> basket — 3 items
+      </div>
+      <div style={{ display: "flex", gap: 50, marginTop: 36 }}>
+        <div style={{ flex: 1.3 }}>
+          {ITEMS.map((it, i) => (
+            <div key={it.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
+              background: "#fff", border: "1px solid #E6EAF0", borderRadius: 16, padding: "20px 26px", marginBottom: 16,
+              opacity: a(8 + i * 10), transform: `translateX(${(1 - a(8 + i * 10)) * -24}px)` }}>
+              <div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "#0B1220" }}>{it.name}</div>
+                <div style={{ marginTop: 4 }}><Logo name={it.retailer} size={22} /></div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: 22, color: "#94A3B8", textDecoration: "line-through" }}>{it.ref}</div>
+                <div style={{ fontSize: 36, fontWeight: 900, color: "#16A34A" }}>{it.price}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ flex: 1, background: "#0B1220", borderRadius: 22, padding: 36, color: "#fff", opacity: a(30) }}>
+          <div style={{ fontSize: 24, color: "#94A3B8" }}>Reference (Amazon)</div>
+          <div style={{ fontSize: 46, fontWeight: 800, textDecoration: "line-through", opacity: 0.7 }}>$996</div>
+          <div style={{ fontSize: 24, color: "#6ee7a8", marginTop: 18 }}>With TwinCart</div>
+          <div style={{ fontSize: 84, fontWeight: 900, color: "#fff", lineHeight: 1 }}>$118</div>
+          <div style={{ marginTop: 14, fontSize: 30, fontWeight: 800, color: "#16A34A" }}>
+            <SavingsCounter to={88} /> less · 8.4× cheaper
           </div>
-          <Badge />
-        </AbsoluteFill>
-      )}
+        </div>
+      </div>
+      <div style={{ marginTop: 30, textAlign: "center", opacity: a(46) }}>
+        <span style={{ background: "#16A34A", color: "#fff", fontWeight: 900, fontSize: 30, padding: "16px 30px", borderRadius: 14 }}>
+          Agent checks out all 3 · stops at your approval · never auto-pays
+        </span>
+      </div>
     </AbsoluteFill>
   );
 };

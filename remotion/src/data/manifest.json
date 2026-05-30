@@ -2,2252 +2,1102 @@
   {
     "scene": "s1",
     "audioFile": "audio/s1.mp3",
-    "durationSeconds": 25.82,
+    "durationSeconds": 5.944,
     "words": [
       {
-        "word": "Two",
+        "word": "TwinCart",
         "start": 0,
-        "end": 0.221
-      },
-      {
-        "word": "weeks",
-        "start": 0.255,
-        "end": 0.464
-      },
-      {
-        "word": "ago,",
-        "start": 0.499,
-        "end": 0.778
-      },
-      {
-        "word": "Google",
-        "start": 0.836,
-        "end": 1.149
-      },
-      {
-        "word": "announced",
-        "start": 1.173,
-        "end": 1.591
-      },
-      {
-        "word": "Universal",
-        "start": 1.8,
-        "end": 2.368
-      },
-      {
-        "word": "Cart",
-        "start": 2.461,
-        "end": 2.775
+        "end": 0.639
       },
       {
         "word": "—",
-        "start": 2.926,
-        "end": 3.216
+        "start": 0.72,
+        "end": 0.766
       },
       {
-        "word": "one",
-        "start": 3.657,
+        "word": "the",
+        "start": 1.01,
+        "end": 1.103
+      },
+      {
+        "word": "cross-marketplace",
+        "start": 1.149,
+        "end": 2.032
+      },
+      {
+        "word": "twin-finder.",
+        "start": 2.067,
+        "end": 2.821
+      },
+      {
+        "word": "Find",
+        "start": 3.518,
+        "end": 3.785
+      },
+      {
+        "word": "the",
+        "start": 3.82,
         "end": 3.889
       },
       {
-        "word": "cart",
-        "start": 3.924,
-        "end": 4.11
+        "word": "twin.",
+        "start": 3.936,
+        "end": 4.423
       },
       {
-        "word": "that",
-        "start": 4.145,
-        "end": 4.249
-      },
-      {
-        "word": "checks",
-        "start": 4.284,
-        "end": 4.516
-      },
-      {
-        "word": "you",
-        "start": 4.551,
-        "end": 4.632
-      },
-      {
-        "word": "out",
-        "start": 4.702,
-        "end": 4.876
-      },
-      {
-        "word": "across",
-        "start": 4.946,
-        "end": 5.48
-      },
-      {
-        "word": "Nike,",
-        "start": 5.573,
-        "end": 5.991
-      },
-      {
-        "word": "Target,",
-        "start": 6.037,
-        "end": 6.432
-      },
-      {
-        "word": "and",
-        "start": 6.455,
-        "end": 6.571
-      },
-      {
-        "word": "Walmart.",
-        "start": 6.641,
-        "end": 7.221
-      },
-      {
-        "word": "It's",
-        "start": 7.825,
-        "end": 8.011
-      },
-      {
-        "word": "a",
-        "start": 8.046,
-        "end": 8.069
-      },
-      {
-        "word": "real",
-        "start": 8.185,
-        "end": 8.44
-      },
-      {
-        "word": "glimpse",
-        "start": 8.522,
-        "end": 8.893
-      },
-      {
-        "word": "of",
-        "start": 8.928,
-        "end": 8.986
-      },
-      {
-        "word": "where",
-        "start": 9.067,
-        "end": 9.3
-      },
-      {
-        "word": "shopping",
-        "start": 9.358,
-        "end": 9.706
-      },
-      {
-        "word": "is",
-        "start": 9.752,
-        "end": 9.822
-      },
-      {
-        "word": "heading.",
-        "start": 9.868,
-        "end": 10.31
-      },
-      {
-        "word": "But",
-        "start": 10.635,
-        "end": 10.774
-      },
-      {
-        "word": "there's",
-        "start": 10.797,
-        "end": 10.995
-      },
-      {
-        "word": "one",
-        "start": 11.146,
-        "end": 11.436
-      },
-      {
-        "word": "thing",
-        "start": 11.482,
-        "end": 11.761
-      },
-      {
-        "word": "it",
-        "start": 11.935,
-        "end": 12.109
-      },
-      {
-        "word": "structurally",
-        "start": 12.237,
-        "end": 13.084
-      },
-      {
-        "word": "cannot",
-        "start": 13.468,
-        "end": 14.06
-      },
-      {
-        "word": "do.",
-        "start": 14.118,
-        "end": 14.489
-      },
-      {
-        "word": "It",
-        "start": 15.093,
-        "end": 15.232
-      },
-      {
-        "word": "can't",
-        "start": 15.279,
-        "end": 15.499
-      },
-      {
-        "word": "find",
-        "start": 15.546,
-        "end": 15.778
+        "word": "Pay",
+        "start": 4.574,
+        "end": 4.748
       },
       {
         "word": "the",
-        "start": 15.824,
-        "end": 15.906
+        "start": 4.795,
+        "end": 4.865
       },
       {
-        "word": "cheaper,",
-        "start": 15.964,
-        "end": 16.579
+        "word": "smart",
+        "start": 4.899,
+        "end": 5.166
       },
       {
-        "word": "different-brand",
-        "start": 16.707,
-        "end": 17.566
-      },
-      {
-        "word": "product",
-        "start": 17.647,
-        "end": 18.053
-      },
-      {
-        "word": "that",
-        "start": 18.1,
-        "end": 18.251
-      },
-      {
-        "word": "does",
-        "start": 18.286,
-        "end": 18.437
-      },
-      {
-        "word": "the",
-        "start": 18.46,
-        "end": 18.541
-      },
-      {
-        "word": "exact",
-        "start": 18.587,
-        "end": 19.11
-      },
-      {
-        "word": "same",
-        "start": 19.226,
-        "end": 19.539
-      },
-      {
-        "word": "job.",
-        "start": 19.586,
-        "end": 20.027
-      },
-      {
-        "word": "That's",
-        "start": 20.41,
-        "end": 20.642
-      },
-      {
-        "word": "the",
-        "start": 20.677,
-        "end": 20.747
-      },
-      {
-        "word": "entire",
-        "start": 20.793,
-        "end": 21.107
-      },
-      {
-        "word": "budget",
-        "start": 21.153,
-        "end": 21.397
-      },
-      {
-        "word": "economy,",
-        "start": 21.432,
-        "end": 21.861
-      },
-      {
-        "word": "and",
-        "start": 21.885,
-        "end": 22.036
-      },
-      {
-        "word": "today,",
-        "start": 22.082,
-        "end": 22.651
-      },
-      {
-        "word": "it's",
-        "start": 22.976,
-        "end": 23.162
-      },
-      {
-        "word": "invisible.",
-        "start": 23.208,
-        "end": 23.824
-      },
-      {
-        "word": "This",
-        "start": 24.265,
-        "end": 24.59
-      },
-      {
-        "word": "is",
-        "start": 24.659,
-        "end": 24.822
-      },
-      {
-        "word": "TwinCart.",
-        "start": 24.903,
-        "end": 25.82
+        "word": "price.",
+        "start": 5.213,
+        "end": 5.944
       }
     ]
   },
   {
     "scene": "s2",
     "audioFile": "audio/s2.mp3",
-    "durationSeconds": 19.644,
+    "durationSeconds": 15.186,
     "words": [
       {
-        "word": "Almost",
+        "word": "Comparison",
         "start": 0,
-        "end": 0.337
+        "end": 0.604
       },
       {
-        "word": "every",
-        "start": 0.406,
-        "end": 0.662
+        "word": "sites",
+        "start": 0.662,
+        "end": 0.964
       },
       {
-        "word": "product",
-        "start": 0.743,
-        "end": 1.103
+        "word": "only",
+        "start": 1.033,
+        "end": 1.265
       },
       {
-        "word": "has",
-        "start": 1.138,
-        "end": 1.242
+        "word": "match",
+        "start": 1.324,
+        "end": 1.533
       },
       {
-        "word": "a",
-        "start": 1.277,
-        "end": 1.312
+        "word": "barcodes.",
+        "start": 1.579,
+        "end": 2.229
       },
       {
-        "word": "twin.",
-        "start": 1.37,
-        "end": 1.869
+        "word": "TwinCart",
+        "start": 2.833,
+        "end": 3.32
       },
       {
-        "word": "Same",
-        "start": 2.078,
-        "end": 2.345
+        "word": "matches",
+        "start": 3.367,
+        "end": 3.646
       },
       {
-        "word": "function,",
-        "start": 2.392,
-        "end": 2.891
+        "word": "the",
+        "start": 3.692,
+        "end": 3.762
       },
       {
-        "word": "same",
-        "start": 2.949,
-        "end": 3.239
+        "word": "job.",
+        "start": 3.808,
+        "end": 4.203
       },
       {
-        "word": "specs,",
-        "start": 3.286,
-        "end": 3.924
+        "word": "Search",
+        "start": 4.586,
+        "end": 4.853
       },
       {
-        "word": "a",
-        "start": 4.098,
-        "end": 4.168
+        "word": "any",
+        "start": 4.911,
+        "end": 5.062
       },
       {
-        "word": "different",
-        "start": 4.226,
-        "end": 4.516
-      },
-      {
-        "word": "brand",
-        "start": 4.551,
-        "end": 4.923
-      },
-      {
-        "word": "—",
-        "start": 5.097,
-        "end": 5.155
+        "word": "product,",
+        "start": 5.132,
+        "end": 5.677
       },
       {
         "word": "and",
-        "start": 5.538,
-        "end": 5.689
-      },
-      {
-        "word": "no",
-        "start": 5.805,
+        "start": 5.921,
         "end": 6.06
       },
       {
-        "word": "shared",
-        "start": 6.153,
-        "end": 6.455
+        "word": "we",
+        "start": 6.118,
+        "end": 6.246
       },
       {
-        "word": "barcode",
-        "start": 6.502,
-        "end": 6.966
-      },
-      {
-        "word": "connecting",
-        "start": 7.012,
-        "end": 7.372
+        "word": "surface",
+        "start": 6.316,
+        "end": 6.711
       },
       {
         "word": "the",
-        "start": 7.419,
-        "end": 7.488
+        "start": 6.745,
+        "end": 6.815
       },
       {
-        "word": "two.",
-        "start": 7.523,
-        "end": 7.906
-      },
-      {
-        "word": "So",
-        "start": 8.29,
-        "end": 8.44
-      },
-      {
-        "word": "a",
-        "start": 8.499,
-        "end": 8.533
-      },
-      {
-        "word": "forty-dollar",
-        "start": 8.649,
-        "end": 9.3
+        "word": "same",
+        "start": 6.861,
+        "end": 7.094
       },
       {
         "word": "item",
-        "start": 9.369,
-        "end": 9.636
+        "start": 7.152,
+        "end": 7.396
       },
       {
-        "word": "and",
-        "start": 9.718,
-        "end": 9.985
+        "word": "—",
+        "start": 7.477,
+        "end": 7.523
+      },
+      {
+        "word": "or",
+        "start": 7.674,
+        "end": 7.814
       },
       {
         "word": "its",
-        "start": 10.054,
-        "end": 10.182
+        "start": 7.872,
+        "end": 7.988
       },
       {
-        "word": "twelve-dollar",
-        "start": 10.228,
-        "end": 10.809
+        "word": "cheaper",
+        "start": 8.034,
+        "end": 8.313
+      },
+      {
+        "word": "functional",
+        "start": 8.359,
+        "end": 8.707
       },
       {
         "word": "twin",
-        "start": 10.867,
-        "end": 11.192
+        "start": 8.742,
+        "end": 8.975
       },
       {
-        "word": "look",
-        "start": 11.366,
-        "end": 11.552
+        "word": "—",
+        "start": 9.125,
+        "end": 9.172
       },
       {
-        "word": "like",
-        "start": 11.61,
-        "end": 11.761
+        "word": "across",
+        "start": 9.451,
+        "end": 9.822
       },
       {
-        "word": "two",
-        "start": 11.796,
-        "end": 11.993
+        "word": "Amazon,",
+        "start": 9.903,
+        "end": 10.472
       },
       {
-        "word": "completely",
-        "start": 12.063,
-        "end": 12.852
+        "word": "Walmart,",
+        "start": 10.623,
+        "end": 11.204
       },
       {
-        "word": "unrelated",
-        "start": 13.026,
-        "end": 13.618
+        "word": "Target,",
+        "start": 11.32,
+        "end": 11.865
       },
       {
-        "word": "listings",
-        "start": 13.665,
-        "end": 14.071
-      },
-      {
-        "word": "to",
-        "start": 14.118,
-        "end": 14.199
-      },
-      {
-        "word": "every",
-        "start": 14.327,
-        "end": 14.686
-      },
-      {
-        "word": "search",
-        "start": 14.744,
-        "end": 15
-      },
-      {
-        "word": "engine,",
-        "start": 15.058,
-        "end": 15.395
+        "word": "Temu",
+        "start": 11.993,
+        "end": 12.376
       },
       {
         "word": "and",
-        "start": 15.418,
-        "end": 15.731
+        "start": 12.446,
+        "end": 12.585
       },
       {
-        "word": "to",
-        "start": 15.801,
-        "end": 15.871
+        "word": "SHEIN.",
+        "start": 12.666,
+        "end": 13.119
       },
       {
-        "word": "every",
-        "start": 15.952,
-        "end": 16.219
+        "word": "Then",
+        "start": 14.071,
+        "end": 14.245
       },
       {
-        "word": "shopping",
-        "start": 16.265,
-        "end": 16.602
+        "word": "we",
+        "start": 14.303,
+        "end": 14.396
       },
       {
-        "word": "cart",
-        "start": 16.649,
-        "end": 16.811
+        "word": "prove",
+        "start": 14.454,
+        "end": 14.698
       },
       {
-        "word": "on",
-        "start": 16.846,
-        "end": 16.904
-      },
-      {
-        "word": "the",
-        "start": 16.927,
-        "end": 16.997
-      },
-      {
-        "word": "internet.",
-        "start": 17.032,
-        "end": 17.438
-      },
-      {
-        "word": "Nobody",
-        "start": 17.496,
-        "end": 17.856
-      },
-      {
-        "word": "indexes",
-        "start": 17.949,
-        "end": 18.425
-      },
-      {
-        "word": "the",
-        "start": 18.471,
-        "end": 18.541
-      },
-      {
-        "word": "match.",
-        "start": 18.576,
-        "end": 18.901
-      },
-      {
-        "word": "We",
-        "start": 18.936,
-        "end": 19.063
-      },
-      {
-        "word": "do.",
-        "start": 19.11,
-        "end": 19.644
+        "word": "it.",
+        "start": 14.733,
+        "end": 15.186
       }
     ]
   },
   {
     "scene": "s3",
     "audioFile": "audio/s3.mp3",
-    "durationSeconds": 43.514,
+    "durationSeconds": 19.458,
     "words": [
       {
-        "word": "TwinCart",
+        "word": "Here's",
         "start": 0,
-        "end": 0.488
+        "end": 0.29
       },
       {
-        "word": "finds",
-        "start": 0.522,
-        "end": 0.766
+        "word": "how.",
+        "start": 0.337,
+        "end": 0.72
       },
       {
-        "word": "that",
-        "start": 0.801,
-        "end": 0.906
-      },
-      {
-        "word": "match",
-        "start": 0.94,
+        "word": "A",
+        "start": 1.045,
         "end": 1.126
       },
       {
-        "word": "two",
-        "start": 1.173,
-        "end": 1.3
-      },
-      {
-        "word": "ways.",
-        "start": 1.347,
-        "end": 1.649
-      },
-      {
-        "word": "First,",
-        "start": 1.73,
-        "end": 2.09
-      },
-      {
-        "word": "the",
-        "start": 2.113,
-        "end": 2.194
-      },
-      {
         "word": "deterministic",
-        "start": 2.252,
-        "end": 2.984
+        "start": 1.196,
+        "end": 1.892
       },
       {
-        "word": "layer.",
-        "start": 3.077,
-        "end": 3.529
+        "word": "tier",
+        "start": 1.95,
+        "end": 2.252
       },
       {
-        "word": "When",
-        "start": 3.913,
-        "end": 4.098
-      },
-      {
-        "word": "two",
-        "start": 4.133,
-        "end": 4.272
-      },
-      {
-        "word": "products",
-        "start": 4.319,
-        "end": 4.621
-      },
-      {
-        "word": "share",
-        "start": 4.644,
-        "end": 4.911
-      },
-      {
-        "word": "a",
-        "start": 4.981,
-        "end": 5.097
-      },
-      {
-        "word": "global",
-        "start": 5.271,
-        "end": 5.642
-      },
-      {
-        "word": "barcode",
-        "start": 5.677,
-        "end": 6.2
-      },
-      {
-        "word": "—",
-        "start": 6.246,
-        "end": 6.293
-      },
-      {
-        "word": "a",
-        "start": 6.409,
-        "end": 6.49
-      },
-      {
-        "word": "GTIN",
-        "start": 6.606,
-        "end": 7.361
-      },
-      {
-        "word": "—",
-        "start": 7.535,
-        "end": 7.674
-      },
-      {
-        "word": "we",
-        "start": 7.79,
-        "end": 7.918
-      },
-      {
-        "word": "lock",
-        "start": 8.092,
-        "end": 8.359
-      },
-      {
-        "word": "them",
-        "start": 8.417,
-        "end": 8.545
-      },
-      {
-        "word": "together",
-        "start": 8.603,
-        "end": 8.963
-      },
-      {
-        "word": "as",
-        "start": 9.056,
-        "end": 9.276
-      },
-      {
-        "word": "an",
-        "start": 9.334,
-        "end": 9.392
-      },
-      {
-        "word": "exact",
-        "start": 9.451,
-        "end": 9.95
-      },
-      {
-        "word": "match",
-        "start": 10.008,
-        "end": 10.263
-      },
-      {
-        "word": "across",
-        "start": 10.321,
-        "end": 10.658
-      },
-      {
-        "word": "Amazon,",
-        "start": 10.751,
-        "end": 11.308
-      },
-      {
-        "word": "Walmart,",
-        "start": 11.366,
-        "end": 11.865
-      },
-      {
-        "word": "and",
-        "start": 11.889,
-        "end": 11.993
-      },
-      {
-        "word": "Target.",
-        "start": 12.051,
-        "end": 12.527
-      },
-      {
-        "word": "That's",
-        "start": 12.91,
-        "end": 13.142
+        "word": "locks",
+        "start": 2.461,
+        "end": 2.786
       },
       {
         "word": "the",
-        "start": 13.166,
-        "end": 13.235
+        "start": 2.821,
+        "end": 2.891
       },
       {
-        "word": "easy",
-        "start": 13.293,
-        "end": 13.526
+        "word": "branded",
+        "start": 2.949,
+        "end": 3.297
       },
       {
-        "word": "half.",
-        "start": 13.572,
-        "end": 13.874
+        "word": "reference",
+        "start": 3.355,
+        "end": 3.704
       },
       {
-        "word": "The",
-        "start": 14.199,
-        "end": 14.315
-      },
-      {
-        "word": "hard",
-        "start": 14.373,
-        "end": 14.57
-      },
-      {
-        "word": "half",
-        "start": 14.617,
-        "end": 14.791
-      },
-      {
-        "word": "is",
-        "start": 14.861,
-        "end": 14.954
-      },
-      {
-        "word": "cross-brand,",
-        "start": 15.035,
-        "end": 15.975
-      },
-      {
-        "word": "where",
-        "start": 16.219,
-        "end": 16.451
-      },
-      {
-        "word": "no",
-        "start": 16.544,
-        "end": 16.753
-      },
-      {
-        "word": "barcode",
-        "start": 16.834,
-        "end": 17.218
-      },
-      {
-        "word": "exists",
-        "start": 17.241,
-        "end": 17.635
-      },
-      {
-        "word": "and",
-        "start": 17.682,
-        "end": 17.81
-      },
-      {
-        "word": "no",
-        "start": 17.926,
-        "end": 18.158
-      },
-      {
-        "word": "SKU",
-        "start": 18.239,
-        "end": 18.727
-      },
-      {
-        "word": "lines",
-        "start": 18.796,
-        "end": 19.017
-      },
-      {
-        "word": "up.",
-        "start": 19.075,
-        "end": 19.389
-      },
-      {
-        "word": "So",
-        "start": 19.83,
-        "end": 19.957
-      },
-      {
-        "word": "we",
-        "start": 20.016,
-        "end": 20.085
-      },
-      {
-        "word": "hand",
-        "start": 20.155,
-        "end": 20.387
-      },
-      {
-        "word": "both",
-        "start": 20.457,
-        "end": 20.654
-      },
-      {
-        "word": "products",
-        "start": 20.689,
-        "end": 20.991
-      },
-      {
-        "word": "to",
-        "start": 21.026,
-        "end": 21.072
-      },
-      {
-        "word": "Claude,",
-        "start": 21.142,
-        "end": 21.594
-      },
-      {
-        "word": "which",
-        "start": 21.711,
-        "end": 21.908
-      },
-      {
-        "word": "scores",
-        "start": 21.943,
-        "end": 22.245
-      },
-      {
-        "word": "their",
-        "start": 22.279,
-        "end": 22.407
-      },
-      {
-        "word": "functional",
-        "start": 22.454,
-        "end": 22.779
-      },
-      {
-        "word": "parity.",
-        "start": 22.825,
-        "end": 23.324
-      },
-      {
-        "word": "Does",
-        "start": 24.137,
-        "end": 24.334
-      },
-      {
-        "word": "this",
-        "start": 24.369,
-        "end": 24.555
-      },
-      {
-        "word": "actually",
-        "start": 24.636,
-        "end": 25.112
-      },
-      {
-        "word": "do",
-        "start": 25.182,
-        "end": 25.321
-      },
-      {
-        "word": "the",
-        "start": 25.391,
-        "end": 25.461
-      },
-      {
-        "word": "same",
-        "start": 25.495,
-        "end": 25.693
-      },
-      {
-        "word": "job?",
-        "start": 25.739,
-        "end": 26.157
-      },
-      {
-        "word": "It",
-        "start": 26.331,
-        "end": 26.459
-      },
-      {
-        "word": "writes",
-        "start": 26.482,
-        "end": 26.691
-      },
-      {
-        "word": "a",
-        "start": 26.726,
-        "end": 26.749
-      },
-      {
-        "word": "verdict",
-        "start": 26.865,
-        "end": 27.272
-      },
-      {
-        "word": "you",
-        "start": 27.33,
-        "end": 27.411
-      },
-      {
-        "word": "can",
-        "start": 27.458,
-        "end": 27.574
-      },
-      {
-        "word": "read,",
-        "start": 27.632,
-        "end": 27.875
-      },
-      {
-        "word": "in",
-        "start": 27.899,
-        "end": 27.957
-      },
-      {
-        "word": "plain",
-        "start": 28.015,
-        "end": 28.224
-      },
-      {
-        "word": "language.",
-        "start": 28.27,
-        "end": 28.781
-      },
-      {
-        "word": "Then",
-        "start": 29.106,
-        "end": 29.268
-      },
-      {
-        "word": "every",
-        "start": 29.338,
-        "end": 29.547
-      },
-      {
-        "word": "twin",
-        "start": 29.582,
-        "end": 29.814
-      },
-      {
-        "word": "earns",
-        "start": 29.884,
-        "end": 30.07
-      },
-      {
-        "word": "a",
-        "start": 30.116,
-        "end": 30.139
-      },
-      {
-        "word": "Value",
-        "start": 30.22,
-        "end": 30.604
-      },
-      {
-        "word": "Score",
-        "start": 30.627,
-        "end": 30.964
-      },
-      {
-        "word": "—",
-        "start": 31.08,
-        "end": 31.138
-      },
-      {
-        "word": "parity,",
-        "start": 31.312,
-        "end": 31.846
-      },
-      {
-        "word": "times",
-        "start": 31.881,
-        "end": 32.229
-      },
-      {
-        "word": "savings,",
-        "start": 32.264,
-        "end": 32.844
-      },
-      {
-        "word": "times",
-        "start": 32.902,
-        "end": 33.204
-      },
-      {
-        "word": "confidence.",
-        "start": 33.251,
-        "end": 33.878
-      },
-      {
-        "word": "That",
-        "start": 34.481,
-        "end": 34.702
-      },
-      {
-        "word": "single",
-        "start": 34.795,
-        "end": 35.166
-      },
-      {
-        "word": "number",
-        "start": 35.201,
-        "end": 35.457
-      },
-      {
-        "word": "is",
-        "start": 35.526,
-        "end": 35.607
-      },
-      {
-        "word": "why",
-        "start": 35.642,
-        "end": 35.782
-      },
-      {
-        "word": "TwinCart",
-        "start": 35.863,
-        "end": 36.409
-      },
-      {
-        "word": "surfaces",
-        "start": 36.478,
-        "end": 37.012
-      },
-      {
-        "word": "the",
-        "start": 37.094,
-        "end": 37.198
-      },
-      {
-        "word": "best",
-        "start": 37.314,
-        "end": 37.651
-      },
-      {
-        "word": "value",
-        "start": 37.732,
-        "end": 38.162
-      },
-      {
-        "word": "and",
-        "start": 38.208,
-        "end": 38.591
-      },
-      {
-        "word": "the",
-        "start": 38.707,
-        "end": 38.823
-      },
-      {
-        "word": "best",
-        "start": 38.882,
-        "end": 39.079
-      },
-      {
-        "word": "budget",
-        "start": 39.137,
-        "end": 39.416
-      },
-      {
-        "word": "pick,",
-        "start": 39.45,
-        "end": 39.88
-      },
-      {
-        "word": "instead",
-        "start": 40.321,
-        "end": 40.635
-      },
-      {
-        "word": "of",
-        "start": 40.658,
-        "end": 40.704
-      },
-      {
-        "word": "just",
-        "start": 40.751,
-        "end": 40.89
-      },
-      {
-        "word": "blindly",
-        "start": 40.948,
-        "end": 41.505
-      },
-      {
-        "word": "sorting",
-        "start": 41.598,
-        "end": 41.993
+        "word": "price",
+        "start": 3.738,
+        "end": 4.005
       },
       {
         "word": "by",
-        "start": 42.063,
-        "end": 42.295
+        "start": 4.04,
+        "end": 4.145
+      },
+      {
+        "word": "barcode.",
+        "start": 4.203,
+        "end": 4.899
+      },
+      {
+        "word": "Then",
+        "start": 6.014,
+        "end": 6.246
+      },
+      {
+        "word": "Claude",
+        "start": 6.327,
+        "end": 6.711
+      },
+      {
+        "word": "scores",
+        "start": 6.734,
+        "end": 7.07
+      },
+      {
+        "word": "functional",
+        "start": 7.129,
+        "end": 7.523
+      },
+      {
+        "word": "parity",
+        "start": 7.581,
+        "end": 7.941
+      },
+      {
+        "word": "across",
+        "start": 7.999,
+        "end": 8.336
+      },
+      {
+        "word": "brands",
+        "start": 8.394,
+        "end": 8.824
+      },
+      {
+        "word": "—",
+        "start": 8.998,
+        "end": 9.067
+      },
+      {
+        "word": "does",
+        "start": 9.392,
+        "end": 9.555
+      },
+      {
+        "word": "it",
+        "start": 9.59,
+        "end": 9.636
+      },
+      {
+        "word": "do",
+        "start": 9.671,
+        "end": 9.729
+      },
+      {
+        "word": "the",
+        "start": 9.787,
+        "end": 9.857
+      },
+      {
+        "word": "same",
+        "start": 9.903,
+        "end": 10.112
+      },
+      {
+        "word": "job?",
+        "start": 10.159,
+        "end": 10.6
+      },
+      {
+        "word": "And",
+        "start": 10.983,
+        "end": 11.134
+      },
+      {
+        "word": "every",
+        "start": 11.227,
+        "end": 11.517
+      },
+      {
+        "word": "twin",
+        "start": 11.564,
+        "end": 11.877
+      },
+      {
+        "word": "earns",
+        "start": 11.97,
+        "end": 12.225
+      },
+      {
+        "word": "a",
+        "start": 12.26,
+        "end": 12.295
+      },
+      {
+        "word": "Value",
+        "start": 12.353,
+        "end": 12.69
+      },
+      {
+        "word": "Score:",
+        "start": 12.713,
+        "end": 13.201
+      },
+      {
+        "word": "parity,",
+        "start": 13.444,
+        "end": 14.013
+      },
+      {
+        "word": "times",
+        "start": 14.129,
+        "end": 14.443
+      },
+      {
+        "word": "savings,",
+        "start": 14.466,
+        "end": 15.07
+      },
+      {
+        "word": "times",
+        "start": 15.186,
+        "end": 15.464
+      },
+      {
+        "word": "confidence.",
+        "start": 15.511,
+        "end": 16.149
+      },
+      {
+        "word": "So",
+        "start": 16.475,
+        "end": 16.637
+      },
+      {
+        "word": "we",
+        "start": 16.695,
+        "end": 16.776
+      },
+      {
+        "word": "rank",
+        "start": 16.858,
+        "end": 17.055
+      },
+      {
+        "word": "by",
+        "start": 17.125,
+        "end": 17.229
+      },
+      {
+        "word": "value,",
+        "start": 17.31,
+        "end": 17.833
+      },
+      {
+        "word": "not",
+        "start": 18.042,
+        "end": 18.228
+      },
+      {
+        "word": "by",
+        "start": 18.274,
+        "end": 18.355
+      },
+      {
+        "word": "the",
+        "start": 18.413,
+        "end": 18.483
       },
       {
         "word": "lowest",
-        "start": 42.469,
-        "end": 42.817
+        "start": 18.518,
+        "end": 18.773
       },
       {
-        "word": "price.",
-        "start": 42.864,
-        "end": 43.514
+        "word": "sticker.",
+        "start": 18.797,
+        "end": 19.458
       }
     ]
   },
   {
     "scene": "s4",
     "audioFile": "audio/s4.mp3",
-    "durationSeconds": 38.359,
+    "durationSeconds": 14.629,
     "words": [
       {
         "word": "Watch",
         "start": 0,
-        "end": 0.383
-      },
-      {
-        "word": "what",
-        "start": 0.441,
-        "end": 0.604
-      },
-      {
-        "word": "that",
-        "start": 0.65,
-        "end": 0.813
-      },
-      {
-        "word": "surfaces.",
-        "start": 0.882,
-        "end": 1.614
-      },
-      {
-        "word": "Search",
-        "start": 2.566,
-        "end": 2.914
-      },
-      {
-        "word": "robot",
-        "start": 3.03,
-        "end": 3.471
-      },
-      {
-        "word": "vacuum.",
-        "start": 3.529,
-        "end": 4.203
-      },
-      {
-        "word": "The",
-        "start": 4.481,
-        "end": 4.598
-      },
-      {
-        "word": "brand-name",
-        "start": 4.667,
-        "end": 5.236
-      },
-      {
-        "word": "model",
-        "start": 5.283,
-        "end": 5.642
-      },
-      {
-        "word": "is",
-        "start": 5.817,
-        "end": 6.037
-      },
-      {
-        "word": "the",
-        "start": 6.107,
-        "end": 6.188
-      },
-      {
-        "word": "anchor",
-        "start": 6.258,
-        "end": 6.56
-      },
-      {
-        "word": "—",
-        "start": 6.734,
-        "end": 6.78
-      },
-      {
-        "word": "but",
-        "start": 7.384,
-        "end": 7.546
-      },
-      {
-        "word": "right",
-        "start": 7.581,
-        "end": 7.732
-      },
-      {
-        "word": "beside",
-        "start": 7.767,
-        "end": 8.15
-      },
-      {
-        "word": "it,",
-        "start": 8.185,
-        "end": 8.278
-      },
-      {
-        "word": "TwinCart",
-        "start": 8.301,
-        "end": 8.766
-      },
-      {
-        "word": "finds",
-        "start": 8.824,
-        "end": 9.218
-      },
-      {
-        "word": "a",
-        "start": 9.288,
-        "end": 9.381
-      },
-      {
-        "word": "functional",
-        "start": 9.532,
-        "end": 10.019
-      },
-      {
-        "word": "twin",
-        "start": 10.089,
-        "end": 10.484
-      },
-      {
-        "word": "that",
-        "start": 10.658,
-        "end": 10.844
-      },
-      {
-        "word": "cleans",
-        "start": 10.89,
-        "end": 11.331
-      },
-      {
-        "word": "the",
-        "start": 11.389,
-        "end": 11.459
-      },
-      {
-        "word": "same",
-        "start": 11.517,
-        "end": 11.738
-      },
-      {
-        "word": "floors,",
-        "start": 11.773,
-        "end": 12.179
-      },
-      {
-        "word": "with",
-        "start": 12.214,
-        "end": 12.399
-      },
-      {
-        "word": "the",
-        "start": 12.446,
-        "end": 12.516
-      },
-      {
-        "word": "same",
-        "start": 12.562,
-        "end": 12.794
-      },
-      {
-        "word": "suction",
-        "start": 12.829,
-        "end": 13.247
-      },
-      {
-        "word": "and",
-        "start": 13.34,
-        "end": 13.491
-      },
-      {
-        "word": "the",
-        "start": 13.537,
-        "end": 13.607
-      },
-      {
-        "word": "same",
-        "start": 13.642,
-        "end": 13.874
-      },
-      {
-        "word": "smart",
-        "start": 13.932,
-        "end": 14.28
-      },
-      {
-        "word": "mapping,",
-        "start": 14.327,
-        "end": 14.838
-      },
-      {
-        "word": "for",
-        "start": 15.047,
-        "end": 15.197
-      },
-      {
-        "word": "a",
-        "start": 15.244,
-        "end": 15.267
-      },
-      {
-        "word": "tiny",
-        "start": 15.348,
-        "end": 15.731
-      },
-      {
-        "word": "fraction",
-        "start": 15.789,
-        "end": 16.3
-      },
-      {
-        "word": "of",
-        "start": 16.451,
-        "end": 16.59
-      },
-      {
-        "word": "the",
-        "start": 16.66,
-        "end": 16.73
-      },
-      {
-        "word": "price.",
-        "start": 16.776,
-        "end": 17.287
-      },
-      {
-        "word": "Not",
-        "start": 17.728,
-        "end": 17.937
-      },
-      {
-        "word": "five",
-        "start": 17.983,
-        "end": 18.169
-      },
-      {
-        "word": "percent,",
-        "start": 18.192,
-        "end": 18.517
-      },
-      {
-        "word": "not",
-        "start": 18.552,
-        "end": 18.715
-      },
-      {
-        "word": "ten",
-        "start": 18.75,
-        "end": 18.889
-      },
-      {
-        "word": "percent",
-        "start": 18.947,
-        "end": 19.237
-      },
-      {
-        "word": "—",
-        "start": 19.26,
-        "end": 19.307
-      },
-      {
-        "word": "up",
-        "start": 19.481,
-        "end": 19.644
-      },
-      {
-        "word": "to",
-        "start": 19.69,
-        "end": 19.76
-      },
-      {
-        "word": "ninety-seven",
-        "start": 19.876,
-        "end": 20.63
-      },
-      {
-        "word": "percent",
-        "start": 20.7,
-        "end": 21.037
-      },
-      {
-        "word": "less.",
-        "start": 21.095,
-        "end": 21.49
-      },
-      {
-        "word": "The",
-        "start": 21.768,
-        "end": 21.884
-      },
-      {
-        "word": "parity",
-        "start": 21.942,
-        "end": 22.244
-      },
-      {
-        "word": "verdict",
-        "start": 22.302,
-        "end": 22.697
-      },
-      {
-        "word": "explains",
-        "start": 22.813,
-        "end": 23.556
-      },
-      {
-        "word": "exactly",
-        "start": 23.672,
-        "end": 24.427
-      },
-      {
-        "word": "why",
-        "start": 24.497,
-        "end": 24.926
-      },
-      {
-        "word": "the",
-        "start": 25.1,
-        "end": 25.228
-      },
-      {
-        "word": "two",
-        "start": 25.286,
-        "end": 25.46
-      },
-      {
-        "word": "match,",
-        "start": 25.518,
-        "end": 25.971
-      },
-      {
-        "word": "and",
-        "start": 26.215,
-        "end": 26.354
-      },
-      {
-        "word": "it's",
-        "start": 26.412,
-        "end": 26.528
-      },
-      {
-        "word": "honest",
-        "start": 26.586,
-        "end": 26.993
-      },
-      {
-        "word": "about",
-        "start": 27.086,
-        "end": 27.387
-      },
-      {
-        "word": "the",
-        "start": 27.422,
-        "end": 27.492
-      },
-      {
-        "word": "tradeoffs.",
-        "start": 27.527,
-        "end": 28.096
-      },
-      {
-        "word": "And",
-        "start": 28.479,
-        "end": 28.618
-      },
-      {
-        "word": "every",
-        "start": 28.699,
-        "end": 28.932
-      },
-      {
-        "word": "comparison",
-        "start": 28.966,
-        "end": 29.442
-      },
-      {
-        "word": "you",
-        "start": 29.489,
-        "end": 29.57
-      },
-      {
-        "word": "run",
-        "start": 29.663,
-        "end": 29.895
-      },
-      {
-        "word": "becomes",
-        "start": 29.965,
-        "end": 30.29
-      },
-      {
-        "word": "a",
-        "start": 30.336,
-        "end": 30.371
-      },
-      {
-        "word": "savings",
-        "start": 30.464,
-        "end": 30.893
-      },
-      {
-        "word": "report,",
-        "start": 30.94,
-        "end": 31.323
-      },
-      {
-        "word": "saved",
-        "start": 31.358,
-        "end": 31.648
-      },
-      {
-        "word": "straight",
-        "start": 31.671,
-        "end": 31.95
-      },
-      {
-        "word": "to",
-        "start": 31.996,
-        "end": 32.066
-      },
-      {
-        "word": "Box,",
-        "start": 32.159,
-        "end": 32.612
-      },
-      {
-        "word": "with",
-        "start": 32.658,
-        "end": 32.844
-      },
-      {
-        "word": "real,",
-        "start": 32.972,
-        "end": 33.308
-      },
-      {
-        "word": "working",
-        "start": 33.343,
-        "end": 33.657
-      },
-      {
-        "word": "product",
-        "start": 33.715,
-        "end": 34.005
-      },
-      {
-        "word": "links",
-        "start": 34.051,
-        "end": 34.295
-      },
-      {
-        "word": "—",
-        "start": 34.446,
-        "end": 34.493
-      },
-      {
-        "word": "so",
-        "start": 35.096,
-        "end": 35.224
-      },
-      {
-        "word": "the",
-        "start": 35.282,
-        "end": 35.352
-      },
-      {
-        "word": "proof",
-        "start": 35.421,
-        "end": 35.723
-      },
-      {
-        "word": "travels",
-        "start": 35.793,
-        "end": 36.176
-      },
-      {
-        "word": "with",
-        "start": 36.222,
-        "end": 36.397
-      },
-      {
-        "word": "you,",
-        "start": 36.455,
-        "end": 36.71
-      },
-      {
-        "word": "and",
-        "start": 36.745,
-        "end": 36.896
-      },
-      {
-        "word": "you",
-        "start": 36.942,
-        "end": 37.012
-      },
-      {
-        "word": "can",
-        "start": 37.047,
-        "end": 37.174
-      },
-      {
-        "word": "act",
-        "start": 37.256,
-        "end": 37.488
-      },
-      {
-        "word": "on",
-        "start": 37.546,
-        "end": 37.616
+        "end": 0.279
       },
       {
         "word": "it",
-        "start": 37.65,
-        "end": 37.72
+        "start": 0.325,
+        "end": 0.383
       },
       {
-        "word": "later.",
-        "start": 37.755,
-        "end": 38.359
+        "word": "work.",
+        "start": 0.43,
+        "end": 0.836
+      },
+      {
+        "word": "Search",
+        "start": 1.277,
+        "end": 1.579
+      },
+      {
+        "word": "robot",
+        "start": 1.637,
+        "end": 1.927
+      },
+      {
+        "word": "vacuum.",
+        "start": 1.974,
+        "end": 2.473
+      },
+      {
+        "word": "The",
+        "start": 3.17,
+        "end": 3.286
+      },
+      {
+        "word": "brand-name",
+        "start": 3.332,
+        "end": 3.796
+      },
+      {
+        "word": "pick",
+        "start": 3.831,
+        "end": 4.005
+      },
+      {
+        "word": "is",
+        "start": 4.063,
+        "end": 4.133
+      },
+      {
+        "word": "the",
+        "start": 4.168,
+        "end": 4.249
+      },
+      {
+        "word": "anchor",
+        "start": 4.307,
+        "end": 4.609
+      },
+      {
+        "word": "—",
+        "start": 4.667,
+        "end": 4.714
+      },
+      {
+        "word": "but",
+        "start": 4.83,
+        "end": 4.969
+      },
+      {
+        "word": "its",
+        "start": 5.004,
+        "end": 5.12
+      },
+      {
+        "word": "twin",
+        "start": 5.155,
+        "end": 5.433
+      },
+      {
+        "word": "cleans",
+        "start": 5.503,
+        "end": 5.77
+      },
+      {
+        "word": "the",
+        "start": 5.817,
+        "end": 5.886
+      },
+      {
+        "word": "same",
+        "start": 5.933,
+        "end": 6.153
+      },
+      {
+        "word": "floors",
+        "start": 6.188,
+        "end": 6.478
+      },
+      {
+        "word": "for",
+        "start": 6.513,
+        "end": 6.618
+      },
+      {
+        "word": "a",
+        "start": 6.664,
+        "end": 6.687
+      },
+      {
+        "word": "fraction",
+        "start": 6.769,
+        "end": 7.175
+      },
+      {
+        "word": "of",
+        "start": 7.21,
+        "end": 7.256
+      },
+      {
+        "word": "the",
+        "start": 7.303,
+        "end": 7.372
+      },
+      {
+        "word": "price.",
+        "start": 7.396,
+        "end": 7.872
+      },
+      {
+        "word": "Up",
+        "start": 8.255,
+        "end": 8.394
+      },
+      {
+        "word": "to",
+        "start": 8.44,
+        "end": 8.499
+      },
+      {
+        "word": "ninety-seven",
+        "start": 8.615,
+        "end": 9.183
+      },
+      {
+        "word": "percent",
+        "start": 9.23,
+        "end": 9.555
+      },
+      {
+        "word": "less.",
+        "start": 9.613,
+        "end": 10.054
+      },
+      {
+        "word": "And",
+        "start": 10.495,
+        "end": 10.646
+      },
+      {
+        "word": "every",
+        "start": 10.762,
+        "end": 11.053
+      },
+      {
+        "word": "match",
+        "start": 11.122,
+        "end": 11.355
+      },
+      {
+        "word": "ships",
+        "start": 11.401,
+        "end": 11.633
+      },
+      {
+        "word": "with",
+        "start": 11.656,
+        "end": 11.773
+      },
+      {
+        "word": "its",
+        "start": 11.819,
+        "end": 11.923
+      },
+      {
+        "word": "proof,",
+        "start": 11.981,
+        "end": 12.283
+      },
+      {
+        "word": "plus",
+        "start": 12.307,
+        "end": 12.678
+      },
+      {
+        "word": "a",
+        "start": 12.957,
+        "end": 13.038
+      },
+      {
+        "word": "savings",
+        "start": 13.119,
+        "end": 13.456
+      },
+      {
+        "word": "report",
+        "start": 13.502,
+        "end": 13.758
+      },
+      {
+        "word": "you",
+        "start": 13.781,
+        "end": 13.851
+      },
+      {
+        "word": "can",
+        "start": 13.897,
+        "end": 13.99
+      },
+      {
+        "word": "keep.",
+        "start": 14.036,
+        "end": 14.629
       }
     ]
   },
   {
     "scene": "s5",
     "audioFile": "audio/s5.mp3",
-    "durationSeconds": 21.269,
+    "durationSeconds": 14.211,
     "words": [
       {
-        "word": "And",
+        "word": "Add",
         "start": 0,
-        "end": 0.151
+        "end": 0.209
       },
       {
-        "word": "once",
-        "start": 0.244,
-        "end": 0.488
+        "word": "every",
+        "start": 0.267,
+        "end": 0.464
       },
       {
-        "word": "you've",
+        "word": "twin",
         "start": 0.522,
         "end": 0.731
       },
       {
-        "word": "found",
-        "start": 0.813,
-        "end": 1.161
+        "word": "to",
+        "start": 0.789,
+        "end": 0.848
       },
       {
-        "word": "your",
-        "start": 1.231,
-        "end": 1.37
+        "word": "one",
+        "start": 0.94,
+        "end": 1.126
       },
       {
-        "word": "twin?",
-        "start": 1.428,
-        "end": 2.055
-      },
-      {
-        "word": "TwinCart's",
-        "start": 2.566,
-        "end": 3.111
-      },
-      {
-        "word": "agent",
-        "start": 3.158,
-        "end": 3.495
-      },
-      {
-        "word": "takes",
-        "start": 3.553,
-        "end": 3.808
-      },
-      {
-        "word": "it",
-        "start": 3.855,
-        "end": 3.924
-      },
-      {
-        "word": "from",
-        "start": 3.947,
-        "end": 4.087
-      },
-      {
-        "word": "there.",
-        "start": 4.122,
-        "end": 4.447
-      },
-      {
-        "word": "It",
-        "start": 4.83,
-        "end": 4.957
-      },
-      {
-        "word": "opens",
-        "start": 5.004,
-        "end": 5.283
-      },
-      {
-        "word": "the",
-        "start": 5.329,
-        "end": 5.399
-      },
-      {
-        "word": "retailer,",
-        "start": 5.457,
-        "end": 5.933
-      },
-      {
-        "word": "locates",
-        "start": 5.991,
-        "end": 6.409
-      },
-      {
-        "word": "the",
-        "start": 6.455,
-        "end": 6.536
-      },
-      {
-        "word": "exact",
-        "start": 6.583,
-        "end": 6.931
-      },
-      {
-        "word": "product,",
-        "start": 6.989,
-        "end": 7.372
+        "word": "basket,",
+        "start": 1.173,
+        "end": 1.73
       },
       {
         "word": "and",
-        "start": 7.396,
-        "end": 7.5
+        "start": 1.904,
+        "end": 2.032
       },
       {
-        "word": "adds",
-        "start": 7.616,
-        "end": 7.999
+        "word": "the",
+        "start": 2.078,
+        "end": 2.148
       },
       {
-        "word": "it",
-        "start": 8.057,
-        "end": 8.15
+        "word": "savings",
+        "start": 2.183,
+        "end": 2.554
       },
       {
-        "word": "to",
-        "start": 8.208,
-        "end": 8.301
+        "word": "stack",
+        "start": 2.577,
+        "end": 2.833
       },
       {
-        "word": "your",
-        "start": 8.382,
-        "end": 8.522
-      },
-      {
-        "word": "cart",
-        "start": 8.591,
-        "end": 8.882
+        "word": "up",
+        "start": 2.902,
+        "end": 3.019
       },
       {
         "word": "—",
-        "start": 9.033,
-        "end": 9.091
+        "start": 3.17,
+        "end": 3.251
+      },
+      {
+        "word": "a",
+        "start": 3.576,
+        "end": 3.634
+      },
+      {
+        "word": "nearly",
+        "start": 3.704,
+        "end": 3.959
+      },
+      {
+        "word": "thousand-dollar",
+        "start": 4.029,
+        "end": 4.644
+      },
+      {
+        "word": "cart",
+        "start": 4.702,
+        "end": 4.923
+      },
+      {
+        "word": "for",
+        "start": 4.969,
+        "end": 5.085
+      },
+      {
+        "word": "around",
+        "start": 5.132,
+        "end": 5.375
+      },
+      {
+        "word": "a",
+        "start": 5.41,
+        "end": 5.433
+      },
+      {
+        "word": "hundred",
+        "start": 5.492,
+        "end": 5.747
+      },
+      {
+        "word": "dollars,",
+        "start": 5.77,
+        "end": 6.304
+      },
+      {
+        "word": "eighty-eight",
+        "start": 6.548,
+        "end": 6.966
+      },
+      {
+        "word": "percent",
+        "start": 6.989,
+        "end": 7.291
+      },
+      {
+        "word": "off.",
+        "start": 7.349,
+        "end": 7.721
+      },
+      {
+        "word": "Then",
+        "start": 8.417,
+        "end": 8.615
+      },
+      {
+        "word": "the",
+        "start": 8.661,
+        "end": 8.731
+      },
+      {
+        "word": "TwinCart",
+        "start": 8.777,
+        "end": 9.253
+      },
+      {
+        "word": "agent",
+        "start": 9.311,
+        "end": 9.578
+      },
+      {
+        "word": "checks",
+        "start": 9.613,
+        "end": 9.845
+      },
+      {
+        "word": "out",
+        "start": 9.88,
+        "end": 9.985
+      },
+      {
+        "word": "the",
+        "start": 10.019,
+        "end": 10.089
+      },
+      {
+        "word": "whole",
+        "start": 10.124,
+        "end": 10.31
+      },
+      {
+        "word": "basket,",
+        "start": 10.333,
+        "end": 10.844
       },
       {
         "word": "and",
-        "start": 9.474,
-        "end": 9.613
-      },
-      {
-        "word": "then",
-        "start": 9.648,
-        "end": 9.752
-      },
-      {
-        "word": "it",
-        "start": 9.787,
-        "end": 9.857
-      },
-      {
-        "word": "stops.",
-        "start": 9.892,
-        "end": 10.461
-      },
-      {
-        "word": "It",
-        "start": 10.902,
-        "end": 11.029
+        "start": 11.053,
+        "end": 11.204
       },
       {
         "word": "stops",
-        "start": 11.088,
-        "end": 11.505
+        "start": 11.262,
+        "end": 11.598
       },
       {
         "word": "at",
-        "start": 11.564,
+        "start": 11.633,
         "end": 11.691
       },
       {
         "word": "your",
-        "start": 11.749,
+        "start": 11.738,
         "end": 11.877
       },
       {
-        "word": "approval,",
-        "start": 11.912,
-        "end": 12.62
+        "word": "approval.",
+        "start": 11.923,
+        "end": 12.516
       },
       {
-        "word": "and",
-        "start": 13.003,
-        "end": 13.154
-      },
-      {
-        "word": "it",
-        "start": 13.212,
-        "end": 13.305
+        "word": "It",
+        "start": 12.759,
+        "end": 12.91
       },
       {
         "word": "never",
-        "start": 13.421,
-        "end": 13.851
+        "start": 12.992,
+        "end": 13.259
       },
       {
         "word": "auto-pays.",
-        "start": 14.06,
-        "end": 15.151
-      },
-      {
-        "word": "That",
-        "start": 15.325,
-        "end": 15.534
-      },
-      {
-        "word": "human-in-the-loop",
-        "start": 15.615,
-        "end": 16.66
-      },
-      {
-        "word": "boundary",
-        "start": 16.73,
-        "end": 17.194
-      },
-      {
-        "word": "is",
-        "start": 17.705,
-        "end": 17.902
-      },
-      {
-        "word": "the",
-        "start": 17.96,
-        "end": 18.042
-      },
-      {
-        "word": "entire",
-        "start": 18.1,
-        "end": 18.541
-      },
-      {
-        "word": "point",
-        "start": 18.587,
-        "end": 18.843
-      },
-      {
-        "word": "of",
-        "start": 18.901,
-        "end": 18.97
-      },
-      {
-        "word": "AP2-signed",
-        "start": 19.086,
-        "end": 20.015
-      },
-      {
-        "word": "agentic",
-        "start": 20.085,
-        "end": 20.503
-      },
-      {
-        "word": "checkout.",
-        "start": 20.549,
-        "end": 21.269
+        "start": 13.328,
+        "end": 14.211
       }
     ]
   },
   {
     "scene": "s6",
     "audioFile": "audio/s6.mp3",
-    "durationSeconds": 22.941,
+    "durationSeconds": 14.257,
     "words": [
       {
-        "word": "So",
+        "word": "Five",
         "start": 0,
-        "end": 0.174
+        "end": 0.325
       },
       {
-        "word": "here's",
-        "start": 0.221,
-        "end": 0.418
-      },
-      {
-        "word": "the",
-        "start": 0.453,
-        "end": 0.522
-      },
-      {
-        "word": "difference,",
-        "start": 0.557,
-        "end": 0.929
-      },
-      {
-        "word": "in",
-        "start": 0.952,
-        "end": 1.022
+        "word": "marketplaces,",
+        "start": 0.372,
+        "end": 1.231
       },
       {
         "word": "one",
-        "start": 1.115,
-        "end": 1.312
+        "start": 1.405,
+        "end": 1.625
       },
       {
-        "word": "line.",
-        "start": 1.358,
-        "end": 1.672
+        "word": "ranked",
+        "start": 1.66,
+        "end": 1.892
       },
       {
-        "word": "Google's",
-        "start": 1.8,
-        "end": 2.171
-      },
-      {
-        "word": "Universal",
-        "start": 2.241,
-        "end": 2.67
-      },
-      {
-        "word": "Cart",
-        "start": 2.74,
-        "end": 2.984
-      },
-      {
-        "word": "checks",
-        "start": 3.042,
-        "end": 3.286
-      },
-      {
-        "word": "you",
-        "start": 3.32,
-        "end": 3.402
-      },
-      {
-        "word": "out",
-        "start": 3.448,
-        "end": 3.553
-      },
-      {
-        "word": "at",
-        "start": 3.587,
-        "end": 3.646
-      },
-      {
-        "word": "the",
-        "start": 3.669,
-        "end": 3.738
-      },
-      {
-        "word": "brand.",
-        "start": 3.762,
-        "end": 4.203
-      },
-      {
-        "word": "TwinCart",
-        "start": 4.481,
-        "end": 5.027
-      },
-      {
-        "word": "finds",
-        "start": 5.097,
-        "end": 5.457
-      },
-      {
-        "word": "the",
-        "start": 5.515,
-        "end": 5.584
-      },
-      {
-        "word": "cross-marketplace",
-        "start": 5.631,
-        "end": 6.594
-      },
-      {
-        "word": "twin",
-        "start": 6.653,
-        "end": 7.012
-      },
-      {
-        "word": "that",
-        "start": 7.07,
-        "end": 7.198
-      },
-      {
-        "word": "Google",
-        "start": 7.268,
-        "end": 7.616
-      },
-      {
-        "word": "won't",
-        "start": 7.651,
-        "end": 7.906
-      },
-      {
-        "word": "index",
-        "start": 7.976,
-        "end": 8.406
+        "word": "answer",
+        "start": 1.939,
+        "end": 2.276
       },
       {
         "word": "—",
-        "start": 8.499,
-        "end": 8.557
+        "start": 2.45,
+        "end": 2.554
       },
       {
-        "word": "across",
-        "start": 8.626,
-        "end": 9.044
+        "word": "built",
+        "start": 2.798,
+        "end": 3.042
       },
       {
-        "word": "Amazon,",
-        "start": 9.137,
-        "end": 9.776
+        "word": "on",
+        "start": 3.1,
+        "end": 3.193
       },
       {
-        "word": "Temu,",
-        "start": 9.834,
-        "end": 10.461
+        "word": "AWS,",
+        "start": 3.274,
+        "end": 3.959
       },
       {
-        "word": "SHEIN,",
-        "start": 10.507,
-        "end": 11.088
-      },
-      {
-        "word": "Walmart,",
-        "start": 11.18,
-        "end": 11.714
+        "word": "Box,",
+        "start": 4.005,
+        "end": 4.377
       },
       {
         "word": "and",
-        "start": 11.749,
-        "end": 11.865
+        "start": 4.4,
+        "end": 4.481
       },
       {
-        "word": "Target.",
-        "start": 11.923,
-        "end": 12.399
+        "word": "Apify.",
+        "start": 4.551,
+        "end": 5.236
       },
       {
-        "word": "It's",
-        "start": 12.725,
-        "end": 12.91
+        "word": "Five",
+        "start": 5.933,
+        "end": 6.211
       },
       {
-        "word": "UCP-compatible,",
-        "start": 13.003,
-        "end": 14.152
+        "word": "thousand",
+        "start": 6.246,
+        "end": 6.56
       },
       {
-        "word": "it's",
-        "start": 14.199,
-        "end": 14.361
+        "word": "real",
+        "start": 6.618,
+        "end": 6.78
       },
       {
-        "word": "live",
-        "start": 14.477,
-        "end": 14.849
-      },
-      {
-        "word": "today,",
-        "start": 14.884,
-        "end": 15.278
+        "word": "products,",
+        "start": 6.827,
+        "end": 7.43
       },
       {
         "word": "and",
-        "start": 15.313,
-        "end": 15.453
-      },
-      {
-        "word": "it",
-        "start": 15.499,
-        "end": 15.557
-      },
-      {
-        "word": "finally",
-        "start": 15.604,
-        "end": 15.905
-      },
-      {
-        "word": "makes",
-        "start": 15.963,
-        "end": 16.196
+        "start": 7.546,
+        "end": 7.686
       },
       {
         "word": "the",
-        "start": 16.242,
-        "end": 16.335
+        "start": 7.732,
+        "end": 7.802
       },
       {
-        "word": "dupe",
-        "start": 16.428,
-        "end": 16.776
+        "word": "twins",
+        "start": 7.825,
+        "end": 8.162
       },
       {
-        "word": "economy",
-        "start": 16.823,
-        "end": 17.38
+        "word": "are",
+        "start": 8.22,
+        "end": 8.359
       },
       {
-        "word": "searchable.",
-        "start": 17.624,
-        "end": 18.251
+        "word": "already",
+        "start": 8.417,
+        "end": 8.812
       },
       {
-        "word": "TwinCart",
-        "start": 18.854,
-        "end": 19.504
+        "word": "live.",
+        "start": 8.87,
+        "end": 9.334
       },
       {
-        "word": "—",
-        "start": 19.621,
-        "end": 19.679
+        "word": "TwinCart.",
+        "start": 10.031,
+        "end": 10.762
       },
       {
-        "word": "find",
-        "start": 19.795,
-        "end": 20.004
+        "word": "Find",
+        "start": 11.459,
+        "end": 11.726
       },
       {
         "word": "the",
-        "start": 20.039,
-        "end": 20.108
-      },
-      {
-        "word": "same",
-        "start": 20.143,
-        "end": 20.34
-      },
-      {
-        "word": "product,",
-        "start": 20.375,
-        "end": 20.782
-      },
-      {
-        "word": "or",
-        "start": 20.828,
-        "end": 20.991
-      },
-      {
-        "word": "its",
-        "start": 21.049,
-        "end": 21.165
-      },
-      {
-        "word": "smarter,",
-        "start": 21.339,
-        "end": 21.85
-      },
-      {
-        "word": "cheaper",
-        "start": 21.896,
-        "end": 22.256
+        "start": 11.761,
+        "end": 11.831
       },
       {
         "word": "twin.",
-        "start": 22.326,
-        "end": 22.941
+        "start": 11.865,
+        "end": 12.33
+      },
+      {
+        "word": "Pay",
+        "start": 12.934,
+        "end": 13.119
+      },
+      {
+        "word": "the",
+        "start": 13.177,
+        "end": 13.247
+      },
+      {
+        "word": "smart",
+        "start": 13.282,
+        "end": 13.526
+      },
+      {
+        "word": "price.",
+        "start": 13.56,
+        "end": 14.257
       }
     ]
   }

@@ -11,7 +11,7 @@ const StepCard: React.FC<{ title: string; body: React.ReactNode; appear: number 
   return (
     <div style={{ opacity: p, transform: `translateY(${(1 - p) * 30}px)`, background: "rgba(255,255,255,0.05)",
       border: "2px solid rgba(124,246,200,0.45)", borderRadius: 20, padding: "26px 34px", maxWidth: 1200 }}>
-      <div style={{ color: "#7CF6C8", fontSize: 30, fontWeight: 800, marginBottom: 8 }}>{title}</div>
+      <div style={{ color: "#16A34A", fontSize: 30, fontWeight: 800, marginBottom: 8 }}>{title}</div>
       <div style={{ color: "#fff", fontSize: 34, fontWeight: 600, lineHeight: 1.3 }}>{body}</div>
     </div>
   );

@@ -5,9 +5,9 @@ const DIR = join(import.meta.dir, "../remotion/public/bg");
 const KEY = process.env.GEMINI_API_KEY!;
 const MODEL = "gemini-3.1-flash-image-preview";
 const PROMPTS: Record<string, string> = {
-  hook: "Dark cinematic abstract background, deep navy to teal gradient, subtle floating shopping-cart and price-tag silhouettes, premium tech keynote style, no text, 16:9 wide",
-  idea: "Two abstract product silhouettes mirrored as twins on a dark teal stage, soft spotlight beam between them, minimal premium, no text, 16:9 wide",
-  close: "Dark premium split-stage background, left side cool blue, right side warm green, abstract marketplace network nodes, no text, 16:9 wide",
+  hook: "A single glowing translucent shopping cart floating in a vast dark cinematic void, with a faint identical ghost twin cart beside it, deep navy to teal volumetric lighting, premium Apple-keynote aesthetic, ultra detailed, photorealistic, dramatic depth of field, no text, no words, cinematic widescreen 16:9",
+  idea: "Two nearly identical sleek product boxes standing side by side on a dark reflective studio stage, the right one softly glowing teal as its twin, dramatic single spotlight, high-end minimalist product photography, deep shadows, premium, no text, no words, cinematic widescreen 16:9",
+  close: "Two elegant glowing marketplace network constellations on a dark premium stage, left cluster cool blue nodes, right cluster warm green nodes, fine connecting light lines merging in the center, cinematic depth and bokeh, premium tech keynote, no text, no words, widescreen 16:9",
 };
 
 async function gen(name: string, prompt: string) {

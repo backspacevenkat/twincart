@@ -1,6 +1,5 @@
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { MANIFEST, sceneFrames } from "./lib/manifest";
-import { Caption } from "./components/Caption";
 import { S1_Hook } from "./scenes/S1_Hook";
 import { S2_TwinIdea } from "./scenes/S2_TwinIdea";
 import { S3_HowTwinsFound } from "./scenes/S3_HowTwinsFound";
@@ -15,7 +14,7 @@ const BODY: Record<string, React.FC<{ dur: number }>> = {
 export const TwinCartVideo: React.FC = () => {
   let from = 0;
   return (
-    <AbsoluteFill style={{ backgroundColor: "#06120f" }}>
+    <AbsoluteFill style={{ backgroundColor: "#0B1220" }}>
       {MANIFEST.map((s) => {
         const dur = sceneFrames(s);
         const Body = BODY[s.scene] ?? (() => null);
@@ -23,7 +22,6 @@ export const TwinCartVideo: React.FC = () => {
           <Sequence key={s.scene} from={from} durationInFrames={dur} name={s.scene}>
             <Body dur={s.durationSeconds} />
             {s.audioFile ? <Audio src={staticFile(s.audioFile)} /> : null}
-            <Caption words={s.words} />
           </Sequence>
         );
         from += dur;
