@@ -49,3 +49,8 @@ logs/
 .deploy_status
 .tc_out.zip
 out/
+
+# demo video
+video-out/
+remotion/public/audio/
+remotion/public/capture/

@@ -8,7 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "ingest": "bun src/pipeline/ingest.ts",
-    "test:gtin": "bun src/pipeline/gtin.test.ts"
+    "test:gtin": "bun src/pipeline/gtin.test.ts",
+    "video:capture": "bun scripts/capture-app.ts",
+    "video:vo": "bun scripts/gen-voiceover.ts",
+    "video:assets": "bun scripts/fetch-logos.ts && bun scripts/gen-backgrounds.ts",
+    "video:preview": "cd remotion && npm run studio",
+    "video:build": "cd remotion && npm run render"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.100.1",
@@ -33,6 +38,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "playwright": "1.60.0",
     "tailwindcss": "^4",
     "tsx": "4.22.3",
     "typescript": "^5"
