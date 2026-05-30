@@ -866,7 +866,7 @@ function TwinTriptych({ cluster, animate = true, onPick, picked }: any) {
       }} />
       <SeamNode active={seam} />
 
-      <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
+      <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
         gap: 14, zIndex: 1, alignItems: "stretch" }} className="triptych-grid">
         {slots.map((s, i) => (
           <TwinPanel key={s.key} p={s.p} icon={cluster.icon} slotKind={s.kind}
