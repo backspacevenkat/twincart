@@ -9,7 +9,7 @@ Researched 2026-05-29. All actors are keyword-search, Node-SDK callable (`client
 | Amazon | `automation-lab/amazon-scraper` | ~$7.20 | ASIN (+GTIN on detail) | Most-used, residential proxy, `listPrice`+`currency` |
 | Walmart | `silentflow/walmart-scraper` | ~$20 (sub) | **UPC/gtin13** (needs `includeDetails:true`) | Fallback `burbn/walmart-product-search` ($5/1k, no UPC) |
 | Target | `makework36/target-scraper` | ~$9 | **UPC** (needs `fetchProductDetails:true`) + TCIN | RedSky API; `currency` not emitted → set "USD" |
-| Temu | `sovereigntaylor/temu-product-scraper` | ~$7-10 | none | Budget twin; RESIDENTIAL proxy mandatory |
+| Temu | `crw/temu-products-scraper` | ~$7-10 | none | Budget twin; **prices in CENTS** (÷100); verified working |
 | SHEIN | `scraper-engine/shein-search-products-scraper` | ~$9-11 | none | Image URLs protocol-relative (prefix `https:`); price nested `salePrice.usdAmount`; product_url derived from `goods_id` |
 
 **Total pre-scrape budget: ~$30–45** for 5 retailers × ~18 queries × ~100 products.
@@ -29,9 +29,8 @@ Researched 2026-05-29. All actors are keyword-search, Node-SDK callable (`client
 // Target (fetchProductDetails=true REQUIRED for UPC; ~12x slower)
 { "searchQueries": ["coffee maker"], "maxProducts": 100, "fetchProductDetails": true, "storeId": "3991" }
 
-// Temu (RESIDENTIAL mandatory; cap maxResults)
-{ "searchTerms": ["summer dress"], "maxResults": 100, "maxPrice": 0,
-  "proxy": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] } }
+// Temu — crw actor. Use GENERIC terms ("tumbler" not "thermo flask"). Prices in CENTS.
+{ "keyword": "tumbler", "region": "US", "max_items": 100, "sort": "relevance" }
 
 // SHEIN
 { "query": ["summer dress"], "countryCode": "us", "orderBy": "recommend",

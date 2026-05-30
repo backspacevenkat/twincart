@@ -24,6 +24,12 @@ export const env = {
     enterpriseId: opt('BOX_ENTERPRISE_ID'),
     reportsFolderId: opt('BOX_REPORTS_FOLDER_ID', '0'),
   }),
+  typesense: () => ({
+    host: opt('TYPESENSE_HOST', 'localhost'),
+    port: Number(opt('TYPESENSE_PORT', '8108')),
+    protocol: opt('TYPESENSE_PROTOCOL', 'http'),
+    apiKey: opt('TYPESENSE_API_KEY', 'twincart-dev'),
+  }),
   ucpSandboxUrl: () => opt('UCP_SANDBOX_URL', 'https://puddingheroes.com'),
   ingestConfirmed: () => opt('INGEST_CONFIRM') === '1', // safety gate for paid Apify runs
 };

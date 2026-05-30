@@ -30,6 +30,18 @@ const num = (v: unknown): number | null => {
 };
 const str = (v: unknown): string | null => (v == null ? null : String(v));
 
+// Temu/SHEIN match GENERIC product terms far better than brand-specific queries
+// (verified: "thermo flask" → 0 results, "tumbler" → rich twins). Map the canonical
+// query to a generic term for those two budget-twin marketplaces.
+const GENERIC_TERM: Record<string, string> = {
+  'thermo flask': 'tumbler',
+  'stanley tumbler': 'tumbler',
+  'airpods': 'wireless earbuds',
+  'iphone charger': 'usb c charger',
+  'led mirror': 'vanity mirror',
+};
+const genericTerm = (q: string): string => GENERIC_TERM[q] ?? q;
+
 type RawItem = Record<string, unknown>;
 
 interface ActorConfig {
@@ -80,27 +92,31 @@ export const RETAILER_ACTORS: Record<Retailer, ActorConfig> = {
       return {
         retailer: 'target', external_id: str(i.tcin), asin: null, upc, gtin14: toGtin14(upc),
         title: str(i.title) ?? '', brand: str(i.brand),
-        price: num(i.price) ?? num(i.salePrice), original_price: num(i.regularPrice), currency: 'USD',
-        image_url: str(i.imageUrl), product_url: str(i.url), rating: num(i.rating), review_count: num(i.reviewCount),
+        price: num(i.salePrice) ?? num(i.price), original_price: num(i.regularPrice), currency: 'USD',
+        image_url: str(i.imageUrl) ?? str((i.alternateImages as string[] | undefined)?.[0]),
+        product_url: str(i.url), rating: num(i.rating), review_count: num(i.reviewCount),
         raw_json: { ...i, _query: q },
       };
     },
   },
   temu: {
-    actorId: 'sovereigntaylor/temu-product-scraper',
-    buildInput: (q, maxItems) => ({ searchTerms: [q], maxResults: maxItems, maxPrice: 0, proxy: RESIDENTIAL }),
+    // crw actor is reliable + cleanly structured. NOTE: prices come in CENTS.
+    actorId: 'crw/temu-products-scraper',
+    buildInput: (q, maxItems) => ({ keyword: genericTerm(q), region: 'US', max_items: maxItems, sort: 'relevance' }),
     map: (i, q) => ({
-      retailer: 'temu', external_id: str(i.productId) ?? str(i.id), asin: null, upc: null, gtin14: null,
-      title: str(i.title) ?? '', brand: str(i.store) ?? str(i.brand),
-      price: num(i.price), original_price: num(i.originalPrice), currency: str(i.currency) ?? 'USD',
-      image_url: str((i.images as string[] | undefined)?.[0]) ?? str(i.image), product_url: str(i.url),
-      rating: num(i.rating), review_count: num(i.reviews),
+      retailer: 'temu', external_id: str(i.goods_id), asin: null, upc: null, gtin14: null,
+      title: str(i.title) ?? '', brand: null,
+      price: i.price != null ? Number(i.price) / 100 : null,            // cents → dollars
+      original_price: i.market_price ? Number(i.market_price) / 100 : null,
+      currency: str(i.currency) ?? 'USD',
+      image_url: str(i.image_url) ?? str(i.thumb_url), product_url: str(i.link_url),
+      rating: num(i.rating), review_count: num(i.review_count),
       raw_json: { ...i, _query: q },
     }),
   },
   shein: {
     actorId: 'scraper-engine/shein-search-products-scraper',
-    buildInput: (q, maxItems) => ({ query: [q], countryCode: 'us', orderBy: 'recommend', maxItems, perPage: 100, proxyConfiguration: { useApifyProxy: true } }),
+    buildInput: (q, maxItems) => ({ query: [genericTerm(q)], countryCode: 'us', orderBy: 'recommend', maxItems, perPage: '100', proxyConfiguration: { useApifyProxy: true } }),
     map: (i, q) => {
       const sale = (i.salePrice as RawItem) ?? {};
       const retail = (i.retailPrice as RawItem) ?? {};

@@ -1,0 +1,17 @@
+# Typesense — fast faceted/typo-tolerant search for the 10k–20k+ listing scale.
+# Local: docker compose up -d typesense   (data persists in the named volume)
+# Prod path: same image on an EC2 t3.small with an EBS volume.
+services:
+  typesense:
+    image: typesense/typesense:27.1
+    restart: unless-stopped
+    ports:
+      - "8108:8108"
+    volumes:
+      - typesense-data:/data
+    command: >
+      --data-dir /data
+      --api-key=${TYPESENSE_API_KEY:-twincart-dev}
+      --enable-cors
+volumes:
+  typesense-data:
