@@ -24,19 +24,35 @@ interface Row {
 const MAX_CANDIDATES = 14;     // per cluster, LLM-classified
 const CONCURRENCY = 5;         // parallel LLM calls
 
-/** Premium/reference score — the genuine branded article shoppers anchor on. */
-function anchorScore(r: Row): number {
+const median = (xs: number[]): number => {
+  if (!xs.length) return 0;
+  const s = [...xs].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+};
+
+/**
+ * Reference-anchor score. The anchor is the genuine branded article shoppers compare against —
+ * the most-PROVEN (reviews/rating) item in a SANE price band, NOT the max-priced outlier/bundle.
+ * `priceCap` (3× median) excludes mispriced bundles so savings stay believable.
+ */
+function anchorScore(r: Row, priceCap: number): number {
   const price = r.price ?? 0;
+  if (price <= 0 || price > priceCap) return 0; // reject outliers as anchors
   const reviews = r.review_count ?? 0;
   const rating = r.rating ?? 3.5;
-  const branded = r.brand && !/generic|no.?brand|unbranded/i.test(r.brand) ? 1.3 : 1;
-  const amazon = r.retailer === 'amazon' ? 1.15 : 1; // Amazon = trust anchor
-  return price * (1 + Math.log10(reviews + 1)) * (rating / 5) * branded * amazon;
+  const branded = r.brand && !/generic|no.?brand|unbranded/i.test(r.brand) ? 1.25 : 1;
+  const amazon = r.retailer === 'amazon' ? 1.1 : 1; // Amazon = trust anchor
+  // Proven-ness (reviews+rating) dominates; price is a mild "premium reference" nudge, not the driver.
+  return (1 + Math.log10(reviews + 1)) * (rating / 5) * branded * amazon * (1 + Math.log10(price + 1) * 0.25);
 }
 
 /** Pick a diverse, mostly-cheaper candidate set spanning retailers. */
 function pickCandidates(rows: Row[], anchor: Row): Row[] {
-  const others = rows.filter((r) => r.id !== anchor.id && r.price != null && r.title);
+  // Candidates priced 5%..110% of anchor — excludes accessory noise (cases/parts) and pricier items.
+  const aP = anchor.price ?? 0;
+  const others = rows.filter((r) => r.id !== anchor.id && r.price != null && r.title
+    && (r.price as number) >= aP * 0.05 && (r.price as number) <= aP * 1.1);
   // dedup near-identical titles
   const seen = new Set<string>();
   const uniq = others.filter((r) => {
@@ -78,10 +94,12 @@ function valueScore(parity: number, savingsPct: number, matchType: string): numb
 }
 
 async function buildCluster(q: string, rows: Row[]): Promise<string | null> {
-  const valid = rows.filter((r) => r.price != null && r.title);
+  const valid = rows.filter((r) => r.price != null && r.title && (r.price ?? 0) > 0);
   if (valid.length < 3) return null;
 
-  const anchor = valid.reduce((a, b) => (anchorScore(b) > anchorScore(a) ? b : a));
+  // Reject outlier/bundle prices above 3× median when choosing the anchor.
+  const priceCap = median(valid.map((r) => r.price as number)) * 3;
+  const anchor = valid.reduce((a, b) => (anchorScore(b, priceCap) > anchorScore(a, priceCap) ? b : a));
   const cands = pickCandidates(valid, anchor);
   if (!cands.length) return null;
 
