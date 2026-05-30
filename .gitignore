@@ -40,3 +40,7 @@ databases/
 # ─── Logs ───────────────────────────────────────────────────────
 logs/
 *.log
+
+# ─── Test/screenshot artifacts ──────────────────────────────────
+.playwright-mcp/
+/twincart-home.png
