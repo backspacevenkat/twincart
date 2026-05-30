@@ -9,6 +9,10 @@ export const CURATED_QUERIES = [
   'humidifier', 'electric toothbrush', 'espresso machine', 'smartwatch', 'air fryer',
   'crossbody bag', 'memory foam pillow', 'kitchen knife set', 'resistance bands', 'phone case',
   'necklace', 'yoga mat', 'desk lamp', 'sunglasses', 'backpack', 'wireless charger',
+  // wave 2 — more breadth to scale the catalog
+  'hair dryer', 'bluetooth speaker', 'gaming mouse', 'mechanical keyboard', 'water bottle',
+  'leggings', 'hoodie', 'sneakers', 'sandals', 'baseball cap', 'travel pillow', 'laptop sleeve',
+  'standing desk', 'ring light', 'power bank', 'phone tripod', 'coffee grinder', 'cast iron skillet',
 ];
 
 const num = (v: unknown): number | null => {
@@ -32,6 +36,9 @@ const GENERIC_TERM: Record<string, string> = {
   'kids shoes': 'kids sneakers',
   'kitchen knife set': 'knife set',
   'wireless charger': 'wireless charger pad',
+  'mechanical keyboard': 'gaming keyboard',
+  'cast iron skillet': 'cast iron pan',
+  'bluetooth speaker': 'portable speaker',
 };
 const genericTerm = (q: string): string => GENERIC_TERM[q] ?? q;
 
@@ -63,19 +70,19 @@ export const RETAILER_ACTORS: Record<Retailer, ActorConfig> = {
     },
   },
   walmart: {
-    actorId: 'silentflow/walmart-scraper',
-    buildInput: (q, maxItems) => ({ search: q, zipCode: '10001', sort: 'best_match', maxItems, includeDetails: true, includeReviews: false, proxy: RESIDENTIAL }),
-    map: (i, q) => {
-      const upc = str(i.upc) ?? str(i.gtin13);
-      return {
-        retailer: 'walmart', external_id: str(i.sku) ?? str(i.id), asin: null, upc, gtin14: toGtin14(upc),
-        title: str(i.name) ?? '', brand: str(i.brand),
-        price: num(i.price), original_price: num(i.wasPrice), currency: str(i.currency) ?? 'USD',
-        image_url: str(i.imageUrl) ?? str((i.images as string[] | undefined)?.[0]) ?? null,
-        product_url: str(i.url), rating: num(i.averageRating), review_count: num(i.numberOfReviews),
-        raw_json: { ...i, _query: q },
-      };
-    },
+    // burbn = pay-per-result, NO actor rental (silentflow required a paid rental → 0 rows). ~40 items/page.
+    // burbn = pay-per-result, no rental. REQUIRES residential proxy (else Walmart blocks → 0).
+    // Returns ~50 items/page; fields: title/price/listPrice/rating/reviewCount/seller/url/image/productId (no UPC).
+    actorId: 'burbn/walmart-product-search',
+    buildInput: (q, maxItems) => ({ query: q, domain: 'us', sort_by: 'best_match', page: 1, maxPages: Math.max(1, Math.ceil(maxItems / 50)), proxyConfiguration: RESIDENTIAL }),
+    map: (i, q) => ({
+      retailer: 'walmart', external_id: str(i.productId) ?? str(i.id), asin: null, upc: null, gtin14: null,
+      title: str(i.title) ?? '', brand: str(i.seller),
+      price: num(i.price), original_price: num(i.listPrice), currency: 'USD',
+      image_url: str(i.image), product_url: str(i.url),
+      rating: num(i.rating), review_count: num(i.reviewCount),
+      raw_json: { ...i, _query: q },
+    }),
   },
   target: {
     actorId: 'makework36/target-scraper',

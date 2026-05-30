@@ -16,9 +16,9 @@ import { scrapeRetailer } from './apify';
 
 const RETAILERS = Object.keys(RETAILER_ACTORS) as Retailer[];
 // Budget caps: Amazon is cheapest ($0.004), Temu dearest ($0.01) → weight accordingly.
-// Temu's only reliable actor (crw) is $10/1k — its cheap rivals return 0. So we keep crw but
-// pull fewer, top-selling Temu items (best budget twins) to cut its spend ~45%.
-const CAPS: Record<Retailer, number> = { amazon: 120, temu: 25, shein: 50, walmart: 40, target: 50 };
+// Budget-weighted caps to reach ~10k+ efficiently: lean on cheap retailers (Amazon $0.004),
+// keep Temu ($0.01, riskiest) modest. Real yield runs ~60-80% of cap.
+const CAPS: Record<Retailer, number> = { amazon: 250, temu: 60, shein: 110, walmart: 120, target: 110 };
 
 async function upsertProduct(p: IngestedProduct): Promise<number> {
   const rows = await query<{ id: number }>(
