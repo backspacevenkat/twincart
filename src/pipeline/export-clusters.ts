@@ -18,7 +18,7 @@ const num = (v: any) => (v == null ? null : Number(v));
 
 interface M {
   product_id: number; retailer: string; title: string; brand: string | null;
-  price: number; original_price: number | null; image_url: string | null;
+  price: number; original_price: number | null; image_url: string | null; product_url: string | null;
   rating: number | null; review_count: number | null;
   match_type: string; functional_parity: number; price_savings_pct: number; value_score: number;
   reason: string; caveats: string;
@@ -31,7 +31,7 @@ function toProduct(m: M, slot: string, tag: string) {
     slot, tag, retailer: m.retailer, name: m.title,
     price: Math.round(m.price), parity: m.functional_parity, matchType: prettyMatch(m.match_type),
     anchorKey: isExact ? 'The genuine article' : (m.caveats || 'Different brand · no shared SKU'),
-    image: m.image_url, tint: '',
+    image: m.image_url, url: m.product_url, tint: '',
     shipping, shippingTone: tag === 'budget' ? 'warn' : shippingTone,
     rating: m.rating ?? 4.3, reviews: m.review_count ?? 0, stock: STOCK[m.retailer] ?? 'In stock',
     take: m.reason || undefined,
@@ -48,7 +48,7 @@ async function main() {
   const out: any[] = [];
   for (const c of clusters) {
     const members = await query<M>(
-      `SELECT cm.product_id, p.retailer, p.title, p.brand, p.price, p.original_price, p.image_url,
+      `SELECT cm.product_id, p.retailer, p.title, p.brand, p.price, p.original_price, p.image_url, p.product_url,
               p.rating, p.review_count, cm.match_type, cm.functional_parity, cm.price_savings_pct,
               cm.value_score, cm.reason, cm.caveats
        FROM cluster_members cm JOIN products p ON p.id = cm.product_id
@@ -84,7 +84,7 @@ async function main() {
         matchType: prettyMatch(m.match_type),
         ...(m.match_type === 'EXACT_MATCH' ? {} : { savingsAmt: Math.max(0, Math.round(anchor.price - m.price)), savingsPct: m.price_savings_pct }),
         shipping, shippingTone, rating: m.rating ?? 4.3, reviews: m.review_count ?? 0,
-        image: m.image_url, tint: '', stock: STOCK[m.retailer] ?? 'In stock', tag,
+        image: m.image_url, url: m.product_url, tint: '', stock: STOCK[m.retailer] ?? 'In stock', tag,
       };
     });
 
