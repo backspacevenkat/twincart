@@ -108,26 +108,31 @@ Root `package.json` scripts:
 - Animated stretches (carousel swap, agent stepper) are short **video clips**,
   shown full-frame.
 
-### Capture script (`capture-app.ts`)
+### Capture script (`capture-app.ts`) — continuous takes (≤2-3 "gos")
 
-- Playwright Chromium, viewport 1920×1080, `deviceScaleFactor: 2` (retina-crisp
-  screenshots for clean Remotion zoom), `recordVideo: { dir, size: {1920,1080} }`.
-- Selectors developed against the running app (use Playwright role/text locators;
-  fall back to adding `data-testid` only if a selector is unstable — minimal,
-  app-side change avoided if possible).
-- Scripted beats, each: act → wait for settle → `page.screenshot()` with a
-  labeled filename; the continuous webm covers the animated stretches.
-  1. Home / search bar
-  2. Type hero query (e.g. "robot vacuum") → results
-  3. Cluster list
-  4. Open hero cluster detail (97%/94%/90% savings)
-  5. **Price carousel** — click price points (image swaps) → animated stretch (clip)
-  6. Compare / parity view
-  7. Savings + **Box report** card
-  8. Click Buy → **agent stepper** runs 4 steps → **Awaiting your approval** (clip)
-  9. Approval state
-- Writes `remotion/src/data/shots.ts` mapping logical names → asset paths +
-  (for clips) the frame ranges to use.
+**Coherence requirement:** the real-app footage must read as one flowing journey,
+NOT a stitched montage of many fragments. So we capture **one continuous take**
+for the twin-finding journey (and at most one more short take for the agent),
+recorded as video with smooth, deliberate scripted pacing.
+
+- Playwright Chromium recording continuous video (`recordVideo`). Record at the
+  **highest practical resolution** (e.g. 2560×1440 viewport) and downscale in
+  Remotion to 1080p, giving zoom headroom that stays sharp. (Exact viewport is a
+  build-time tuning detail for this mobile-first UI.)
+- Navigation uses Playwright role/text locators + **explicit waits** (wait for a
+  ready selector, not fixed sleeps), with deliberate human-paced dwell so the
+  footage breathes. Smooth-scroll, not jump-scroll.
+- **Take 1 (the spine, continuous):** Home → type hero query (e.g. "robot
+  vacuum") → results → open hero cluster (97%/94%/90% savings) → price carousel
+  (click price points, images swap) → compare/parity view → savings + Box report.
+  This single take feeds scenes 3 + 4.
+- **Take 2 (short, continuous):** Buy → agent stepper runs the 4 steps →
+  Awaiting your approval → approval state. Feeds scene 5.
+- Emits `public/capture/take1.webm`, `take2.webm` (transcode to mp4 if Remotion
+  needs it) + `remotion/src/data/shots.ts` mapping logical beats → **timecodes
+  within each take** (so Remotion can zoom/pan to a beat without cutting).
+- A few still `page.screenshot()`s are captured only as fallback/poster frames,
+  not as the primary material.
 - Idempotent: re-running overwrites `public/capture/` cleanly.
 
 ### Audio-manifest-driven layout (unchanged core decision)
@@ -141,9 +146,12 @@ Root `package.json` scripts:
 4. **Hard-cap guard:** if summed duration > 178s, print per-scene breakdown and
    exit non-zero → trim copy before rendering.
 
-Real captures fill each scene's manifest-derived duration: screenshots held with
-slow Ken Burns zoom/pan; webm clips trimmed (and time-scaled if needed) to the
-scene length; caption/highlight overlays animate on top.
+Real captures fill each scene's manifest-derived duration by playing a segment of
+the **continuous take** (referenced by timecode in `shots.ts`), trimmed and gently
+time-scaled to the scene length, with Remotion zoom/pan toward the relevant beat
+and caption/highlight overlays on top. Scenes flow *within* the footage rather
+than hard-cutting between fragments — only transitions in/out of the synthetic
+framing scenes (1, 2, 6) are cuts.
 
 Format: 1920×1080, 30fps; defined once in `Root.tsx`.
 
@@ -190,7 +198,9 @@ Word budget ≈ 2.5 words/sec; total VO ≤ ~400 words (hard 180s cap).
 1. **Skeleton:** scaffold `remotion/`, pin deps, one `<Composition>`, 6 placeholder
    scenes → `video:build` produces a complete ~180s MP4. *Prove a full render works.*
 2. **Capture:** write + run `capture-app.ts` against local `pnpm dev`; verify
-   `public/capture/` has all beats (screenshots + the 2 clips) and `shots.ts`.
+   `public/capture/` has the continuous `take1.webm` (twin journey) + short
+   `take2.webm` (agent) and `shots.ts` timecodes. Watch each take end-to-end —
+   it must look like one smooth human walkthrough, not a montage.
 3. **Real VO + manifest:** `script.ts` → `gen-voiceover.ts`; wire manifest-driven
    durations + captions; confirm hard-cap guard passes (<178s).
 4. **Twin scenes 3 + 4 first (the priority):** drop captures into the matching
