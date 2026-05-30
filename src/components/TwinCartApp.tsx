@@ -5,6 +5,14 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { RETAILERS, CLUSTERS, GALLERY, IMG, CHIPS, QUERIES, DEMO_BASKET } from '@/lib/twincart-data';
 import CartScreen from '@/components/CartScreen';
 
+/* Route remote product images through wsrv.nl. Temu (kwcdn.com) and SHEIN (ltwebstatic.com)
+   block cross-origin hotlinks, so their <img> 404 on our domain — leaving only Amazon visible.
+   The proxy refetches server-side and re-serves with permissive CORS. */
+const px = (u: any) =>
+  typeof u === "string" && /^https?:\/\//.test(u)
+    ? `https://wsrv.nl/?url=${encodeURIComponent(u)}&w=640&output=webp&we`
+    : u;
+
 /* TwinCart — shared UI primitives */
 
 /* ───────────────── Icons (clean line icons) ───────────────── */
@@ -61,7 +69,7 @@ function RetailerBadge({ id, size = "md" }: any) {
       fontSize: sm ? 11 : 12, fontWeight: 600, color: "var(--ink-soft)", whiteSpace: "nowrap",
     }}>
       {logoOk && r.logo
-        ? <img src={r.logo} alt="" width={dim} height={dim} loading="lazy" onError={() => setLogoOk(false)}
+        ? <img src={px(r.logo)} alt="" width={dim} height={dim} loading="lazy" onError={() => setLogoOk(false)}
             style={{ width: dim, height: dim, borderRadius: 4, objectFit: "contain", display: "block" }} />
         : <span style={{ width: 7, height: 7, borderRadius: 999, background: r.color }} />}
       {r.name}
@@ -164,7 +172,7 @@ function Rating({ value, count }: any) {
 function Thumb({ icon, retailer, size = 64, tone, tint, radius = 14, img }: any) {
   const r = RETAILERS[retailer];
   const accent = tone || (r ? r.color : "var(--accent)");
-  const src = img || IMG[icon];
+  const src = px(img) || IMG[icon];
   return (
     <div style={{
       width: size, height: size, borderRadius: radius, flexShrink: 0,
@@ -184,7 +192,7 @@ function Thumb({ icon, retailer, size = 64, tone, tint, radius = 14, img }: any)
 
 /* Larger product image for cards — fixed aspect, real photo */
 function ProductImage({ icon, tint, height = 200, radius = 14, children, img }: any) {
-  const src = img || IMG[icon];
+  const src = px(img) || IMG[icon];
   return (
     <div style={{ position: "relative", width: "100%", height, borderRadius: radius, overflow: "hidden",
       background: "var(--surface-3)", border: "1px solid var(--hairline)" }}>
@@ -248,7 +256,7 @@ function RetailerLink({ url, retailer, compact, full }: any) {
 
 /* ───────────────── Image carousel ───────────────── */
 function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounded = true, images: imagesProp, captions, index, setIndex }: any) {
-  const imgs = ((imagesProp && imagesProp.length ? imagesProp : (GALLERY && GALLERY[icon]) || [IMG[icon]]) as any[]).filter(Boolean);
+  const imgs = ((imagesProp && imagesProp.length ? imagesProp : (GALLERY && GALLERY[icon]) || [IMG[icon]]) as any[]).filter(Boolean).map(px);
   const [iLocal, setILocal] = useState(0);
   // Controlled mode: parent owns the index (so clicking a price elsewhere syncs the image).
   const i = typeof index === "number" ? Math.min(index, Math.max(0, imgs.length - 1)) : iLocal;
@@ -348,7 +356,7 @@ function spectrumColor(o: any) {
   return "var(--accent)";
 }
 
-function TwinSpectrum({ cluster, onPick, onAdd, onSelectImage }: any) {
+function TwinSpectrum({ cluster, onPick, onAdd, onSelectImage, onPickOffer }: any) {
   const offers = cluster.offers;
   const prices = offers.map((o: any) => o.price);
   const lo = Math.min(...prices), hi = Math.max(...prices);
@@ -396,7 +404,7 @@ function TwinSpectrum({ cluster, onPick, onAdd, onSelectImage }: any) {
           return (
             <div key={o.retailer + o.name}
               onMouseEnter={() => setHover(idx)} onMouseLeave={() => setHover(null)}
-              onClick={(e: any) => { e.stopPropagation(); setSel(o); onSelectImage && onSelectImage(idx); }}
+              onClick={(e: any) => { e.stopPropagation(); setSel(o); onSelectImage && onSelectImage(idx); onPickOffer && onPickOffer(o); }}
               style={{ position: "absolute", top: 32, left: `${x}%`, transform: "translate(-50%,-50%)",
                 zIndex: active ? 20 : isVal ? 10 : 5, cursor: "pointer" }}>
               {/* node dot */}
@@ -784,7 +792,7 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
   );
 }
 
-function TwinTriptych({ cluster, animate = true, onPick }: any) {
+function TwinTriptych({ cluster, animate = true, onPick, picked }: any) {
   const [seam, setSeam] = useState(!animate);
   useEffect(() => {
     if (!animate) return;
@@ -793,10 +801,15 @@ function TwinTriptych({ cluster, animate = true, onPick }: any) {
   }, [animate]);
 
   const { exact, value, budget } = cluster.products;
+  // If the user clicked a price that isn't one of the 3 picks, it REPLACES the budget slot.
+  const isOneOf3 = picked && [exact, value, budget].some((p: any) => p && p.name === picked.name && p.retailer === picked.retailer);
+  const budgetSlot = picked && !isOneOf3
+    ? { ...picked, slot: "Your Pick", savingsAmt: picked.savingsAmt ?? Math.max(0, Math.round(exact.price - picked.price)) }
+    : budget;
   const slots = [
     { key: "exact", p: exact, kind: "exact" },
     { key: "value", p: value, kind: "value" },
-    { key: "budget", p: budget, kind: "budget" },
+    { key: "budget", p: budgetSlot, kind: picked && !isOneOf3 ? "picked" : "budget" },
   ];
 
   return (
@@ -990,6 +1003,7 @@ function FilterBar({ filters, setFilters }: any) {
 function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWish, wishlist, lead }: any) {
   const [showAll, setShowAll] = useState(!!lead);
   const [activeImg, setActiveImg] = useState(0);
+  const [picked, setPicked] = useState<any>(null);
   const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
   const prices = cluster.offers.map((o: any) => o.price);
   const lo = Math.min(...prices), hi = Math.max(...prices);
@@ -1050,7 +1064,8 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
           </div>
 
           {/* the twin spectrum — the cluster aha */}
-          <TwinSpectrum cluster={cluster} onPick={onOpenCluster} onAdd={onAdd} onSelectImage={setActiveImg} />
+          <TwinSpectrum cluster={cluster} onPick={onOpenCluster} onAdd={onAdd}
+            onSelectImage={setActiveImg} onPickOffer={(o: any) => setPicked(o)} />
         </div>
       </div>
 
@@ -1064,7 +1079,7 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
               color: "var(--ink-soft)" }}>TwinCart's smart picks</span>
             <span style={{ fontSize: 12, color: "var(--muted)", fontWeight: 500 }}>· the 3 we'd buy</span>
           </div>
-          <TwinTriptych cluster={cluster} onPick={onOpenCluster} />
+          <TwinTriptych cluster={cluster} onPick={onOpenCluster} picked={picked} />
         </div>
 
         {/* Aggregated offers */}
@@ -1720,7 +1735,7 @@ function SectionLabel({ n, title }: any) {
 function ReportScreen({ cluster, onBack, onHome }: any) {
   const [copied, setCopied] = useState(false);
   const p = cluster.products.value;
-  const link = `https://app.box.com/s/tc-${cluster.id}-${(p.savingsPct || 40)}off`;
+  const link = cluster.boxReport || `https://app.box.com/s/tc-${cluster.id}-${(p.savingsPct || 40)}off`;
   const contents = [
     { icon: "twins", label: "Exact match + functional twins", val: "3 listings" },
     { icon: "scale", label: "Cross-retailer price comparison", val: `Save $${p.savingsAmt}` },
@@ -1791,10 +1806,12 @@ function ReportScreen({ cluster, onBack, onHome }: any) {
         <div style={{ padding: "16px 22px 22px" }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: "var(--muted)", marginBottom: 9 }}>Shareable Box link</div>
           <div style={{ display: "flex", gap: 9, alignItems: "center" }}>
-            <div className="mono" style={{ flex: 1, fontSize: 12.5, color: "var(--trust)", padding: "11px 14px",
+            <a className="mono" href={link} target="_blank" rel="noopener noreferrer"
+              style={{ flex: 1, fontSize: 12.5, color: "var(--trust)", padding: "11px 14px",
               background: "var(--trust-soft)", border: "1px solid #cfe0fd", borderRadius: 11,
-              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{link}</div>
-            <Btn variant={copied ? "money" : "trust"} icon={copied ? "check" : "copy"} onClick={copy}>
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{link}</a>
+            <Btn variant="trust" icon="arrow" onClick={() => window.open(link, "_blank")}>Open</Btn>
+            <Btn variant={copied ? "money" : "soft"} icon={copied ? "check" : "copy"} onClick={copy}>
               {copied ? "Copied" : "Copy"}
             </Btn>
           </div>
