@@ -50,7 +50,16 @@ logs/
 .tc_out.zip
 out/
 
-# demo video
+# demo video / remotion (kept local only — large + node-heavy)
 video-out/
-remotion/public/audio/
-remotion/public/capture/
+remotion/
+*.mp4
+*.mov
+*.webm
+
+# large binaries / archives
+*.tar.gz
+*.zip
+*.node
+*.dylib
+*.wasm
