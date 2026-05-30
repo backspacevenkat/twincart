@@ -1,11 +1,11 @@
 // Brand wordmarks as styled text — no external file dependency (render-safe).
 const BRAND: Record<string, { c: string; label: string }> = {
-  google: { c: "#ffffff", label: "Google" },
+  google: { c: "#0B1220", label: "Google" },
   amazon: { c: "#FF9900", label: "amazon" },
-  walmart: { c: "#4DABF7", label: "Walmart" },
-  target: { c: "#FF4D4D", label: "Target" },
+  walmart: { c: "#0071CE", label: "Walmart" },
+  target: { c: "#CC0000", label: "Target" },
   temu: { c: "#FB7701", label: "Temu" },
-  shein: { c: "#ffffff", label: "SHEIN" },
+  shein: { c: "#0B1220", label: "SHEIN" },
 };
 
 export const Logo: React.FC<{ name: string; size?: number }> = ({ name, size = 44 }) => {
