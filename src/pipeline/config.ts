@@ -71,16 +71,15 @@ export const RETAILER_ACTORS: Record<Retailer, ActorConfig> = {
   },
   walmart: {
     // burbn = pay-per-result, NO actor rental (silentflow required a paid rental → 0 rows). ~40 items/page.
-    // burbn = pay-per-result, no rental. REQUIRES residential proxy (else Walmart blocks → 0).
-    // Returns ~50 items/page; fields: title/price/listPrice/rating/reviewCount/seller/url/image/productId (no UPC).
-    actorId: 'burbn/walmart-product-search',
-    buildInput: (q, maxItems) => ({ query: q, domain: 'us', sort_by: 'best_match', page: 1, maxPages: Math.max(1, Math.ceil(maxItems / 50)), proxyConfiguration: RESIDENTIAL }),
+    // junipr = $1.30/1k (4× cheaper than burbn), 95% reliability, residential incl. Returns GTIN!
+    actorId: 'junipr/walmart-scraper',
+    buildInput: (q, maxItems) => ({ searchTerms: [q], maxItems, proxyConfiguration: RESIDENTIAL }),
     map: (i, q) => ({
-      retailer: 'walmart', external_id: str(i.productId) ?? str(i.id), asin: null, upc: null, gtin14: null,
-      title: str(i.title) ?? '', brand: str(i.seller),
-      price: num(i.price), original_price: num(i.listPrice), currency: 'USD',
-      image_url: str(i.image), product_url: str(i.url),
-      rating: num(i.rating), review_count: num(i.reviewCount),
+      retailer: 'walmart', external_id: str(i.id), asin: null, upc: str(i.gtin), gtin14: toGtin14(str(i.gtin)),
+      title: str(i.name) ?? '', brand: str(i.brand),
+      price: num(i.price), original_price: num(i.originalPrice), currency: str(i.currency) ?? 'USD',
+      image_url: str(i.imageUrl), product_url: str(i.productUrl),
+      rating: num(i.rating), review_count: num(i.reviewsCount),
       raw_json: { ...i, _query: q },
     }),
   },
