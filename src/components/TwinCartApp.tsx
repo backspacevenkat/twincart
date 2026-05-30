@@ -3,6 +3,20 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { RETAILERS, CLUSTERS, GALLERY, IMG, CHIPS, QUERIES, DEMO_BASKET } from '@/lib/twincart-data';
+import HERO_IMAGES from '@/lib/hero-images.json';
+
+// AI-generated (Gemini) studio tile per category; falls back to the cluster's real scraped hero.
+const heroFor = (cluster: any) =>
+  (HERO_IMAGES as any)[cluster?.query] || cluster?.heroImages?.[0] || IMG[cluster?.icon] || "";
+// Per-category summary for the browse grid (best savings + how many retailers we aggregated).
+const CATEGORY_CARDS = CLUSTERS.map((c: any) => ({
+  query: c.query,
+  title: c.title,
+  maxSavingsPct: c.maxSavingsPct || 0,
+  retailers: new Set((c.offers || []).map((o: any) => o.retailer)).size,
+  listings: (c.offers || []).length,
+  img: (HERO_IMAGES as any)[c.query] || c.heroImages?.[0] || IMG[c.icon] || "",
+}));
 import CartScreen from '@/components/CartScreen';
 
 /* Route remote product images through wsrv.nl. Temu (kwcdn.com) and SHEIN (ltwebstatic.com)
@@ -914,58 +928,117 @@ function TrustStrap({ center }: any) {
 }
 
 /* ───────────────── Screen 1 — Home ───────────────── */
-function HomeScreen({ onSearch, onOpenCluster, onCheckout, onReport, onAdd, onWish, wishlist }: any) {
+/* Compact trending chips — a few high-signal categories under the search bar (not a 24-pill wall) */
+function TrendingChips({ onPick }: any) {
+  const top = QUERIES.slice(0, 6);
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 9, flexWrap: "wrap" }}>
+      <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--muted-2)" }}>Trending</span>
+      {top.map((c: any) => (
+        <button key={c} onClick={() => onPick(c)}
+          style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 13px",
+            borderRadius: 999, fontSize: 13, fontWeight: 600, background: "var(--surface)",
+            color: "var(--ink-soft)", border: "1px solid var(--hairline-2)", cursor: "pointer",
+            transition: "border-color .14s ease", textTransform: "capitalize" }}
+          onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
+          onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--hairline-2)")}>
+          <span style={{ width: 5, height: 5, borderRadius: 999, background: "var(--money)" }} />{c}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* One browse tile: AI studio image + category + savings + retailer count. Click → results. */
+function CategoryTile({ cat, onPick, idx }: any) {
+  const [h, setH] = useState(false);
+  return (
+    <button onClick={() => onPick(cat.query)} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      className="anim-fadeup"
+      style={{ display: "flex", flexDirection: "column", textAlign: "left", overflow: "hidden",
+        background: "var(--surface)", border: `1px solid ${h ? "var(--accent)" : "var(--hairline-2)"}`,
+        borderRadius: 16, cursor: "pointer", boxShadow: h ? "var(--shadow-md)" : "var(--shadow-sm)",
+        transform: h ? "translateY(-3px)" : "none", transition: "all .16s ease",
+        animationDelay: `${(idx % 12) * 0.03}s` }}>
+      <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", background: "var(--surface-3)" }}>
+        {cat.img
+          ? <img src={px(cat.img)} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          : <div style={{ width: "100%", height: "100%", display: "grid", placeItems: "center", color: "var(--muted-2)" }}><Icon name="box" size={34} stroke={1.4} /></div>}
+        {cat.maxSavingsPct > 0 && (
+          <span className="tnum" style={{ position: "absolute", top: 9, left: 9, fontSize: 11.5, fontWeight: 700,
+            color: "#fff", background: "var(--accent)", padding: "3px 9px", borderRadius: 999,
+            boxShadow: "var(--shadow-accent)" }}>up to {cat.maxSavingsPct}% off</span>
+        )}
+      </div>
+      <div style={{ padding: "12px 13px 14px" }}>
+        <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ink)", textTransform: "capitalize",
+          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{cat.query}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
+          {cat.listings} listings · {cat.retailers} retailers
+        </div>
+      </div>
+    </button>
+  );
+}
+
+function HomeScreen({ onSearch }: any) {
   const [q, setQ] = useState("");
-  const tod = CLUSTERS[0]; // first real scraped cluster (curated demo clusters removed)
-  if (!tod) return null;
+  const banner = (HERO_IMAGES as any).__banner;
   return (
     <div className="anim-fadein" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 28px" }}>
-      {/* hero */}
-      <section style={{ paddingTop: 56, paddingBottom: 44 }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 13px",
-          borderRadius: 999, background: "var(--accent-soft)", color: "var(--accent-deep)",
-          fontSize: 12.5, fontWeight: 600, marginBottom: 24, whiteSpace: "nowrap" }}>
-          <Icon name="twins" size={15} stroke={2.2} /> The cross-marketplace twin-finder
-        </div>
-        <h1 style={{ fontSize: "clamp(38px, 6vw, 64px)", fontWeight: 700, lineHeight: 1.02,
-          maxWidth: 820, color: "var(--ink)" }}>
-          Find the twin.<br /><span style={{ color: "var(--accent)" }}>Pay the smart price.</span>
-        </h1>
-        <p style={{ fontSize: "clamp(16px, 2vw, 19px)", lineHeight: 1.5, color: "var(--muted)",
-          maxWidth: 560, marginTop: 20 }}>
-          TwinCart finds the same product — or its smartest cheaper twin — across Amazon, Temu,
-          SHEIN, Walmart &amp; Target, and proves <em style={{ color: "var(--ink-soft)", fontStyle: "italic" }}>why</em> they're equivalent.
-        </p>
-
-        <div style={{ maxWidth: 680, marginTop: 32 }}>
-          <SearchBar value={q} onChange={setQ} onSubmit={(v: any) => onSearch(v || QUERIES[0])} autoFocus />
-        </div>
-
-        <div style={{ marginTop: 22, display: "flex", flexDirection: "column", gap: 18 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--muted-2)" }}>Try</span>
-            <QueryChips onPick={onSearch} />
+      {/* hero — text + search on the left, AI cinematic banner on the right */}
+      <section style={{ display: "grid", gridTemplateColumns: banner ? "minmax(0,1.05fr) minmax(0,0.95fr)" : "1fr",
+        gap: 40, alignItems: "center", paddingTop: 44, paddingBottom: 40 }} className="home-hero">
+        <div>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 13px",
+            borderRadius: 999, background: "var(--accent-soft)", color: "var(--accent-deep)",
+            fontSize: 12.5, fontWeight: 600, marginBottom: 20, whiteSpace: "nowrap" }}>
+            <Icon name="twins" size={15} stroke={2.2} /> The cross-marketplace twin-finder
           </div>
-          <TrustStrap />
+          <h1 style={{ fontSize: "clamp(34px, 4.6vw, 56px)", fontWeight: 700, lineHeight: 1.03, color: "var(--ink)" }}>
+            Find the twin.<br /><span style={{ color: "var(--accent)" }}>Pay the smart price.</span>
+          </h1>
+          <p style={{ fontSize: "clamp(15px, 1.6vw, 18px)", lineHeight: 1.5, color: "var(--muted)",
+            maxWidth: 520, marginTop: 16 }}>
+            The same product — or its smartest cheaper twin — across Amazon, Temu, SHEIN, Walmart &amp; Target,
+            with the proof of <em style={{ color: "var(--ink-soft)", fontStyle: "italic" }}>why</em> they're equivalent.
+          </p>
+          <div style={{ marginTop: 24 }}>
+            <SearchBar value={q} onChange={setQ} onSubmit={(v: any) => onSearch(v || QUERIES[0])} autoFocus />
+          </div>
+          <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 16 }}>
+            <TrendingChips onPick={onSearch} />
+            <TrustStrap />
+          </div>
         </div>
+
+        {banner && (
+          <div style={{ position: "relative", borderRadius: 22, overflow: "hidden", boxShadow: "var(--shadow-lg)",
+            aspectRatio: "16 / 11" }} className="home-hero-img">
+            <img src={banner} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <div style={{ position: "absolute", left: 14, bottom: 14, display: "inline-flex", alignItems: "center", gap: 7,
+              fontSize: 12, fontWeight: 700, color: "var(--ink)", background: "rgba(255,255,255,0.92)",
+              padding: "6px 12px", borderRadius: 999, boxShadow: "var(--shadow-sm)", backdropFilter: "blur(4px)" }}>
+              <Icon name="twins" size={14} stroke={2.2} style={{ color: "var(--accent)" }} /> Same product · half the price
+            </div>
+          </div>
+        )}
       </section>
 
-      {/* twin of the day */}
+      {/* category browse grid — every real category, one click away */}
       <section style={{ paddingBottom: 72 }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-          gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
-          <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12,
-              fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent)" }}>
-              <span style={{ width: 7, height: 7, borderRadius: 999, background: "var(--accent)",
-                animation: "pulseDot 1.8s infinite" }} /> Twin of the day
-            </div>
-            <h2 style={{ fontSize: 27, fontWeight: 700, marginTop: 10, color: "var(--ink)" }}>{tod.title}</h2>
-          </div>
-          <Btn variant="soft" iconRight="arrow" onClick={() => onSearch(tod.query)}>See all twins</Btn>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between",
+          gap: 16, marginBottom: 18, flexWrap: "wrap" }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: "var(--ink)" }}>Browse every twin</h2>
+          <span className="tnum" style={{ fontSize: 13.5, color: "var(--muted)", fontWeight: 500 }}>
+            {CATEGORY_CARDS.length} categories · {CATEGORY_CARDS.reduce((n: number, c: any) => n + c.listings, 0)} listings · 5 retailers
+          </span>
         </div>
-        <ClusterCard cluster={tod} lead onOpenCluster={onOpenCluster} onCheckout={onCheckout}
-          onReport={onReport} onAdd={onAdd} onWish={onWish} wishlist={wishlist} />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: 16 }}>
+          {CATEGORY_CARDS.map((cat: any, i: number) => (
+            <CategoryTile key={cat.query} cat={cat} onPick={onSearch} idx={i} />
+          ))}
+        </div>
       </section>
     </div>
   );
@@ -2106,8 +2179,7 @@ function App() {
         onCart={() => { setScreen("cart"); window.scrollTo({ top: 0 }); }} />
 
       <main style={{ flex: 1 }}>
-        {screen === "home" && <HomeScreen onSearch={search} onOpenCluster={openCluster}
-          onCheckout={openCheckout} onReport={openReport} onAdd={addToCart} onWish={toggleWish} wishlist={wishlist} />}
+        {screen === "home" && <HomeScreen onSearch={search} />}
         {screen === "results" && <ResultsScreen query={query} onSearch={search}
           onOpenCluster={openCluster} onCheckout={openCheckout} onReport={openReport}
           onAdd={addToCart} onWish={toggleWish} wishlist={wishlist} />}
