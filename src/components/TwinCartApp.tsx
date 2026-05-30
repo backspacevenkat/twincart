@@ -1296,11 +1296,11 @@ function ResultsScreen({ query, onSearch, onOpenCluster, onCheckout, onReport, o
         <SearchBar value={q} onChange={setQ} onSubmit={(v: any) => onSearch(v || query)} size="md" />
       </div>
 
-      <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 18, flexWrap: "wrap" }}>
-        <h1 style={{ fontSize: 30, fontWeight: 700, color: "var(--ink)" }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+        <h1 style={{ fontSize: 30, fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.01em", lineHeight: 1.1 }}>
           Twins for <span style={{ color: "var(--accent)" }}>"{query}"</span>
         </h1>
-        <span className="tnum" style={{ fontSize: 14, color: "var(--muted)", fontWeight: 500 }}>
+        <span className="tnum" style={{ fontSize: 13.5, color: "var(--muted)", fontWeight: 500 }}>
           {clusters.length} product clusters · {totalListings} listings aggregated across 5 retailers
         </span>
       </div>
@@ -1434,30 +1434,37 @@ function cellTone(tone: any) {
 }
 
 /* compare table row */
-function CompareRow({ row, expanded }: any) {
+function CompareRow({ row, idx = 0 }: any) {
   const cols = ["exact", "value", "budget"];
-  const cellStyle = (i: any, highlight?: any): any => ({
-    padding: "14px 18px", fontSize: 14, fontWeight: row.kind === "price" ? 700 : 500,
-    fontFamily: row.kind === "price" ? "var(--font-display)" : "var(--font-body)",
+  // Derive the row kind from its label so the Price/Match rows pick up the right styling
+  // (the generated data carries no `kind` field).
+  const kind = row.kind || (row.label === "Price" ? "price" : row.label === "Match" ? "parity" : "");
+  const zebra = idx % 2 === 1 ? "var(--surface-2)" : "transparent";
+  const cellStyle = (i: any): any => ({
+    padding: "14px 18px", fontSize: 14, fontWeight: kind === "price" ? 700 : 500,
+    fontFamily: kind === "price" ? "var(--font-display)" : "var(--font-body)",
     textAlign: "left", verticalAlign: "middle",
-    background: i === 1 ? "var(--accent-soft)" : "transparent",
+    background: i === 1 ? "var(--accent-soft)" : zebra,
     borderLeft: i === 1 ? "1px solid var(--accent)" : "none",
     borderRight: i === 1 ? "1px solid var(--accent)" : "none",
   });
   return (
     <tr style={{ borderTop: "1px solid var(--hairline)" }}>
-      <td style={{ padding: "14px 18px", fontSize: 13, fontWeight: 600, color: "var(--muted)",
-        whiteSpace: "nowrap" }}>{row.label}</td>
+      <td style={{ padding: "14px 18px", fontSize: 13, fontWeight: 700, color: "var(--ink-soft)",
+        whiteSpace: "nowrap", background: "var(--surface-3)",
+        borderRight: "1px solid var(--hairline)" }}>{row.label}</td>
       {cols.map((c, i) => {
         const v = row[c];
         const matched = row.match ? row.match[i] : null;
         const tone = row.tone ? cellTone(row.tone[i]) : "var(--ink-soft)";
         return (
-          <td key={c} className={row.kind === "price" || row.kind === "parity" ? "tnum" : ""}
-            style={{ ...cellStyle(i), color: row.kind === "price" ? "var(--ink)" : tone }}>
+          <td key={c} className={kind === "price" || kind === "parity" ? "tnum" : ""}
+            style={{ ...cellStyle(i), color: kind === "price" ? "var(--ink)" : tone }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
               {matched === true && <Icon name="check" size={15} stroke={2.6} style={{ color: "var(--money)" }} />}
-              {matched === false && <Icon name="x" size={14} stroke={2.6} style={{ color: "var(--muted-2)" }} />}
+              {matched === false && <span aria-hidden style={{ display: "inline-flex", alignItems: "center",
+                justifyContent: "center", width: 15, height: 15, fontSize: 13, fontWeight: 700, lineHeight: 1,
+                color: i === 2 ? "var(--risk)" : "var(--muted-2)" }}>✕</span>}
               {v}
             </span>
           </td>
@@ -1618,7 +1625,8 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}>
                 <thead><tr>
-                  <th style={{ padding: "16px 18px", textAlign: "left", width: 120 }}>
+                  <th style={{ padding: "16px 18px", textAlign: "left", width: 120,
+                    background: "var(--surface-3)", borderRight: "1px solid var(--hairline)" }}>
                     <span style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)" }}>Attribute</span>
                   </th>
                   <ColHead p={exact} kind="exact" icon={cluster.icon} />
@@ -1626,7 +1634,7 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
                   <ColHead p={budget} kind="budget" icon={cluster.icon} />
                 </tr></thead>
                 <tbody>
-                  {rows.map((r: any) => <CompareRow key={r.label} row={r} />)}
+                  {rows.map((r: any, i: number) => <CompareRow key={r.label} row={r} idx={i} />)}
                 </tbody>
               </table>
             </div>
