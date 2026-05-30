@@ -27,6 +27,10 @@ const px = (u: any) =>
     ? `https://wsrv.nl/?url=${encodeURIComponent(u)}&w=640&output=webp&we`
     : u;
 
+/* Hash-based slug routing for static export (deep-linkable, shareable). */
+const slugify = (s: any) => String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const clusterBySlug = (s: string) => CLUSTERS.find((c: any) => slugify(c.query) === s);
+
 /* TwinCart — shared UI primitives */
 
 /* ───────────────── Icons (clean line icons) ───────────────── */
@@ -710,6 +714,7 @@ function SeamNode({ active }: any) {
 
 function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
   const [h, setH] = useState(false);
+  const [why, setWhy] = useState(false);
   const tone = matchTone(p.matchType);
   const isStop = /NOT COMPARABLE/.test(p.matchType);
   const slotColor = slotKind === "value" ? "var(--accent)" : slotKind === "budget"
@@ -727,7 +732,7 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
         border: `1px solid ${elevated ? "var(--accent)" : "var(--hairline-2)"}`,
         borderRadius: 18, padding: "20px 18px 18px",
         boxShadow: elevated ? "var(--shadow-lg), inset 0 0 0 1px var(--accent)" : (h ? "var(--shadow-md)" : "var(--shadow-sm)"),
-        transform: elevated ? "translateY(-8px)" : (h ? "translateY(-3px)" : "none"),
+        transform: h ? "translateY(-3px)" : "none",
         transition: "transform .18s ease, box-shadow .18s ease",
         cursor: "pointer", display: "flex", flexDirection: "column", gap: 14,
         animationDelay: animate ? `${idx * 0.07}s` : undefined,
@@ -782,8 +787,23 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
           : <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted)", paddingBottom: 4 }}>reference price</span>}
       </div>
 
-      {/* parity meter */}
-      <ParityMeter value={p.parity} matchType={p.matchType} animate={animate} delay={idx * 90} compact />
+      {/* parity meter + similarity "why?" tooltip */}
+      <div style={{ position: "relative" }} onMouseEnter={() => setWhy(true)} onMouseLeave={() => setWhy(false)}>
+        <ParityMeter value={p.parity} matchType={p.matchType} animate={animate} delay={idx * 90} compact />
+        <span style={{ position: "absolute", top: 0, right: 0, fontSize: 11, fontWeight: 600,
+          color: "var(--accent)", cursor: "help" }}>why?</span>
+        {why && (
+          <div style={{ position: "absolute", bottom: "100%", left: 0, right: 0, marginBottom: 8, zIndex: 20,
+            background: "var(--surface)", border: "1px solid var(--hairline-2)", borderRadius: 12,
+            boxShadow: "var(--shadow-lg)", padding: "12px 14px", fontSize: 12.5, color: "var(--ink-soft)",
+            pointerEvents: "none" }}>
+            <div style={{ fontWeight: 700, color: "var(--ink)" }}>{p.parity}% {p.matchType}</div>
+            {p.anchorKey && <div style={{ marginTop: 4 }}>How we matched: {p.anchorKey}</div>}
+            {p.take && <div style={{ marginTop: 4, color: "var(--muted)" }}>{p.take}</div>}
+            <div style={{ fontSize: 11, color: "var(--muted-2)", marginTop: 6 }}>Functional parity = shared core specs &amp; use, scored by TwinCart AI.</div>
+          </div>
+        )}
+      </div>
 
       {/* take */}
       <div style={{ display: "flex", gap: 8, alignItems: "flex-start", paddingTop: 2,
@@ -983,11 +1003,11 @@ function CategoryTile({ cat, onPick, idx }: any) {
 
 function HomeScreen({ onSearch }: any) {
   const [q, setQ] = useState("");
-  const banner = (HERO_IMAGES as any).__banner;
+  const mosaic = CATEGORY_CARDS.filter((c: any) => c.img).slice().sort((a: any, b: any) => b.maxSavingsPct - a.maxSavingsPct).slice(0, 8);
   return (
     <div className="anim-fadein" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 28px" }}>
-      {/* hero — text + search on the left, AI cinematic banner on the right */}
-      <section style={{ display: "grid", gridTemplateColumns: banner ? "minmax(0,1.05fr) minmax(0,0.95fr)" : "1fr",
+      {/* hero — text + search on the left, savings mosaic on the right */}
+      <section style={{ display: "grid", gridTemplateColumns: mosaic.length ? "minmax(0,1.05fr) minmax(0,0.95fr)" : "1fr",
         gap: 40, alignItems: "center", paddingTop: 44, paddingBottom: 40 }} className="home-hero">
         <div>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 13px",
@@ -1012,14 +1032,29 @@ function HomeScreen({ onSearch }: any) {
           </div>
         </div>
 
-        {banner && (
-          <div style={{ position: "relative", borderRadius: 22, overflow: "hidden", boxShadow: "var(--shadow-lg)",
-            aspectRatio: "16 / 11" }} className="home-hero-img">
-            <img src={banner} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-            <div style={{ position: "absolute", left: 14, bottom: 14, display: "inline-flex", alignItems: "center", gap: 7,
-              fontSize: 12, fontWeight: 700, color: "var(--ink)", background: "rgba(255,255,255,0.92)",
-              padding: "6px 12px", borderRadius: 999, boxShadow: "var(--shadow-sm)", backdropFilter: "blur(4px)" }}>
-              <Icon name="twins" size={14} stroke={2.2} style={{ color: "var(--accent)" }} /> Same product · half the price
+        {mosaic.length > 0 && (
+          <div className="home-hero-img">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+              {mosaic.map((item: any) => (
+                <div key={item.query} onClick={() => onSearch(item.query)}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "none"; }}
+                  style={{ position: "relative", aspectRatio: "1", borderRadius: 14, overflow: "hidden",
+                    border: "1px solid var(--hairline-2)", cursor: "pointer", transition: "transform .18s ease" }}>
+                  <img src={px(item.img)} alt="" loading="lazy"
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  <span style={{ position: "absolute", top: 6, left: 6, fontSize: 10.5, fontWeight: 700,
+                    color: "#fff", background: "var(--accent)", padding: "2px 7px", borderRadius: 999,
+                    boxShadow: "var(--shadow-accent)" }}>−{item.maxSavingsPct}%</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 12, display: "flex", justifyContent: "center" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 7,
+                fontSize: 12, fontWeight: 700, color: "var(--ink)", background: "rgba(255,255,255,0.92)",
+                padding: "6px 12px", borderRadius: 999, boxShadow: "var(--shadow-sm)", backdropFilter: "blur(4px)" }}>
+                <Icon name="twins" size={14} stroke={2.2} style={{ color: "var(--accent)" }} /> Same product · up to {mosaic[0]?.maxSavingsPct || 90}% less
+              </div>
             </div>
           </div>
         )}
@@ -2152,8 +2187,8 @@ function App() {
   };
 
   const goHome = (q?: any) => {
-    if (typeof q === "string") { setQuery(q); setScreen("results"); }
-    else { setScreen("home"); }
+    if (typeof q === "string") { setQuery(q); setScreen("results"); setHash("#/s/" + slugify(q)); }
+    else { setScreen("home"); setHash("#/"); }
     window.scrollTo({ top: 0 });
   };
   const search = (q: any) => {
@@ -2168,15 +2203,32 @@ function App() {
     }
     // genuinely no match -> pass the raw query so ResultsScreen shows its "No twins found" empty state
     setQuery(match || q || QUERIES[0]); setScreen("results"); window.scrollTo({ top: 0 });
+    setHash("#/s/" + slugify(match || q || QUERIES[0]));
   };
-  const openCluster = (c: any) => { setCluster(c); setScreen("compare"); window.scrollTo({ top: 0 }); };
-  const openReport = (c: any) => { setCluster(c); setScreen("report"); window.scrollTo({ top: 0 }); };
+  const openCluster = (c: any) => { setCluster(c); setScreen("compare"); window.scrollTo({ top: 0 }); setHash("#/twin/" + slugify(c.query)); };
+  const openReport = (c: any) => { setCluster(c); setScreen("report"); window.scrollTo({ top: 0 }); setHash("#/report/" + slugify(c.query)); };
   const openCheckout = (c: any) => setCheckout(c);
+
+  const setHash = (h: string) => { if (typeof window !== "undefined" && window.location.hash !== (h || "#/")) history.replaceState(null, "", h || "#/"); };
+  useEffect(() => {
+    const applyHash = () => {
+      const h = (typeof window !== "undefined" ? window.location.hash : "") || "";
+      const [route, slug] = h.replace(/^#\/?/, "").split("/");
+      if (route === "s" && slug) { setQuery(clusterBySlug(slug)?.query || decodeURIComponent(slug).replace(/-/g, " ")); setScreen("results"); }
+      else if (route === "twin" && slug) { const c = clusterBySlug(slug); if (c) { setCluster(c); setScreen("compare"); } else { setScreen("home"); } }
+      else if (route === "report" && slug) { const c = clusterBySlug(slug); if (c) { setCluster(c); setScreen("report"); } else { setScreen("home"); } }
+      else if (route === "cart") { setScreen("cart"); }
+      else { setScreen("home"); }
+    };
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
+  }, []);
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <TopNav onHome={goHome} screen={screen} cartCount={cart.length} wishCount={wishlist.size}
-        onCart={() => { setScreen("cart"); window.scrollTo({ top: 0 }); }} />
+        onCart={() => { setScreen("cart"); setHash("#/cart"); window.scrollTo({ top: 0 }); }} />
 
       <main style={{ flex: 1 }}>
         {screen === "home" && <HomeScreen onSearch={search} />}
