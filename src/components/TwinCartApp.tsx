@@ -1003,11 +1003,21 @@ function CategoryTile({ cat, onPick, idx }: any) {
 
 function HomeScreen({ onSearch }: any) {
   const [q, setQ] = useState("");
-  const mosaic = CATEGORY_CARDS.filter((c: any) => c.img).slice().sort((a: any, b: any) => b.maxSavingsPct - a.maxSavingsPct).slice(0, 8);
+  // Rotating cinematic hero banners (Gemini). Fall back to the single banner, then to nothing.
+  const banners: string[] = ((HERO_IMAGES as any).__banners && (HERO_IMAGES as any).__banners.length)
+    ? (HERO_IMAGES as any).__banners
+    : ((HERO_IMAGES as any).__banner ? [(HERO_IMAGES as any).__banner] : []);
+  const topSave = CATEGORY_CARDS.reduce((m: number, c: any) => Math.max(m, c.maxSavingsPct || 0), 0) || 90;
+  const [heroIdx, setHeroIdx] = useState(0);
+  useEffect(() => {
+    if (banners.length < 2) return;
+    const t = setInterval(() => setHeroIdx((i) => (i + 1) % banners.length), 3800);
+    return () => clearInterval(t);
+  }, [banners.length]);
   return (
     <div className="anim-fadein" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 28px" }}>
       {/* hero — text + search on the left, savings mosaic on the right */}
-      <section style={{ display: "grid", gridTemplateColumns: mosaic.length ? "minmax(0,1.05fr) minmax(0,0.95fr)" : "1fr",
+      <section style={{ display: "grid", gridTemplateColumns: banners.length ? "minmax(0,1.05fr) minmax(0,0.95fr)" : "1fr",
         gap: 40, alignItems: "center", paddingTop: 44, paddingBottom: 40 }} className="home-hero">
         <div>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 13px",
@@ -1032,30 +1042,32 @@ function HomeScreen({ onSearch }: any) {
           </div>
         </div>
 
-        {mosaic.length > 0 && (
-          <div className="home-hero-img">
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
-              {mosaic.map((item: any) => (
-                <div key={item.query} onClick={() => onSearch(item.query)}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "none"; }}
-                  style={{ position: "relative", aspectRatio: "1", borderRadius: 14, overflow: "hidden",
-                    border: "1px solid var(--hairline-2)", cursor: "pointer", transition: "transform .18s ease" }}>
-                  <img src={px(item.img)} alt="" loading="lazy"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                  <span style={{ position: "absolute", top: 6, left: 6, fontSize: 10.5, fontWeight: 700,
-                    color: "#fff", background: "var(--accent)", padding: "2px 7px", borderRadius: 999,
-                    boxShadow: "var(--shadow-accent)" }}>−{item.maxSavingsPct}%</span>
-                </div>
-              ))}
+        {banners.length > 0 && (
+          <div className="home-hero-img" style={{ position: "relative", borderRadius: 22, overflow: "hidden",
+            boxShadow: "var(--shadow-lg)", aspectRatio: "16 / 11", background: "var(--surface-3)" }}>
+            {/* cross-fading rotating banners */}
+            {banners.map((src: string, i: number) => (
+              <img key={src} src={src} alt="" draggable={false}
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+                  opacity: i === heroIdx ? 1 : 0, transition: "opacity .9s ease" }} />
+            ))}
+            {/* value-prop pill */}
+            <div style={{ position: "absolute", left: 14, bottom: 14, display: "inline-flex", alignItems: "center", gap: 7,
+              fontSize: 12, fontWeight: 700, color: "var(--ink)", background: "rgba(255,255,255,0.92)",
+              padding: "6px 12px", borderRadius: 999, boxShadow: "var(--shadow-sm)", backdropFilter: "blur(4px)" }}>
+              <Icon name="twins" size={14} stroke={2.2} style={{ color: "var(--accent)" }} /> Same product · up to {topSave}% less
             </div>
-            <div style={{ marginTop: 12, display: "flex", justifyContent: "center" }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 7,
-                fontSize: 12, fontWeight: 700, color: "var(--ink)", background: "rgba(255,255,255,0.92)",
-                padding: "6px 12px", borderRadius: 999, boxShadow: "var(--shadow-sm)", backdropFilter: "blur(4px)" }}>
-                <Icon name="twins" size={14} stroke={2.2} style={{ color: "var(--accent)" }} /> Same product · up to {mosaic[0]?.maxSavingsPct || 90}% less
+            {/* dots */}
+            {banners.length > 1 && (
+              <div style={{ position: "absolute", right: 14, bottom: 16, display: "flex", gap: 6 }}>
+                {banners.map((_: string, i: number) => (
+                  <button key={i} onClick={() => setHeroIdx(i)} aria-label={`Hero ${i + 1}`}
+                    style={{ width: i === heroIdx ? 18 : 7, height: 7, borderRadius: 999, border: "none", cursor: "pointer",
+                      background: i === heroIdx ? "var(--accent)" : "rgba(255,255,255,0.8)",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.3)", transition: "all .25s" }} />
+                ))}
               </div>
-            </div>
+            )}
           </div>
         )}
       </section>

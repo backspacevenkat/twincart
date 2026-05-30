@@ -23,5 +23,13 @@
   "foam roller": "/assets/hero/foam-roller.jpg",
   "led strip lights": "/assets/hero/led-strip-lights.jpg",
   "belt": "/assets/hero/belt.jpg",
-  "wireless mouse": "/assets/hero/wireless-mouse.jpg"
+  "wireless mouse": "/assets/hero/wireless-mouse.jpg",
+  "__banners": [
+    "/assets/hero/banner-1.jpg",
+    "/assets/hero/banner-2.jpg",
+    "/assets/hero/banner-3.jpg",
+    "/assets/hero/banner-4.jpg",
+    "/assets/hero/banner-5.jpg",
+    "/assets/hero/banner-6.jpg"
+  ]
 }
