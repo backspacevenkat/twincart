@@ -1,0 +1,120 @@
+import type { IngestedProduct, Retailer } from '@/lib/types';
+import { toGtin14 } from './gtin';
+
+// The curated search universe the demo runs on. Pre-scraped offline.
+export const CURATED_QUERIES = [
+  'thermo flask',
+  'stanley tumbler',
+  'airpods',
+  'wireless earbuds',
+  'robot vacuum',
+  'office chair',
+  'baby stroller',
+  'protein powder',
+  'luggage',
+  'led mirror',
+  'summer dress',
+  'kids shoes',
+  'iphone charger',
+  'humidifier',
+  'electric toothbrush',
+  'espresso machine',
+  'smartwatch',
+  'air fryer',
+];
+
+const num = (v: unknown): number | null => {
+  if (v == null) return null;
+  const n = typeof v === 'number' ? v : parseFloat(String(v).replace(/[^0-9.]/g, ''));
+  return Number.isFinite(n) ? n : null;
+};
+const str = (v: unknown): string | null => (v == null ? null : String(v));
+
+type RawItem = Record<string, unknown>;
+
+interface ActorConfig {
+  actorId: string;
+  buildInput: (query: string, maxItems: number) => Record<string, unknown>;
+  map: (item: RawItem, query: string) => IngestedProduct;
+}
+
+const RESIDENTIAL = { useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL'] };
+
+// Per-retailer actor + input + output mapping. Mappings per docs/apify-actors.md.
+export const RETAILER_ACTORS: Record<Retailer, ActorConfig> = {
+  amazon: {
+    actorId: 'automation-lab/amazon-scraper',
+    buildInput: (q, maxItems) => ({ searchQueries: [q], marketplace: 'US', maxItems, proxyConfiguration: RESIDENTIAL }),
+    map: (i, q) => {
+      const asin = str(i.asin);
+      return {
+        retailer: 'amazon', external_id: asin, asin, upc: str(i.gtin), gtin14: toGtin14(str(i.gtin)),
+        title: str(i.name) ?? '', brand: str(i.brand),
+        price: num(i.price), original_price: num(i.listPrice), currency: str(i.currency) ?? 'USD',
+        image_url: str(i.thumbnail) ?? str((i.images as string[] | undefined)?.[0]) ?? null,
+        product_url: str(i.url), rating: num(i.rating), review_count: num(i.reviewCount),
+        raw_json: { ...i, _query: q },
+      };
+    },
+  },
+  walmart: {
+    actorId: 'silentflow/walmart-scraper',
+    buildInput: (q, maxItems) => ({ search: q, zipCode: '10001', sort: 'best_match', maxItems, includeDetails: true, includeReviews: false, proxy: RESIDENTIAL }),
+    map: (i, q) => {
+      const upc = str(i.upc) ?? str(i.gtin13);
+      return {
+        retailer: 'walmart', external_id: str(i.sku) ?? str(i.id), asin: null, upc, gtin14: toGtin14(upc),
+        title: str(i.name) ?? '', brand: str(i.brand),
+        price: num(i.price), original_price: num(i.wasPrice), currency: str(i.currency) ?? 'USD',
+        image_url: str(i.imageUrl) ?? str((i.images as string[] | undefined)?.[0]) ?? null,
+        product_url: str(i.url), rating: num(i.averageRating), review_count: num(i.numberOfReviews),
+        raw_json: { ...i, _query: q },
+      };
+    },
+  },
+  target: {
+    actorId: 'makework36/target-scraper',
+    buildInput: (q, maxItems) => ({ searchQueries: [q], maxProducts: maxItems, fetchProductDetails: true, storeId: '3991' }),
+    map: (i, q) => {
+      const upc = str(i.upc);
+      return {
+        retailer: 'target', external_id: str(i.tcin), asin: null, upc, gtin14: toGtin14(upc),
+        title: str(i.title) ?? '', brand: str(i.brand),
+        price: num(i.price) ?? num(i.salePrice), original_price: num(i.regularPrice), currency: 'USD',
+        image_url: str(i.imageUrl), product_url: str(i.url), rating: num(i.rating), review_count: num(i.reviewCount),
+        raw_json: { ...i, _query: q },
+      };
+    },
+  },
+  temu: {
+    actorId: 'sovereigntaylor/temu-product-scraper',
+    buildInput: (q, maxItems) => ({ searchTerms: [q], maxResults: maxItems, maxPrice: 0, proxy: RESIDENTIAL }),
+    map: (i, q) => ({
+      retailer: 'temu', external_id: str(i.productId) ?? str(i.id), asin: null, upc: null, gtin14: null,
+      title: str(i.title) ?? '', brand: str(i.store) ?? str(i.brand),
+      price: num(i.price), original_price: num(i.originalPrice), currency: str(i.currency) ?? 'USD',
+      image_url: str((i.images as string[] | undefined)?.[0]) ?? str(i.image), product_url: str(i.url),
+      rating: num(i.rating), review_count: num(i.reviews),
+      raw_json: { ...i, _query: q },
+    }),
+  },
+  shein: {
+    actorId: 'scraper-engine/shein-search-products-scraper',
+    buildInput: (q, maxItems) => ({ query: [q], countryCode: 'us', orderBy: 'recommend', maxItems, perPage: 100, proxyConfiguration: { useApifyProxy: true } }),
+    map: (i, q) => {
+      const sale = (i.salePrice as RawItem) ?? {};
+      const retail = (i.retailPrice as RawItem) ?? {};
+      const goodsId = str(i.goods_id);
+      const img = str(i.goods_img);
+      return {
+        retailer: 'shein', external_id: goodsId, asin: null, upc: null, gtin14: null,
+        title: str(i.goods_name) ?? '', brand: null,
+        price: num(sale.usdAmount), original_price: num(retail.usdAmount), currency: 'USD',
+        image_url: img ? (img.startsWith('//') ? `https:${img}` : img) : null,
+        product_url: goodsId ? `https://www.shein.com/-p-${goodsId}.html` : null,
+        rating: null, review_count: null,
+        raw_json: { ...i, _query: q },
+      };
+    },
+  },
+};
