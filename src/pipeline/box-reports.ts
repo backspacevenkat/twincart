@@ -4,9 +4,34 @@
  * upload to Box (CCG auth), create an open shared link, and write boxReport into live-clusters.json.
  * Run: bun src/pipeline/box-reports.ts
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, statSync, existsSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { env } from '@/lib/env';
+
+const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+
+/** Render an HTML string to a real PDF via headless Chrome. Returns the PDF bytes. */
+function htmlToPdf(id: string, html: string): Buffer {
+  const htmlPath = `/tmp/tc_${id}.html`;
+  const pdfPath = `/tmp/tc_${id}.pdf`;
+  writeFileSync(htmlPath, html);
+  if (existsSync(pdfPath)) unlinkSync(pdfPath);
+  const args = ['--headless', '--disable-gpu', '--no-pdf-header-footer', `--print-to-pdf=${pdfPath}`, `file://${htmlPath}`];
+  try {
+    execFileSync(CHROME, args, { stdio: 'ignore' });
+  } catch {
+    // older/newer Chrome may need the new headless mode
+  }
+  if (!existsSync(pdfPath) || statSync(pdfPath).size < 5 * 1024) {
+    // retry with --headless=new
+    execFileSync(CHROME, ['--headless=new', '--disable-gpu', '--no-pdf-header-footer', `--print-to-pdf=${pdfPath}`, `file://${htmlPath}`], { stdio: 'ignore' });
+  }
+  if (!existsSync(pdfPath) || statSync(pdfPath).size < 5 * 1024) {
+    throw new Error(`PDF render failed/too small for ${id} (${existsSync(pdfPath) ? statSync(pdfPath).size : 0} bytes)`);
+  }
+  return readFileSync(pdfPath);
+}
 
 const FOLDER = process.env.BOX_REPORTS_FOLDER_ID && process.env.BOX_REPORTS_FOLDER_ID !== '0'
   ? process.env.BOX_REPORTS_FOLDER_ID : '385683218231';
@@ -58,11 +83,12 @@ ${row(e, 'EXACT', '#0e0f13')}${row(v, 'VALUE', '#16a34a')}${row(b, 'BUDGET', '#c
 </body></html>`;
 }
 
-async function upload(token: string, name: string, html: string): Promise<string> {
+async function upload(token: string, name: string, pdf: Buffer): Promise<string> {
+  const blob = () => new Blob([new Uint8Array(pdf)], { type: 'application/pdf' });
   // delete existing same-name file first (idempotent re-runs)
   const form = new FormData();
   form.append('attributes', JSON.stringify({ name, parent: { id: FOLDER } }));
-  form.append('file', new Blob([html], { type: 'text/html' }), name);
+  form.append('file', blob(), name);
   let r = await fetch('https://upload.box.com/api/2.0/files/content', {
     method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: form as any,
   });
@@ -70,11 +96,16 @@ async function upload(token: string, name: string, html: string): Promise<string
   let id: string;
   if (j.entries) id = j.entries[0].id;
   else if (j.code === 'item_name_in_use') {
-    id = j.context_info.conflicts[0].id;
+    const conflict = j.context_info?.conflicts;
+    const existingId = Array.isArray(conflict) ? conflict[0]?.id : conflict?.id;
+    if (!existingId) throw new Error('conflict but no id: ' + JSON.stringify(j).slice(0, 200));
+    id = existingId;
     // upload new version
     const f2 = new FormData();
-    f2.append('file', new Blob([html], { type: 'text/html' }), name);
-    await fetch(`https://upload.box.com/api/2.0/files/${id}/content`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: f2 as any });
+    f2.append('file', blob(), name);
+    const vr = await fetch(`https://upload.box.com/api/2.0/files/${id}/content`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: f2 as any });
+    const vj: any = await vr.json();
+    if (vj.entries) id = vj.entries[0].id;
   } else throw new Error('upload failed: ' + JSON.stringify(j).slice(0, 120));
   // open shared link
   const sr = await fetch(`https://api.box.com/2.0/files/${id}`, {
@@ -93,7 +124,8 @@ async function main() {
   let ok = 0;
   for (const c of clusters) {
     try {
-      const url = await upload(token, `TwinCart_${c.id}_${c.query.replace(/\s+/g, '-')}.html`, reportHTML(c));
+      const pdf = htmlToPdf(c.id, reportHTML(c));
+      const url = await upload(token, `TwinCart_${c.id}_${c.query.replace(/\s+/g, '-')}.pdf`, pdf);
       c.boxReport = url;
       ok++;
       console.log(`  ✓ ${c.query} → ${url}`);

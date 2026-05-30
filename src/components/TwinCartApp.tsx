@@ -368,6 +368,10 @@ function TwinSpectrum({ cluster, onPick, onAdd, onSelectImage, onPickOffer }: an
   // de-overlap: sort by price, nudge equal-ish nodes
   const nodes = offers.map((o: any, idx: any) => ({ o, idx, x: pos(o.price) }))
     .sort((a: any, b: any) => a.x - b.x);
+  const MIN_GAP = 9;
+  for (let k = 1; k < nodes.length; k++) {
+    if (nodes[k].x < nodes[k - 1].x + MIN_GAP) nodes[k].x = Math.min(96, nodes[k - 1].x + MIN_GAP);
+  }
 
   return (
     <div style={{ background: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: 16,
@@ -1005,6 +1009,8 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
   const [activeImg, setActiveImg] = useState(0);
   const [picked, setPicked] = useState<any>(null);
   const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
+  const offerImgs = cluster.offers.map((o: any) => o.image || cluster.heroImages?.[0]).filter(Boolean);
+  const carouselImgs = offerImgs.length === cluster.offers.length ? offerImgs : cluster.heroImages;
   const prices = cluster.offers.map((o: any) => o.price);
   const lo = Math.min(...prices), hi = Math.max(...prices);
   const retailers = new Set(cluster.offers.map((o: any) => o.retailer)).size;
@@ -1019,7 +1025,7 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
         className="cluster-identity">
         {/* carousel */}
         <div style={{ position: "relative" }}>
-          <ImageCarousel icon={cluster.icon} images={cluster.heroImages} captions={captions}
+          <ImageCarousel icon={cluster.icon} images={carouselImgs} captions={captions}
             index={activeImg} setIndex={setActiveImg} height={300}>
             {cluster.trending && (
               <span style={{ position: "absolute", top: 12, left: 12, zIndex: 5, display: "inline-flex",
@@ -1139,6 +1145,23 @@ function ResultsScreen({ query, onSearch, onOpenCluster, onCheckout, onReport, o
         </span>
       </div>
 
+      {clusters.length === 0 ? (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16,
+          textAlign: "center", padding: "60px 24px" }}>
+          <h3 style={{ fontSize: 22, fontWeight: 700, color: "var(--ink)" }}>
+            No twins found for <span style={{ color: "var(--accent)" }}>&quot;{query}&quot;</span>
+          </h3>
+          <p style={{ fontSize: 14, color: "var(--muted)" }}>Try one of these:</p>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
+            {CHIPS.slice(0, 8).map((c) => (
+              <button key={c} onClick={() => onSearch(c)} style={{ padding: "9px 16px", borderRadius: 999,
+                border: "1px solid var(--hairline-2)", background: "var(--surface)", color: "var(--muted)",
+                fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>{c}</button>
+            ))}
+          </div>
+        </div>
+      ) : (
+      <>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
         marginBottom: 26, flexWrap: "wrap" }}>
         <FilterBar filters={filters} setFilters={setFilters} />
@@ -1399,6 +1422,8 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
   const [watch, setWatch] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
   const captions = cluster.offers.map((o: any) => `${RETAILERS[o.retailer]?.name ?? o.retailer} · ${o.name}`);
+  const offerImgs = cluster.offers.map((o: any) => o.image || cluster.heroImages?.[0]).filter(Boolean);
+  const carouselImgs = offerImgs.length === cluster.offers.length ? offerImgs : cluster.heroImages;
   const { exact, value, budget } = cluster.products;
   const rows = cluster.compareRows || [];
 
@@ -1432,7 +1457,7 @@ function CompareScreen({ cluster, onBack, onCheckout, onReport, onAdd, onWish, w
       {/* cluster identity band — carousel + spectrum */}
       <div style={{ display: "grid", gridTemplateColumns: "360px minmax(0,1fr)", gap: 24,
         marginBottom: 28, alignItems: "stretch" }} className="cluster-identity">
-        <ImageCarousel icon={cluster.icon} images={cluster.heroImages} captions={captions}
+        <ImageCarousel icon={cluster.icon} images={carouselImgs} captions={captions}
           index={activeImg} setIndex={setActiveImg} height={262} />
         <TwinSpectrum cluster={cluster} onPick={() => {}} onAdd={onAdd} onSelectImage={setActiveImg} />
       </div>
@@ -1926,10 +1951,15 @@ function App() {
   };
   const search = (q: any) => {
     const ql = (q || "").toLowerCase().trim();
-    const match = QUERIES.find((x) => x.toLowerCase() === ql)
-      || QUERIES.find((x) => x.toLowerCase().includes(ql) || ql.includes(x.toLowerCase()))
-      || "thermo flask";
-    setQuery(match); setScreen("results"); window.scrollTo({ top: 0 });
+    const exact = QUERIES.find((x) => x.toLowerCase() === ql);
+    if (exact) { setQuery(exact); setScreen("results"); window.scrollTo({ top: 0 }); return; }
+    const partial = ql && QUERIES.find((x) => x.toLowerCase().includes(ql) || ql.includes(x.toLowerCase()));
+    if (partial) { setQuery(partial); setScreen("results"); window.scrollTo({ top: 0 }); return; }
+    const byContent = ql && CLUSTERS.find((c: any) =>
+      (c.title || "").toLowerCase().includes(ql) ||
+      (c.offers || []).some((o: any) => (o.name || "").toLowerCase().includes(ql)));
+    if (byContent) { setQuery(byContent.query); setScreen("results"); window.scrollTo({ top: 0 }); return; }
+    setQuery(q); setScreen("results"); window.scrollTo({ top: 0 });
   };
   const openCluster = (c: any) => { setCluster(c); setScreen("compare"); window.scrollTo({ top: 0 }); };
   const openReport = (c: any) => { setCluster(c); setScreen("report"); window.scrollTo({ top: 0 }); };
