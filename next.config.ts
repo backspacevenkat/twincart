@@ -8,8 +8,8 @@ const root = dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   turbopack: { root },
-  // Static export for AWS Amplify/S3+CloudFront hosting (no server routes yet).
-  // When the Browserbase agent API route lands, switch this piece to SSR hosting.
+  // Static export for AWS Amplify hosting (current app has no server routes).
+  // When the Browserbase agent API route lands, remove `output: "export"` → SSR hosting.
   output: "export",
   images: { unoptimized: true },
 };

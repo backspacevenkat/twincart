@@ -44,3 +44,8 @@ logs/
 # ─── Test/screenshot artifacts ──────────────────────────────────
 .playwright-mcp/
 /twincart-home.png
+
+# deploy artifacts
+.deploy_status
+.tc_out.zip
+out/
