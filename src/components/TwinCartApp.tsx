@@ -223,11 +223,27 @@ function Btn({ children, variant = "ghost", size = "md", icon, iconRight, onClic
   );
 }
 
+/* ───────────────── Retailer deep-link ───────────────── */
+function RetailerLink({ url, retailer, compact, full }: any) {
+  if (!url) return null;
+  const r = RETAILERS[retailer];
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" onClick={(e: any) => e.stopPropagation()}
+      style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
+        fontSize: compact ? 11.5 : 12.5, fontWeight: 600, color: "var(--trust)",
+        padding: compact ? "5px 10px" : "8px 13px", borderRadius: 999,
+        background: "var(--trust-soft)", border: "1px solid #cfe0fd", whiteSpace: "nowrap",
+        width: full ? "100%" : "auto" }}>
+      View on {r ? r.name : retailer} <Icon name="arrow" size={compact ? 12 : 14} stroke={2.2} />
+    </a>
+  );
+}
+
 /* TwinCart — ImageCarousel + TwinSpectrum (cluster identity visuals) */
 
 /* ───────────────── Image carousel ───────────────── */
 function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounded = true, images: imagesProp }: any) {
-  const imgs = (GALLERY && GALLERY[icon]) || [IMG[icon]];
+  const imgs = ((imagesProp && imagesProp.length ? imagesProp : (GALLERY && GALLERY[icon]) || [IMG[icon]]) as any[]).filter(Boolean);
   const [i, setI] = useState(0);
   const [drag, setDrag] = useState<any>(null);
   const n = imgs.length;
@@ -238,6 +254,16 @@ function ImageCarousel({ icon, height = 300, radius = 18, tint, children, rounde
   const onMove = (e: any) => { if (!drag) return; const x = (e.touches ? e.touches[0].clientX : e.clientX); setDrag((d: any) => ({ ...d, dx: x - d.x })); };
   const onUp = () => { if (!drag) return; if (drag.dx > 45) go(-1); else if (drag.dx < -45) go(1); setDrag(null); };
 
+  if (!n) {
+    return (
+      <div style={{ position: "relative", width: "100%", height, borderRadius: rounded ? radius : 0,
+        overflow: "hidden", background: "var(--surface-3)", border: "1px solid var(--hairline)",
+        display: "grid", placeItems: "center", color: "var(--muted-2)" }}>
+        <Icon name="box" size={Math.min(64, height * 0.3)} stroke={1.4} />
+        {children}
+      </div>
+    );
+  }
   return (
     <div style={{ position: "relative", width: "100%", height, borderRadius: rounded ? radius : 0,
       overflow: "hidden", background: "var(--surface-3)", border: "1px solid var(--hairline)",
@@ -413,7 +439,10 @@ function TwinSpectrum({ cluster, onPick, onAdd }: any) {
               {chosen.savingsAmt != null && <SavingsPill amt={chosen.savingsAmt} pct={chosen.savingsPct} size="sm" muted={stop} />}
             </div>
           </div>
-          <Btn variant="primary" size="sm" icon="cart" onClick={() => onAdd && onAdd(chosen)}>Add to cart</Btn>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <RetailerLink url={chosen.url} retailer={chosen.retailer} compact />
+            <Btn variant="primary" size="sm" icon="cart" onClick={() => onAdd && onAdd(chosen)}>Add to cart</Btn>
+          </div>
         </div>
       ); })()}
       {/* savings callout */}
@@ -532,6 +561,7 @@ function OfferCard({ offer, icon, onAdd, onWish, wished, idx }: any) {
             <Icon name="cart" size={18} stroke={2} />
           </button>
         </div>
+        {offer.url && <RetailerLink url={offer.url} retailer={offer.retailer} compact full />}
       </div>
     </div>
   );
@@ -726,6 +756,9 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
         <span style={{ color: "var(--muted-2)", fontWeight: 500, fontSize: 10.5, whiteSpace: "nowrap",
           overflow: "hidden", textOverflow: "ellipsis" }}>{p.anchorKey}</span>
       </div>
+
+      {/* retailer deep link */}
+      {p.url && <div style={{ marginTop: 2 }}><RetailerLink url={p.url} retailer={p.retailer} full /></div>}
     </div>
   );
 }
@@ -1047,6 +1080,7 @@ function ClusterCard({ cluster, onOpenCluster, onCheckout, onReport, onAdd, onWi
 function ResultsScreen({ query, onSearch, onOpenCluster, onCheckout, onReport, onAdd, onWish, wishlist }: any) {
   const [q, setQ] = useState(query);
   const [filters, setFilters] = useState<any>({});
+  const [layout, setLayout] = useState("cards");
   useEffect(() => { setQ(query); }, [query]);
   const clusters = CLUSTERS.filter((c) => c.query === query);
   const totalListings = clusters.reduce((n, c) => n + c.offers.length, 0);
@@ -1066,15 +1100,121 @@ function ResultsScreen({ query, onSearch, onOpenCluster, onCheckout, onReport, o
         </span>
       </div>
 
-      <div style={{ marginBottom: 26 }}><FilterBar filters={filters} setFilters={setFilters} /></div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
+        marginBottom: 26, flexWrap: "wrap" }}>
+        <FilterBar filters={filters} setFilters={setFilters} />
+        {/* Cards / List layout toggle */}
+        <div style={{ display: "flex", gap: 5, padding: 4, borderRadius: 999,
+          background: "var(--surface-3)", border: "1px solid var(--hairline)" }}>
+          {[["cards", "scale"], ["list", "filter"]].map(([mode, ic]) => {
+            const on = layout === mode;
+            return (
+              <button key={mode} onClick={() => setLayout(mode)}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 14px", borderRadius: 999,
+                  fontSize: 12.5, fontWeight: 600, textTransform: "capitalize",
+                  background: on ? "var(--surface)" : "transparent", color: on ? "var(--ink)" : "var(--muted)",
+                  boxShadow: on ? "var(--shadow-sm)" : "none", transition: "all .12s" }}>
+                <Icon name={ic} size={15} stroke={2} /> {mode}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        {clusters.map((c, i) => (
-          <div key={c.id} className="anim-fadeup" style={{ animationDelay: `${i * 0.06}s` }}>
-            <ClusterCard cluster={c} onOpenCluster={onOpenCluster} lead={i === 0}
-              onCheckout={onCheckout} onReport={onReport}
-              onAdd={onAdd} onWish={onWish} wishlist={wishlist} />
+      {layout === "cards" ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {clusters.map((c, i) => (
+            <div key={c.id} className="anim-fadeup" style={{ animationDelay: `${i * 0.06}s` }}>
+              <ClusterCard cluster={c} onOpenCluster={onOpenCluster} lead={i === 0}
+                onCheckout={onCheckout} onReport={onReport}
+                onAdd={onAdd} onWish={onWish} wishlist={wishlist} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
+          {clusters.map((c, i) => (
+            <ClusterList key={c.id} cluster={c} onOpenCluster={onOpenCluster}
+              onCheckout={onCheckout} onAdd={onAdd} onWish={onWish} wishlist={wishlist} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ───────────────── List layout: one product per row (vertical column) ───────────────── */
+function ListRow({ p, icon, onAdd }: any) {
+  const [h, setH] = useState(false);
+  const stop = /NOT COMPARABLE/.test(p.matchType || "");
+  const tone = matchTone(p.matchType || "");
+  return (
+    <div onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 16px",
+        background: "var(--surface)", border: `1px solid ${p.tag === "value" ? "var(--accent)" : "var(--hairline-2)"}`,
+        borderRadius: 14, boxShadow: h ? "var(--shadow-md)" : "var(--shadow-sm)", transition: "box-shadow .15s" }}>
+      <Thumb icon={icon} img={p.image} retailer={p.retailer} size={64} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
+          {p.tag && <span style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase",
+            color: "#fff", background: p.tag === "value" ? "var(--accent)" : p.tag === "budget" ? "var(--amber)" : "var(--ink)",
+            padding: "2px 7px", borderRadius: 999 }}>{p.slot || p.tag}</span>}
+          <RetailerBadge id={p.retailer} size="sm" />
+          <span className="mono" style={{ fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 5,
+            color: stop ? "var(--risk)" : tone === "amber" ? "var(--amber)" : "var(--accent)",
+            background: stop ? "var(--risk-soft)" : tone === "amber" ? "var(--amber-soft)" : "var(--accent-soft)" }}>
+            {p.parity}% {stop ? "· not a twin" : "twin"}
+          </span>
+        </div>
+        <div style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", lineHeight: 1.3,
+          display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{p.name}</div>
+        <div style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <Rating value={p.rating} count={p.reviews} />
+          <ShippingLine text={p.shipping} tone={p.shippingTone} />
+        </div>
+      </div>
+      <div style={{ textAlign: "right", flexShrink: 0 }}>
+        <div className="tnum" style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 24,
+          color: "var(--ink)", lineHeight: 1 }}>${p.price}</div>
+        {p.savingsAmt != null
+          ? <div className="tnum" style={{ fontSize: 12, fontWeight: 700, color: stop ? "var(--muted)" : "var(--money)", marginTop: 4 }}>
+              Save ${p.savingsAmt} ({p.savingsPct}%)</div>
+          : <div style={{ fontSize: 11, fontWeight: 600, color: "var(--muted)", marginTop: 4 }}>reference</div>}
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 7, flexShrink: 0, width: 132 }}>
+        <RetailerLink url={p.url} retailer={p.retailer} compact full />
+        <Btn variant={p.tag === "value" ? "primary" : "soft"} size="sm" icon="cart" full
+          onClick={() => onAdd && onAdd(p)}>Add</Btn>
+      </div>
+    </div>
+  );
+}
+
+function ClusterList({ cluster, onOpenCluster, onCheckout, onAdd }: any) {
+  const prices = cluster.offers.map((o: any) => o.price);
+  const lo = Math.min(...prices), hi = Math.max(...prices);
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+        marginBottom: 12, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+          <Thumb icon={cluster.icon} img={cluster.heroImages?.[0]} size={44} tone="var(--accent)" />
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 17, fontWeight: 700, color: "var(--ink)", lineHeight: 1.15 }}>{cluster.title}</div>
+            <div className="tnum" style={{ fontSize: 12.5, color: "var(--muted)" }}>
+              {cluster.offers.length} listings · ${lo}–${hi} ·
+              <span style={{ color: "var(--money)", fontWeight: 700 }}> up to {cluster.maxSavingsPct}% off</span>
+            </div>
           </div>
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <Btn variant="ghost" size="sm" icon="scale" onClick={() => onOpenCluster(cluster)}>Compare</Btn>
+          <Btn variant="primary" size="sm" icon="shield" onClick={() => onCheckout(cluster)}>Prepare checkout</Btn>
+        </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+        {cluster.offers.map((o: any, i: number) => (
+          <ListRow key={(o.retailer || "") + (o.name || "") + i} p={o} icon={cluster.icon} onAdd={onAdd} />
         ))}
       </div>
     </div>
