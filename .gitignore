@@ -1,0 +1,42 @@
+# ─── Secrets & env (NEVER commit) ───────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+.aws/
+credentials*
+secrets/
+.mcp.json
+
+# ─── Old files with sensitive info (keep locally, never commit) ──
+product_spec.md
+Earlier_Bad_UI.html
+
+# ─── Node / Next.js ─────────────────────────────────────────────
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.turbo/
+
+# ─── Data / scrape caches / local DB ────────────────────────────
+data/raw/
+*.sqlite
+*.sqlite3
+databases/
+
+# ─── OS / editor ────────────────────────────────────────────────
+.DS_Store
+.vscode/
+.idea/
+
+# ─── Logs ───────────────────────────────────────────────────────
+logs/
+*.log
