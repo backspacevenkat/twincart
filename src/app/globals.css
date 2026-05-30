@@ -1,26 +1,99 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink:        #0E0F13;
+  --ink-soft:   #2A2C34;
+  --canvas:     #FFFFFF;
+  --surface:    #FFFFFF;
+  --surface-2:  #FAFAFC;
+  --surface-3:  #F4F4F7;
+
+  --accent:       #16A34A;
+  --accent-deep:  #15803D;
+  --accent-soft:  #E7F7EC;
+  --accent-ring:  rgba(22,163,74,0.30);
+
+  --money:      #16A34A;
+  --money-soft: #E7F7EC;
+  --amber:      #C77E16;
+  --amber-soft: #FBF1DF;
+  --risk:       #DC4E36;
+  --risk-soft:  #FCEBE7;
+  --trust:      #2563EB;
+  --trust-soft: #EAF0FE;
+
+  --muted:      #6B6E7B;
+  --muted-2:    #9A9CA8;
+  --hairline:   #EAEAEF;
+  --hairline-2: #E0E0E8;
+
+  --shadow-sm: 0 1px 2px rgba(16,17,23,0.04), 0 1px 3px rgba(16,17,23,0.06);
+  --shadow-md: 0 2px 6px rgba(16,17,23,0.05), 0 8px 24px rgba(16,17,23,0.07);
+  --shadow-lg: 0 8px 16px rgba(16,17,23,0.06), 0 24px 60px rgba(16,17,23,0.12);
+  --shadow-accent: 0 10px 30px rgba(22,163,74,0.22);
+
+  --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 26px;
+  --maxw: 1240px;
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --retailer-amazon: #FF9900;
+  --retailer-temu:   #FB7701;
+  --retailer-shein:  #1A1A1A;
+  --retailer-walmart:#0071DC;
+  --retailer-target: #CC0000;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+#root, main { min-height: 100vh; }
+
+h1, h2, h3, h4, .display { font-family: var(--font-display); margin: 0; letter-spacing: -0.02em; }
+p { margin: 0; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.mono { font-family: "Space Grotesk", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+::selection { background: var(--accent-soft); color: var(--accent-deep); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--hairline-2); border-radius: 20px; border: 3px solid var(--canvas); }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-2); }
+:focus-visible { outline: 3px solid var(--accent-ring); outline-offset: 2px; border-radius: 4px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes seamDraw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes pulseDot { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pop { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+.anim-fadeup { animation: fadeUp 0.5s cubic-bezier(.2,.7,.2,1) both; }
+.anim-fadein { animation: fadeIn 0.5s ease both; }
+
+@media (max-width: 920px) {
+  .topnav-links { display: none !important; }
+  .compare-grid { grid-template-columns: 1fr !important; }
+  .checkout-grid { grid-template-columns: 1fr !important; }
+  .cluster-identity { grid-template-columns: 1fr !important; }
+  .offers-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .twin-seam { display: none !important; }
+  .triptych-grid {
+    display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory;
+    margin: 0 -28px; padding: 6px 28px 14px; -webkit-overflow-scrolling: touch;
+  }
+  .triptych-grid > div { min-width: 80%; scroll-snap-align: center; flex-shrink: 0; }
+  .triptych-grid > div:nth-child(2) { transform: none !important; }
+}
+@media (max-width: 560px) {
+  .triptych-grid > div { min-width: 88%; }
+  .nav-trust { display: none !important; }
+  .offers-grid { grid-template-columns: 1fr !important; }
 }
