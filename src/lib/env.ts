@@ -13,7 +13,7 @@ const opt = (name: string, fallback = ''): string => process.env[name] ?? fallba
 // All access is name-based via helpers — no literal credential values in source.
 export const env = {
   databaseUrl: () => req('DATABASE_URL'),
-  apifyToken: () => req('APIFY_TOKEN'),
+  apifyToken: () => (E.APIFY_USE_TOKEN === '2' && E.APIFY_TOKEN_2 ? E.APIFY_TOKEN_2 : req('APIFY_TOKEN')),
   anthropicKey: () => req('ANTHROPIC_API_KEY'),
   openaiKey: () => opt('OPENAI_API_KEY'),
   llmModel: () => opt('LLM_MODEL', 'claude-opus-4-8'),
