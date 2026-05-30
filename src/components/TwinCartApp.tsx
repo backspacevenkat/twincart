@@ -787,17 +787,21 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
           : <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted)", paddingBottom: 4 }}>reference price</span>}
       </div>
 
-      {/* parity meter + similarity "why?" tooltip */}
+      {/* parity meter + similarity "why?" tooltip (why? on its own row so it never overlaps the label) */}
       <div style={{ position: "relative" }} onMouseEnter={() => setWhy(true)} onMouseLeave={() => setWhy(false)}>
         <ParityMeter value={p.parity} matchType={p.matchType} animate={animate} delay={idx * 90} compact />
-        <span style={{ position: "absolute", top: 0, right: 0, fontSize: 11, fontWeight: 600,
-          color: "var(--accent)", cursor: "help" }}>why?</span>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 5 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 11, fontWeight: 600,
+            color: "var(--accent)", cursor: "help" }}>
+            <Icon name="spark" size={11} stroke={2.2} /> why these match?
+          </span>
+        </div>
         {why && (
           <div style={{ position: "absolute", bottom: "100%", left: 0, right: 0, marginBottom: 8, zIndex: 20,
             background: "var(--surface)", border: "1px solid var(--hairline-2)", borderRadius: 12,
             boxShadow: "var(--shadow-lg)", padding: "12px 14px", fontSize: 12.5, color: "var(--ink-soft)",
             pointerEvents: "none" }}>
-            <div style={{ fontWeight: 700, color: "var(--ink)" }}>{p.parity}% {p.matchType}</div>
+            <div style={{ fontWeight: 700, color: "var(--ink)" }}>{p.parity}% · {p.matchType}</div>
             {p.anchorKey && <div style={{ marginTop: 4 }}>How we matched: {p.anchorKey}</div>}
             {p.take && <div style={{ marginTop: 4, color: "var(--muted)" }}>{p.take}</div>}
             <div style={{ fontSize: 11, color: "var(--muted-2)", marginTop: 6 }}>Functional parity = shared core specs &amp; use, scored by TwinCart AI.</div>
