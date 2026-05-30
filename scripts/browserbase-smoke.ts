@@ -69,7 +69,7 @@ async function main() {
     // context.pages() is the cross-runtime-reliable accessor (see header note).
     const page = stagehand.context.pages()[0];
 
-    await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 60_000 });
+    await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeoutMs: 60_000 });
 
     const title = await page.title();
     console.log(`[smoke] title:   ${title}`);
