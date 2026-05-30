@@ -348,7 +348,7 @@ function spectrumColor(o: any) {
   return "var(--accent)";
 }
 
-function TwinSpectrum({ cluster, onPick, onAdd }: any) {
+function TwinSpectrum({ cluster, onPick, onAdd, onSelectImage }: any) {
   const offers = cluster.offers;
   const prices = offers.map((o: any) => o.price);
   const lo = Math.min(...prices), hi = Math.max(...prices);
