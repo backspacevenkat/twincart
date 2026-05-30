@@ -21,7 +21,7 @@ interface Row {
   image_url: string | null;
 }
 
-const MAX_CANDIDATES = 14;     // per cluster, LLM-classified
+const MAX_CANDIDATES = 18;     // per cluster, LLM-classified
 const CONCURRENCY = 5;         // parallel LLM calls
 
 const median = (xs: number[]): number => {
@@ -47,12 +47,12 @@ function anchorScore(r: Row, priceCap: number): number {
   return (1 + Math.log10(reviews + 1)) * (rating / 5) * branded * amazon * (1 + Math.log10(price + 1) * 0.25);
 }
 
-/** Pick a diverse, mostly-cheaper candidate set spanning retailers. */
+/** Pick a diverse candidate set BALANCED across retailers so no single store dominates. */
 function pickCandidates(rows: Row[], anchor: Row): Row[] {
-  // Candidates priced 5%..110% of anchor — excludes accessory noise (cases/parts) and pricier items.
   const aP = anchor.price ?? 0;
+  // Cheaper-than-anchor twins (down to 3% to allow deep budget finds), excluding absurd accessory noise.
   const others = rows.filter((r) => r.id !== anchor.id && r.price != null && r.title
-    && (r.price as number) >= aP * 0.05 && (r.price as number) <= aP * 1.1);
+    && (r.price as number) >= aP * 0.03 && (r.price as number) <= aP * 1.15);
   // dedup near-identical titles
   const seen = new Set<string>();
   const uniq = others.filter((r) => {
@@ -60,20 +60,30 @@ function pickCandidates(rows: Row[], anchor: Row): Row[] {
     if (seen.has(k)) return false;
     seen.add(k); return true;
   });
-  // ensure budget-twin sources (temu/shein) are represented, then fill cheapest-first
-  const budget = uniq.filter((r) => r.retailer === 'temu' || r.retailer === 'shein').sort((a, b) => (a.price! - b.price!));
-  const rest = uniq.filter((r) => r.retailer !== 'temu' && r.retailer !== 'shein').sort((a, b) => (a.price! - b.price!));
+  // Group by retailer; within each, prefer well-reviewed mid-priced items (real products, not junk).
+  const byRetailer: Record<string, Row[]> = {};
+  for (const r of uniq) (byRetailer[r.retailer] ??= []).push(r);
+  const score = (r: Row) => (1 + Math.log10((r.review_count ?? 0) + 1)) * ((r.rating ?? 3.5) / 5);
+  for (const k of Object.keys(byRetailer)) byRetailer[k].sort((a, b) => score(b) - score(a));
+
+  // Round-robin across retailers (budget sources first) so the candidate set is balanced.
+  const order = ['temu', 'shein', 'walmart', 'target', 'amazon'];
   const out: Row[] = [];
-  const want = (r: Row) => { if (out.length < MAX_CANDIDATES && !out.includes(r)) out.push(r); };
-  budget.slice(0, 6).forEach(want);
-  rest.slice(0, 8).forEach(want);
-  // top up if room
-  [...budget, ...rest].forEach(want);
+  for (let depth = 0; depth < 5 && out.length < MAX_CANDIDATES; depth++) {
+    for (const ret of order) {
+      const list = byRetailer[ret];
+      if (list && list[depth] && out.length < MAX_CANDIDATES) out.push(list[depth]);
+    }
+  }
   return out.slice(0, MAX_CANDIDATES);
 }
 
-const SYS = `You compare e-commerce products for FUNCTIONAL equivalence to an ANCHOR (the genuine branded reference). For each candidate decide if it does the same job, independent of brand. Weights: 35% core function/use-case, 30% key-spec parity, 20% feature overlap, 10% quality, 5% category.
-match_type ∈ EXACT_MATCH (same product/model) | NEAR_EXACT (same family, size/color/bundle differs) | FUNCTIONAL_TWIN (diff brand, same job, acceptable) | BUDGET_SUBSTITUTE (same job, real tradeoffs: durability/shipping/returns) | NOT_COMPARABLE (looks similar, materially different).
+const SYS = `You compare e-commerce products for FUNCTIONAL equivalence to an ANCHOR (the genuine branded reference). For each candidate decide if it does the same core job, INDEPENDENT of brand or price.
+BE GENEROUS ABOUT BRAND AND PRICE: a much cheaper, different-brand item that does the SAME job is exactly the twin we want — cheaper budget-marketplace versions (Temu/SHEIN/Walmart) are the point, never reject just for low price.
+BUT BE STRICT ABOUT PRODUCT TYPE / FORM FACTOR: the candidate must be the SAME TYPE of product doing the SAME primary job. A robot (autonomous floor) vacuum's twin is ANOTHER ROBOT vacuum — NOT a handheld, car, or keyboard/desk vacuum. An office chair's twin is another office chair, not a stool or cushion. A 40oz tumbler's twin is another large insulated tumbler, not a straw set or a 12oz cup.
+Mark NOT_COMPARABLE when: different category, a part/accessory OF the product (filter, case, replacement straws), a different form-factor/sub-type (handheld vs robot vacuum), an obvious toy/mini, or materially smaller capacity/class.
+match_type ∈ EXACT_MATCH (same product/model) | NEAR_EXACT (same family, size/color/bundle differs) | FUNCTIONAL_TWIN (diff brand, same job, minor tradeoffs) | BUDGET_SUBSTITUTE (same job, real tradeoffs: durability/shipping/returns) | NOT_COMPARABLE (different category or an accessory/part).
+functional_parity: 85-99 near-identical, 70-84 solid twin, 55-69 budget substitute, <55 weak/not comparable.
 Return ONLY a JSON array, one object per candidate IN ORDER: [{"i":<index>,"match_type":...,"functional_parity":0-100,"reason":"why it's a twin & what you give up (<=18 words)","caveats":"short risk note"}]`;
 
 async function classify(anchor: Row, cands: Row[]): Promise<any[]> {
@@ -98,9 +108,9 @@ async function buildCluster(q: string, rows: Row[]): Promise<string | null> {
   if (valid.length < 3) return null;
 
   // Reject outlier/bundle prices above 3× median when choosing the anchor.
-  // 1.8× median rejects set/bundle outliers (e.g. a $5,700 dumbbell SET vs single dumbbells) so the
-  // anchor lands on a mid-range single item and savings stay believable across wide-price categories.
-  const priceCap = median(valid.map((r) => r.price as number)) * 1.8;
+  // Anchor band: allow up to 3× median (premium branded reference for headroom) but reject extreme
+  // bundle outliers. Gives dramatic-yet-believable savings vs cheap twins.
+  const priceCap = median(valid.map((r) => r.price as number)) * 3;
   const anchor = valid.reduce((a, b) => (anchorScore(b, priceCap) > anchorScore(a, priceCap) ? b : a));
   const cands = pickCandidates(valid, anchor);
   if (!cands.length) return null;
@@ -117,10 +127,14 @@ async function buildCluster(q: string, rows: Row[]): Promise<string | null> {
     return { row: c, match_type: mt, parity, savings, value: valueScore(parity, savings, mt), reason: v.reason ?? '', caveats: v.caveats ?? '' };
   });
 
-  // best picks
-  const twins = members.filter((m) => m.match_type !== 'NOT_COMPARABLE' && m.parity >= 55);
+  // best picks — lower parity floor (50) so genuine budget twins qualify
+  const twins = members.filter((m) => m.match_type !== 'NOT_COMPARABLE' && m.parity >= 50);
   const bestValue = twins.slice().sort((a, b) => b.value - a.value)[0];
-  const bestBudget = twins.slice().sort((a, b) => b.savings - a.savings)[0];
+  // Budget = biggest-savings twin, preferably from a DIFFERENT retailer than value (more diverse demo).
+  const budgetSorted = twins.slice().sort((a, b) => b.savings - a.savings);
+  let bestBudget = budgetSorted.find((m) => bestValue && m.row.retailer !== bestValue.row.retailer && m.row.id !== bestValue.row.id)
+    ?? budgetSorted.find((m) => !bestValue || m.row.id !== bestValue.row.id)
+    ?? budgetSorted[0];
   const canonical = anchor.title.split(/[,|(]/)[0].trim().slice(0, 60);
   const category = (verdicts[0]?.category as string) || q;
 
