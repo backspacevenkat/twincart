@@ -56,8 +56,18 @@ async function boxToken(): Promise<string> {
 
 function reportHTML(c: any): string {
   const e = c.products.exact, v = c.products.value, b = c.products.budget;
+  // Proxy images through wsrv.nl so cross-origin hotlink blocks (Temu/SHEIN) don't break the PDF render.
+  const img = (u: any) => (typeof u === 'string' && /^https?:\/\//.test(u))
+    ? `https://wsrv.nl/?url=${encodeURIComponent(u)}&w=120&h=120&fit=cover&output=webp` : '';
+  const thumb = (p: any) => {
+    const src = img(p.image);
+    return src
+      ? `<img src="${src}" width="48" height="48" style="border-radius:8px;object-fit:cover;border:1px solid #eaeaef" />`
+      : `<div style="width:48px;height:48px;border-radius:8px;background:#f4f4f7"></div>`;
+  };
   const row = (p: any, tag: string, color: string) => `
     <tr>
+      <td style="padding:10px 14px">${thumb(p)}</td>
       <td style="padding:10px 14px"><span style="background:${color};color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px">${tag}</span></td>
       <td style="padding:10px 14px">${p.name}</td>
       <td style="padding:10px 14px;color:#6b6e7b">${(p.retailer || '').toUpperCase()}</td>
@@ -75,7 +85,7 @@ th{text-align:left;padding:10px 14px;background:#f4f4f7;font-size:12px;color:#6b
 <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#16a34a">TwinCart Savings Report</div>
 <h1>${c.title}</h1>
 <p style="color:#6b6e7b">Category: ${c.category} · ${c.offers.length} listings aggregated across ${new Set(c.offers.map((o: any) => o.retailer)).size} retailers · up to <b class="tag">${c.maxSavingsPct}% off</b></p>
-<table><tr><th>Pick</th><th>Product</th><th>Retailer</th><th>Price</th><th>Parity</th><th>Savings</th></tr>
+<table><tr><th></th><th>Pick</th><th>Product</th><th>Retailer</th><th>Price</th><th>Parity</th><th>Savings</th></tr>
 ${row(e, 'EXACT', '#0e0f13')}${row(v, 'VALUE', '#16a34a')}${row(b, 'BUDGET', '#c77e16')}</table>
 <div class="verdict"><b>TwinCart's verdict:</b> ${c.verdict}</div>
 <p style="margin-top:22px"><span class="seal">✓ AP2-signed checkout mandate · ES256</span> &nbsp; <span class="seal">UCP-conformant</span></p>

@@ -143,9 +143,9 @@ CURATED_CLUSTERS.forEach((c: any) => { const u = (CURATED_BOX_REPORTS as any)[c.
 
 // curated demo queries lead; live (real-data) queries follow
 export const QUERIES = ['thermo flask', 'airpods', 'summer dress', ...liveQueries.filter((q) => !curatedQueries.has(q))];
-// chips: a curated lead + a few high-impact live categories
+// chips: a curated lead + ALL live categories (so every searchable term is one click away)
 export const CHIPS = ['thermo flask', 'airpods', 'summer dress',
-  ...liveQueries.filter((q) => !curatedQueries.has(q)).slice(0, 9)];
+  ...liveQueries.filter((q) => !curatedQueries.has(q))];
 
 // ─── Smart Basket (the demo's money shot) ───
 // 12 functional twins TwinCart assembled. Amazon ≈ $996, TwinCart ≈ $120 (~88% off).

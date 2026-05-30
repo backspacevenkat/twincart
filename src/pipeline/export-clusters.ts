@@ -19,6 +19,7 @@ const num = (v: any) => (v == null ? null : Number(v));
 interface M {
   product_id: number; retailer: string; title: string; brand: string | null;
   price: number; original_price: number | null; image_url: string | null; product_url: string | null;
+  external_id: string | null; raw_json: any;
   rating: number | null; review_count: number | null;
   match_type: string; functional_parity: number; price_savings_pct: number; value_score: number;
   reason: string; caveats: string;
@@ -49,7 +50,7 @@ async function main() {
   for (const c of clusters) {
     const members = await query<M>(
       `SELECT cm.product_id, p.retailer, p.title, p.brand, p.price, p.original_price, p.image_url, p.product_url,
-              p.rating, p.review_count, cm.match_type, cm.functional_parity, cm.price_savings_pct,
+              p.external_id, p.raw_json, p.rating, p.review_count, cm.match_type, cm.functional_parity, cm.price_savings_pct,
               cm.value_score, cm.reason, cm.caveats
        FROM cluster_members cm JOIN products p ON p.id = cm.product_id
        WHERE cm.cluster_id = $1 AND p.price > 0
@@ -57,6 +58,16 @@ async function main() {
       [c.id],
     );
     if (members.length < 3) continue;
+
+    // SHEIN: BOTH bare "/-p-<id>.html" AND the full-slug PDP get bot-walled to
+    // /risk/challenge?captcha_type=909 (verified live in-browser). The pdsearch results
+    // page, however, loads fine and lands on the right product, so SHEIN points there.
+    // (Amazon /dp, Walmart /ip, Target /p, Temu /goods all load their real PDP — keep those.)
+    for (const m of members) {
+      if (m.retailer === 'shein' && m.title) {
+        m.product_url = `https://us.shein.com/pdsearch/${encodeURIComponent(m.title)}/`;
+      }
+    }
 
     const anchor = members.find((m) => m.product_id === c.hero_product_id) ?? members[0];
     const twins = members.filter((m) => m.match_type !== 'EXACT_MATCH' && m.match_type !== 'NOT_COMPARABLE');

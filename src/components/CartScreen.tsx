@@ -1,8 +1,8 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RETAILERS, DEMO_BASKET } from '@/lib/twincart-data';
+import { RETAILERS } from '@/lib/twincart-data';
 
-const money = (n: number) => '$' + n.toLocaleString();
+const money = (n: number) => '$' + Math.round(n).toLocaleString();
 
 function RBadge({ id }: any) {
   const r = RETAILERS[id];
@@ -10,13 +10,25 @@ function RBadge({ id }: any) {
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 999,
       background: 'var(--surface-3)', border: '1px solid var(--hairline)', fontSize: 11, fontWeight: 600, color: 'var(--ink-soft)', whiteSpace: 'nowrap' }}>
-      <span style={{ width: 7, height: 7, borderRadius: 999, background: r.color }} /> {r.name}
+      {r.logo
+        ? <img src={r.logo} width={14} height={14} style={{ borderRadius: 3 }} alt="" />
+        : <span style={{ width: 7, height: 7, borderRadius: 999, background: r.color }} />}
+      {r.name}
     </span>
   );
 }
 
-function Thumb({ retailer }: any) {
+function Thumb({ retailer, image }: any) {
   const r = RETAILERS[retailer];
+  if (image) {
+    return (
+      <div style={{ position: 'relative', width: 52, height: 52, borderRadius: 12, flexShrink: 0, overflow: 'hidden',
+        border: '1px solid var(--hairline)', background: 'var(--surface-3)' }}>
+        <img src={image} width={52} height={52} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+        <span style={{ position: 'absolute', left: 0, bottom: 0, width: '100%', height: 3, background: r ? r.color : 'var(--accent)', opacity: 0.9 }} />
+      </div>
+    );
+  }
   return (
     <div style={{ position: 'relative', width: 52, height: 52, borderRadius: 12, flexShrink: 0,
       background: 'var(--surface-3)', border: '1px solid var(--hairline)', display: 'grid', placeItems: 'center', color: 'var(--muted-2)' }}>
@@ -41,12 +53,42 @@ function Stat({ label, value, sub, tone, big }: any) {
   );
 }
 
-export default function CartScreen({ onBack, onCheckout }: any) {
-  const amazon = DEMO_BASKET.reduce((s: number, i: any) => s + i.amazon, 0);
-  const twin = DEMO_BASKET.reduce((s: number, i: any) => s + i.price, 0);
+export default function CartScreen({ items = [], onBack, onCheckout }: any) {
+  // Empty state — the cart reflects ONLY what the shopper actually added.
+  if (!items || items.length === 0) {
+    return (
+      <div className="anim-fadein" style={{ maxWidth: 'var(--maxw)', margin: '0 auto', padding: '24px 28px 90px' }}>
+        <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13.5, fontWeight: 600, color: 'var(--muted)', marginBottom: 18 }}>
+          ← Back
+        </button>
+        <div style={{ textAlign: 'center', padding: '80px 20px' }}>
+          <div style={{ display: 'inline-grid', placeItems: 'center', width: 72, height: 72, borderRadius: 20,
+            background: 'var(--surface-3)', color: 'var(--muted-2)', marginBottom: 20 }}>
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--ink)', marginBottom: 10 }}>
+            Your TwinCart basket is empty
+          </h1>
+          <p style={{ fontSize: 15, color: 'var(--muted)', marginBottom: 26, maxWidth: 440, margin: '0 auto 26px' }}>
+            Add twins from any product and watch your savings stack up here.
+          </p>
+          <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 9, padding: '13px 26px', borderRadius: 999,
+            background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: 15, boxShadow: 'var(--shadow-accent)' }}>
+            Browse twins
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const amazon = items.reduce((s: number, i: any) => s + (i.amazon || i.price), 0);
+  const twin = items.reduce((s: number, i: any) => s + i.price, 0);
   const save = amazon - twin;
-  const pct = Math.round((save / amazon) * 100);
-  const retailers = new Set(DEMO_BASKET.map((i: any) => i.retailer)).size;
+  const pct = amazon > 0 ? Math.round((save / amazon) * 100) : 0;
+  const retailers = new Set(items.map((i: any) => i.retailer)).size;
 
   return (
     <div className="anim-fadein" style={{ maxWidth: 'var(--maxw)', margin: '0 auto', padding: '24px 28px 90px' }}>
@@ -58,44 +100,47 @@ export default function CartScreen({ onBack, onCheckout }: any) {
         <span style={{ width: 7, height: 7, borderRadius: 999, background: 'var(--accent)' }} /> Your TwinCart Basket
       </div>
       <h1 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.05, maxWidth: 760 }}>
-        {DEMO_BASKET.length} items. Same job, <span style={{ color: 'var(--accent)' }}>{pct}% less.</span>
+        {items.length} item{items.length === 1 ? '' : 's'}. Same job, <span style={{ color: 'var(--accent)' }}>{pct}% less.</span>
       </h1>
       <p style={{ fontSize: 16, color: 'var(--muted)', marginTop: 12, maxWidth: 620 }}>
-        The exact branded versions on Amazon cost <strong style={{ color: 'var(--ink-soft)' }}>{money(amazon)}</strong>. TwinCart found feature-rich twins across {retailers} marketplaces for a fraction.
+        The exact branded versions cost <strong style={{ color: 'var(--ink-soft)' }}>{money(amazon)}</strong>. TwinCart found feature-rich twins across {retailers} marketplace{retailers === 1 ? '' : 's'} for a fraction.
       </p>
 
       {/* hero comparison band */}
       <div style={{ marginTop: 26, padding: '28px 28px', borderRadius: 22, background: 'var(--surface)',
         border: '1px solid var(--hairline-2)', boxShadow: 'var(--shadow-md)', display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-        <Stat label="On Amazon" value={money(amazon)} tone="amazon" sub="exact branded items" />
+        <Stat label="Reference price" value={money(amazon)} tone="amazon" sub="exact branded items" />
         <div style={{ fontSize: 30, color: 'var(--muted-2)', paddingBottom: 18 }}>→</div>
         <Stat label="With TwinCart" value={money(twin)} tone="twin" sub="feature-rich twins" />
-        <Stat label="You save" value={money(save)} tone="save" sub={`${pct}% off · ${(amazon / twin).toFixed(1)}× cheaper`} big />
+        <Stat label="You save" value={money(save)} tone="save" sub={`${pct}% off · ${twin > 0 ? (amazon / twin).toFixed(1) : '0'}× cheaper`} big />
       </div>
 
       {/* line items */}
       <div style={{ marginTop: 24, background: 'var(--surface)', border: '1px solid var(--hairline-2)', borderRadius: 20, overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
-        {DEMO_BASKET.map((it: any, i: number) => {
-          const s = it.amazon - it.price;
-          const p = Math.round((s / it.amazon) * 100);
-          const stop = /NOT COMPARABLE/.test(it.matchType);
+        {items.map((it: any, i: number) => {
+          const ref = it.amazon || it.price;
+          const s = ref - it.price;
+          const p = ref > 0 ? Math.round((s / ref) * 100) : 0;
+          const stop = /NOT COMPARABLE/.test(it.matchType || '');
           return (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderTop: i ? '1px solid var(--hairline)' : 'none' }}>
-              <Thumb retailer={it.retailer} />
+              <Thumb retailer={it.retailer} image={it.image} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14.5, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.25 }}>{it.twinName}</div>
+                <div style={{ fontSize: 14.5, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.25,
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{it.twinName || it.name}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 6, flexWrap: 'wrap' }}>
                   <RBadge id={it.retailer} />
-                  <span style={{ fontSize: 12, color: 'var(--muted)' }}>vs Amazon <span style={{ color: 'var(--ink-soft)', fontWeight: 600 }}>{it.name}</span></span>
-                  <span className="mono" style={{ fontSize: 10.5, fontWeight: 700, color: stop ? 'var(--risk)' : 'var(--accent)', background: stop ? 'var(--risk-soft)' : 'var(--accent-soft)', padding: '2px 7px', borderRadius: 6 }}>
-                    {it.parity}% twin
-                  </span>
+                  {it.parity != null && (
+                    <span className="mono" style={{ fontSize: 10.5, fontWeight: 700, color: stop ? 'var(--risk)' : 'var(--accent)', background: stop ? 'var(--risk-soft)' : 'var(--accent-soft)', padding: '2px 7px', borderRadius: 6 }}>
+                      {it.parity}% twin
+                    </span>
+                  )}
                 </div>
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <div className="tnum" style={{ fontSize: 12.5, color: 'var(--muted-2)', textDecoration: 'line-through' }}>{money(it.amazon)}</div>
+                {s > 0 && <div className="tnum" style={{ fontSize: 12.5, color: 'var(--muted-2)', textDecoration: 'line-through' }}>{money(ref)}</div>}
                 <div className="tnum" style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 22, color: 'var(--ink)', lineHeight: 1.1 }}>{money(it.price)}</div>
-                <div className="tnum" style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--money)' }}>save {money(s)} ({p}%)</div>
+                {s > 0 && <div className="tnum" style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--money)' }}>save {money(s)} ({p}%)</div>}
               </div>
             </div>
           );
@@ -106,7 +151,7 @@ export default function CartScreen({ onBack, onCheckout }: any) {
       <div style={{ marginTop: 24, padding: '22px 24px', borderRadius: 20, background: 'var(--accent-soft)', border: '1px solid #bfe6cd',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>Check out all {DEMO_BASKET.length} with the TwinCart Agent</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>Check out all {items.length} with the TwinCart Agent</div>
           <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4 }}>UCP-conformant sessions · AP2-signed mandates · you approve the final payment. We never auto-pay.</div>
         </div>
         <button onClick={onCheckout} style={{ display: 'inline-flex', alignItems: 'center', gap: 9, padding: '14px 26px', borderRadius: 999,

@@ -708,15 +708,15 @@ function TwinPanel({ p, icon, slotKind, elevated, onPick, animate, idx }: any) {
       className={animate ? "anim-fadeup" : undefined}
       style={{
         position: "relative", zIndex: elevated ? 2 : 1,
+        boxSizing: "border-box",
         background: "var(--surface)",
         border: `1px solid ${elevated ? "var(--accent)" : "var(--hairline-2)"}`,
-        borderRadius: 18, padding: elevated ? "22px 20px 20px" : "20px 18px 18px",
-        boxShadow: elevated ? "var(--shadow-lg)" : (h ? "var(--shadow-md)" : "var(--shadow-sm)"),
+        borderRadius: 18, padding: "20px 18px 18px",
+        boxShadow: elevated ? "var(--shadow-lg), inset 0 0 0 1px var(--accent)" : (h ? "var(--shadow-md)" : "var(--shadow-sm)"),
         transform: elevated ? "translateY(-8px)" : (h ? "translateY(-3px)" : "none"),
         transition: "transform .18s ease, box-shadow .18s ease",
         cursor: "pointer", display: "flex", flexDirection: "column", gap: 14,
         animationDelay: animate ? `${idx * 0.07}s` : undefined,
-        outline: elevated ? "3px solid var(--accent-soft)" : "none",
       }}
     >
       {/* Best Value ribbon */}
@@ -1710,11 +1710,90 @@ function AgentStepper({ running, done, onApprove, price }: any) {
   );
 }
 
-/* Screen 4 — Agent Checkout modal */
+/* Deterministic fake UPC (12 digits) from a product name — stable per item, never random. */
+function fakeUpc(name: string): string {
+  let h = 0;
+  for (let i = 0; i < (name || "").length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  let s = String(h);
+  while (s.length < 12) s = s + String((h >> (s.length % 24)) & 7);
+  return s.slice(0, 12);
+}
+
+/* Cart-mode agent panel — simulates an agentic add-to-cart across EVERY cart item,
+   stepping through them one at a time with retailer logo + matched UPC. All simulated; never pays. */
+function CartCheckoutPanel({ items, onApprove }: any) {
+  const [done, setDone] = useState(0); // number of items confirmed in cart
+  useEffect(() => {
+    if (done >= items.length) return;
+    const t = setTimeout(() => setDone((d) => d + 1), 550);
+    return () => clearTimeout(t);
+  }, [done, items.length]);
+  const allDone = done >= items.length;
+  const total = items.reduce((s: number, it: any) => s + (Number(it.price) || 0), 0);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      {items.map((it: any, i: number) => {
+        const state = i < done ? "done" : i === done ? "active" : "idle";
+        const r = RETAILERS[it.retailer];
+        return (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 12px", borderRadius: 12,
+            background: state === "idle" ? "transparent" : "var(--surface)",
+            border: `1px solid ${state === "done" ? "var(--accent)" : "var(--hairline)"}`,
+            opacity: state === "idle" ? 0.5 : 1, transition: "all .25s ease" }}>
+            {r?.logo
+              ? <img src={r.logo} width={22} height={22} style={{ borderRadius: 5, flexShrink: 0 }} alt="" />
+              : <span style={{ width: 22, height: 22, borderRadius: 5, background: r?.color ?? "var(--muted-2)", flexShrink: 0 }} />}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink)", whiteSpace: "nowrap",
+                overflow: "hidden", textOverflow: "ellipsis" }}>{it.name}</div>
+              <div className="mono" style={{ fontSize: 10.5, color: "var(--muted)", marginTop: 1 }}>
+                UPC {fakeUpc(it.name)} · {r?.name ?? it.retailer}
+              </div>
+            </div>
+            <div style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
+              <span className="tnum" style={{ fontSize: 13, fontWeight: 700, color: "var(--ink)" }}>${it.price}</span>
+              <span style={{ display: "grid", placeItems: "center", width: 26, height: 26, borderRadius: 999,
+                background: state === "done" ? "var(--money)" : state === "active" ? "var(--accent-soft)" : "var(--surface-3)",
+                color: state === "done" ? "#fff" : "var(--accent)" }}>
+                {state === "done" ? <Icon name="check" size={15} stroke={3} />
+                  : state === "active" ? <span style={{ width: 13, height: 13, borderRadius: 999,
+                      border: "2.5px solid var(--accent)", borderTopColor: "transparent", animation: "spin .7s linear infinite" }} />
+                  : <span style={{ width: 6, height: 6, borderRadius: 999, background: "var(--muted-2)" }} />}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+
+      <div style={{ marginTop: 4, fontSize: 12, color: "var(--muted)" }}>
+        {allDone ? "All items staged in cart across retailers."
+          : `Adding ${done}/${items.length} — agent is opening each retailer and matching by UPC…`}
+      </div>
+
+      {allDone && (
+        <div className="anim-fadeup" style={{ marginTop: 8 }}>
+          <Btn variant="money" size="lg" icon="check" onClick={onApprove}>
+            Approve &amp; complete · ${total}
+          </Btn>
+          <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 9 }}>
+            TwinCart prepares each cart; you press the final button. Always.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Screen 4 — Agent Checkout modal (single product OR whole cart via { __cart: [...] }) */
 function CheckoutModal({ cluster, onClose, onComplete }: any) {
-  const p = cluster.products.value;
+  const cartMode = Array.isArray(cluster?.__cart);
+  const items = cartMode ? cluster.__cart : null;
+  const p = cartMode ? null : cluster.products.value;
   const [running, setRunning] = useState(false);
   useEffect(() => { const t = setTimeout(() => setRunning(true), 400); return () => clearTimeout(t); }, []);
+
+  const retailers = cartMode ? new Set(items.map((it: any) => it.retailer)).size : 1;
 
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 50,
@@ -1733,7 +1812,9 @@ function CheckoutModal({ cluster, onClose, onComplete }: any) {
             <div>
               <div style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)" }}>TwinCart Agent</div>
               <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
-                {p.name} · {RETAILERS[p.retailer].name}
+                {cartMode
+                  ? `${items.length} item${items.length === 1 ? "" : "s"} · ${retailers} retailer${retailers === 1 ? "" : "s"}`
+                  : `${p.name} · ${RETAILERS[p.retailer].name}`}
               </div>
             </div>
           </div>
@@ -1748,13 +1829,29 @@ function CheckoutModal({ cluster, onClose, onComplete }: any) {
           className="checkout-grid">
           <div>
             <SectionLabel n="01" title="Your guardrails" />
-            <TrustPanel p={p} cluster={cluster} />
+            {cartMode ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                {["UCP-conformant session", "AP2-signed mandate · ES256", "You approve the final payment", "We never auto-pay"].map((g) => (
+                  <div key={g} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13, color: "var(--ink-soft)", fontWeight: 500 }}>
+                    <span style={{ display: "grid", placeItems: "center", width: 24, height: 24, borderRadius: 999,
+                      background: "var(--accent-soft)", color: "var(--accent)", flexShrink: 0 }}>
+                      <Icon name="shield" size={14} stroke={2} />
+                    </span>
+                    {g}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <TrustPanel p={p} cluster={cluster} />
+            )}
           </div>
           <div>
             <SectionLabel n="02" title="Agent progress" />
             <div style={{ background: "var(--surface-2)", border: "1px solid var(--hairline)",
               borderRadius: 20, padding: "22px 22px 22px" }}>
-              <AgentStepper running={running} onApprove={() => onComplete(cluster)} price={p.price} />
+              {cartMode
+                ? <CartCheckoutPanel items={items} onApprove={() => onComplete(cluster)} />
+                : <AgentStepper running={running} onApprove={() => onComplete(cluster)} price={p.price} />}
             </div>
           </div>
         </div>
@@ -1955,7 +2052,22 @@ function App() {
   const [toast, setToast] = useState<any>(null);
 
   const flash = (msg: any) => { setToast(msg); clearTimeout(toastTimer); toastTimer = setTimeout(() => setToast(null), 1900); };
-  const addToCart = (offer: any) => { setCart((c: any) => [...c, offer]); flash(`Added to cart · $${offer.price} from ${RETAILERS[offer.retailer].name}`); };
+  const addToCart = (offer: any) => {
+    // Normalize any added offer/product into a uniform cart row (with a reference "amazon" price + savings%).
+    const price = Number(offer.price) || 0;
+    const savingsPct = offer.savingsPct != null ? offer.savingsPct
+      : (offer.savingsAmt && price + offer.savingsAmt > 0 ? Math.round((offer.savingsAmt / (price + offer.savingsAmt)) * 100) : 0);
+    const amazon = offer.amazon != null ? offer.amazon
+      : (savingsPct > 0 && savingsPct < 100 ? Math.round(price / (1 - savingsPct / 100))
+        : (offer.savingsAmt ? price + offer.savingsAmt : price));
+    const row = {
+      name: offer.name, twinName: offer.twinName ?? offer.name, retailer: offer.retailer,
+      price, image: offer.image, parity: offer.parity, matchType: offer.matchType,
+      icon: offer.icon ?? "box", amazon, savingsPct,
+    };
+    setCart((c: any) => [...c, row]);
+    flash(`Added to cart · $${price} from ${RETAILERS[offer.retailer]?.name ?? offer.retailer}`);
+  };
   const toggleWish = (offer: any) => {
     const key = offer.retailer + offer.name;
     setWishlist((w: any) => { const n = new Set(w); n.has(key) ? n.delete(key) : n.add(key); return n; });
@@ -1999,7 +2111,7 @@ function App() {
           onAdd={addToCart} onWish={toggleWish} wishlist={wishlist} />}
         {screen === "report" && cluster && <ReportScreen cluster={cluster}
           onBack={() => openCluster(cluster)} onHome={() => goHome()} />}
-        {screen === "cart" && <CartScreen onBack={() => goHome()} onCheckout={() => openCheckout(CLUSTERS[0])} />}
+        {screen === "cart" && <CartScreen items={cart} onBack={() => goHome()} onCheckout={() => cart.length && openCheckout({ __cart: cart })} />}
       </main>
 
       <footer style={{ borderTop: "1px solid var(--hairline)", background: "var(--surface-2)",
@@ -2018,7 +2130,7 @@ function App() {
       </footer>
 
       {checkout && <CheckoutModal cluster={checkout} onClose={() => setCheckout(null)}
-        onComplete={(c: any) => { setCheckout(null); openReport(c); }} />}
+        onComplete={(c: any) => { setCheckout(null); if (c && c.__cart) { flash("Order approved · agent placing carts"); goHome(); } else { openReport(c); } }} />}
 
       <Toast msg={toast} />
     </div>

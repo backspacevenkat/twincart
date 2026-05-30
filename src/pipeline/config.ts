@@ -123,12 +123,14 @@ export const RETAILER_ACTORS: Record<Retailer, ActorConfig> = {
       const retail = (i.retailPrice as RawItem) ?? {};
       const goodsId = str(i.goods_id);
       const img = str(i.goods_img);
+      const name = str(i.goods_name) ?? '';
       return {
         retailer: 'shein', external_id: goodsId, asin: null, upc: null, gtin14: null,
-        title: str(i.goods_name) ?? '', brand: null,
+        title: name, brand: null,
         price: num(sale.usdAmount), original_price: num(retail.usdAmount), currency: 'USD',
         image_url: img ? (img.startsWith('//') ? `https:${img}` : img) : null,
-        product_url: goodsId ? `https://www.shein.com/-p-${goodsId}.html` : null,
+        // Scraped goods_id deep links 404 ("OOPS"); use a verified search-by-name URL instead.
+        product_url: name ? `https://us.shein.com/pdsearch/${encodeURIComponent(name)}/` : null,
         rating: null, review_count: null,
         raw_json: { ...i, _query: q },
       };
